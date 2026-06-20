@@ -7,22 +7,40 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0b0c10; color: #c5a059; text-align: center; margin: 0; padding: 20px; }
         h1 { color: #ffffff; margin-bottom: 20px; }
-        .visit-btn { display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 40px; transition: 0.3s; }
-        .visit-btn:hover { background-color: #c5a059; color: #000; }
         
-        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-        .photo-card { position: relative; width: 200px; height: 260px; cursor: pointer; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .photo-card:hover img { transform: scale(1.05); }
+        /* বাটনের প্রিমিয়াম গ্লো ইফেক্ট */
+        .visit-btn { 
+            display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; 
+            color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 40px; 
+            transition: 0.4s; position: relative; 
+        }
+        .visit-btn:hover { 
+            background-color: #c5a059; color: #000; 
+            box-shadow: 0 0 20px #c5a059; /* চারপাশে লাইট জ্বলা ইফেক্ট */
+        }
         
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
+        
+        /* ইমেজ কার্ড ও ফ্লোটিং ইফেক্ট */
+        .photo-card { 
+            position: relative; width: 200px; height: 260px; cursor: pointer; border-radius: 12px; 
+            overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
+            transition: transform 0.4s, box-shadow 0.4s; 
+        }
+        .photo-card:hover { 
+            transform: translateY(-10px); /* ইমেজ ভেসে ওঠা */
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4); /* চারপাশে লাইট জ্বলা */
+        }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* প্রিমিয়াম ডাউনলোড বাটন */
         .dl-btn { 
             position: absolute; top: 10px; right: 10px; 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(10px); 
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); 
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #fff; width: 28px; height: 28px; 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; z-index: 10; font-size: 14px;
+            cursor: pointer; z-index: 10; font-size: 14px; transition: 0.3s;
         }
         .dl-btn:hover { background: #c5a059; color: #000; }
         
@@ -67,8 +85,7 @@
                         gallery.appendChild(div);
                     }
                 });
-            })
-            .catch(err => console.error("Error loading images:", err));
+            });
 
         function openLightbox(url) {
             document.getElementById("lightboxImg").src = url;
