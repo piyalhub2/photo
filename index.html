@@ -14,16 +14,14 @@
         .photo-card { position: relative; width: 200px; height: 260px; cursor: pointer; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .photo-card img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* প্রিমিয়াম ডাউনলোড বাটন */
-        .premium-dl { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); color: #c5a059; border: 1px solid #c5a059; padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; text-transform: uppercase; transition: 0.3s; z-index: 5; }
-        .premium-dl:hover { background: #c5a059; color: #000; }
+        /* প্রিমিয়াম ডাউনলোড বাটন (সব জায়গায় একই) */
+        .dl-icon { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid rgba(255,255,255,0.3); transition: 0.3s; z-index: 10; }
+        .dl-icon:hover { background: #c5a059; color: #000; }
         
         .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
         .lightbox-content { position: relative; max-width: 80%; }
         .lightbox-content img { max-height: 80vh; border-radius: 8px; }
-        
-        /* বড় ছবির নিচের বাটন */
-        .big-dl-btn { display: block; margin-top: 15px; background: #c5a059; color: #000; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        .lightbox .dl-icon { top: 20px; right: 20px; width: 40px; height: 40px; font-size: 24px; }
     </style>
 </head>
 <body>
@@ -35,15 +33,10 @@
 
     <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
         <div class="lightbox-content" onclick="event.stopPropagation()">
+            <div id="lightboxDl" class="dl-icon">↓</div>
             <img id="lightboxImg" src="">
-            <a id="popupDl" href="#" class="big-dl-btn" download>PREMIUM DOWNLOAD</a>
         </div>
     </div>
-
-    <footer style="margin-top: 80px; padding: 20px; border-top: 1px solid #333;">
-        <div style="color: #fff;">Tonir Shaik | Official Photo Gallery</div>
-        <div style="font-size: 12px; color: #666;">© 2026 Tonir Shaik. All Rights Reserved.</div>
-    </footer>
 
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6wwhCaP2ieMo_2Y08kbFai3iK2g2AO8StNvCxbBTm_gFOKk3yCQ82y4IkOfwwtKtNtbxv-4vWBoIb/pub?output=csv';
@@ -54,9 +47,9 @@
             links.forEach((url, i) => {
                 const cleanUrl = url.trim();
                 gallery.innerHTML += `
-                    <div class="photo-card" onclick="openLightbox('${cleanUrl}')">
-                        <button class="premium-dl" onclick="downloadImage('${cleanUrl}', 'Tonir-Photo-${i+1}.jpg'); event.stopPropagation();">Download</button>
-                        <img src="${cleanUrl}">
+                    <div class="photo-card">
+                        <div class="dl-icon" onclick="downloadImage('${cleanUrl}', 'Tonir-${i+1}.jpg'); event.stopPropagation();">↓</div>
+                        <img src="${cleanUrl}" onclick="openLightbox('${cleanUrl}')">
                     </div>
                 `;
             });
@@ -64,12 +57,11 @@
 
         function openLightbox(url) {
             document.getElementById("lightboxImg").src = url;
-            document.getElementById("popupDl").href = url;
+            document.getElementById("lightboxDl").onclick = () => downloadImage(url, 'Tonir-Photo.jpg');
             document.getElementById("myLightbox").style.display = "flex";
         }
         function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
 
-        // সরাসরি ডাউনলোডের জন্য ফাংশন
         function downloadImage(url, filename) {
             fetch(url).then(res => res.blob()).then(blob => {
                 const a = document.createElement('a');
