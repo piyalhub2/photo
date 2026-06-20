@@ -1,225 +1,86 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authenticator App - Vault</title>
-    <script src="https://unpkg.com/@otplib/preset-browser@12.0.1/buffer.js"></script>
-    <script src="https://unpkg.com/@otplib/preset-browser@12.0.1/index.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Tonir Shaik</title>
+    <meta name="description" content="Official photo gallery of Tonir Shaik. View and download high-quality official photos, portraits, and exclusive images of Tonir Shaik.">
+    <meta name="keywords" content="tonirshaik, tonir shaik, tonir shaik photo, tonir shaik official image, tonirshaik github, tonir shaik picture">
+    <meta name="robots" content="index, follow, max-image-preview:large">
     
     <style>
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            display: flex; justify-content: center; align-items: center; 
-            min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box;
-        }
-        .widget-card { 
-            background: #ffffff; padding: 30px; border-radius: 25px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); width: 100%; 
-            max-width: 450px; position: relative; overflow: hidden; min-height: 420px;
-        }
-        .card-title { text-align: center; color: #1c1e21; font-size: 22px; margin-bottom: 25px; font-weight: bold; border-bottom: 2px solid #f0f2f5; padding-bottom: 15px; }
-        .screen { display: none; }
-        .active { display: block; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .pass-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
-        input { 
-            width: 100%; padding: 16px; border: 2px solid #e1e4e8; 
-            border-radius: 15px; box-sizing: border-box; font-size: 16px; 
-            text-align: center; outline: none; background: #fdfdfd;
-        }
-        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; color: #636e72; }
-        .btn-submit { 
-            width: 100%; padding: 16px; background-color: #3867d6; color: white; 
-            border: none; border-radius: 15px; cursor: pointer; font-size: 18px; 
-            font-weight: bold; display: block; margin-top: 10px;
-        }
-        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .cat-btn { 
-            padding: 20px 10px; border-radius: 15px; border: 1px solid #dfe4ea;
-            background: #f8f9fa; cursor: pointer; font-weight: bold; text-align: center; color: #2d3436;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .fa-envelope { color: #EA4335; } 
-        .fa-facebook { color: #1877F2; } 
-        .fa-instagram { color: #E4405F; } 
-        .fa-tiktok { color: #000000; } 
-        .fa-cloud { color: #00A1FF; } 
-        .fa-linkedin { color: #0077B5; } 
-        .fa-telegram { color: #24A1DE; } 
-        .fa-whatsapp { color: #25D366; }
-        .back-btn { margin-bottom: 15px; cursor: pointer; color: #3867d6; font-weight: bold; display: flex; align-items: center; }
-        .back-btn i { margin-right: 8px; }
-        #codeContainer { max-height: 450px; overflow-y: auto; padding-right: 5px; }
-        .account-box { 
-            background-color: #f1f3f6; border: 2px solid #e9ecef; padding: 15px; 
-            border-radius: 18px; margin-bottom: 15px; text-align: center; cursor: pointer;
-        }
-        .account-name { font-size: 12px; font-weight: bold; color: #636e72; display: block; text-align: left; margin-bottom: 5px; text-transform: uppercase; }
-        .otp-code { font-size: 34px; font-weight: 800; color: #d63031; letter-spacing: 3px; font-family: 'Courier New', monospace; }
-        .progress-bar { height: 6px; background-color: #dfe6e9; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background-color: #00b894; width: 0%; transition: width 1s linear; }
-        .copy-alert {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #00b894; color: white; padding: 10px 30px;
-            border-radius: 50px; font-weight: bold; display: none; z-index: 999;
-        }
-        .error-msg { color: #d63031; font-weight: bold; text-align: center; margin-top: 15px; display: none; font-size: 14px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0b0c10; color: #c5a059; text-align: center; margin: 0; padding: 20px; }
+        h1 { margin-bottom: 30px; color: #ffffff; font-weight: 600; letter-spacing: 1px; }
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
+        .photo-card { position: relative; width: 180px; cursor: pointer; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+        .photo-card:hover { transform: translateY(-5px); }
+        .photo-card img { width: 100%; height: 240px; object-fit: cover; display: block; }
+        .download-btn { position: absolute; top: 8px; right: 8px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+        .download-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+        .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(11, 12, 16, 0.95); align-items: center; justify-content: center; }
+        .lightbox-content { position: relative; max-width: 90%; max-height: 85%; }
+        .lightbox-content img { max-width: 100%; max-height: 85vh; border-radius: 12px; }
+        .close-btn { position: absolute; top: -45px; left: 10px; color: #ffffff; font-size: 35px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="copyNotice" class="copy-alert">Copied!</div>
-
-<div class="widget-card">
-    <h2 class="card-title" id="mainTitle">🔒 Authenticator App</h2>
-
-    <div id="lockScreen" class="screen active">
-        <div class="pass-wrapper">
-            <input type="password" id="masterPass" placeholder="Enter Password">
-            <span class="toggle-password" id="eyeIcon" onclick="togglePass()">👁️</span>
-        </div>
-        <button id="submitBtn" class="btn-submit" onclick="unlock()">Submit</button>
-        <div id="errorTxt" class="error-msg">❌ ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</div>
+    <h1>Tonir Shaik</h1>
+    <div class="gallery" id="gallery">
+        <!-- ছবিগুলো এখানে গুগল শিট থেকে অটোমেটিক আসবে -->
     </div>
 
-    <div id="menuScreen" class="screen">
-        <div class="category-grid">
-            <div class="cat-btn" onclick="openCategory('Gmail')"><i class="fa-solid fa-envelope"></i> Gmail</div>
-            <div class="cat-btn" onclick="openCategory('Facebook')"><i class="fa-brands fa-facebook"></i> Facebook</div>
-            <div class="cat-btn" onclick="openCategory('Instagram')"><i class="fa-brands fa-instagram"></i> Instagram</div>
-            <div class="cat-btn" onclick="openCategory('TikTok')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
-            <div class="cat-btn" onclick="openCategory('Mega')"><i class="fa-solid fa-cloud"></i> Mega</div>
-            <div class="cat-btn" onclick="openCategory('linkedin')"><i class="fa-brands fa-linkedin"></i> linkedin</div>
-            <div class="cat-btn" onclick="openCategory('Telegram')"><i class="fa-brands fa-telegram"></i> Telegram</div>
-            <div class="cat-btn" onclick="openCategory('WhatsApp')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</div>
+    <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-content" onclick="event.stopPropagation();">
+            <span class="close-btn" onclick="closeLightbox()">&times;</span>
+            <button id="popupDownloadBtn" class="download-btn" style="top: 15px; right: 15px; width: 44px; height: 44px;">
+                <svg viewBox="0 0 24 24" style="width: 22px; height: 22px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4M7 10l5 5 5-5M12 15V3"/></svg>
+            </button>
+            <img id="lightboxImg" src="" alt="View">
         </div>
     </div>
-    
-    <div id="listScreen" class="screen">
-        <div class="back-btn" onclick="showMenu()"><i class="fa-solid fa-arrow-left"></i> Back to Menu</div>
-        <div id="codeContainer"></div>
-    </div>
-</div>
 
-<script>
-    async function sha256(str) {
-        const buf = new TextEncoder().encode(str);
-        const hash = await crypto.subtle.digest('SHA-256', buf);
-        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+    <script>
+        // আপনার গুগল শিটের CSV লিঙ্ক
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6wwhCaP2ieMo_2Y08kbFai3iK2g2AO8StNvCxbBTm_gFOKk3yCQ82y4IkOfwwtKtNtbxv-4vWBoIb/pub?output=csv';
 
-    const TARGET_HASH = "30d57b4f73801826bde515cc6ecf86eefec933bfbebc925972851d91a9235cb5";
-    
-    let MY_KEYS = {};
-    let activeCat = null;
+        fetch(csvUrl)
+            .then(response => response.text())
+            .then(data => {
+                const links = data.split('\n').filter(link => link.trim() !== '');
+                const gallery = document.getElementById('gallery');
+                
+                links.forEach((url, i) => {
+                    const cleanUrl = url.trim();
+                    gallery.innerHTML += `
+                        <div class="photo-card">
+                            <img src="${cleanUrl}" alt="Photo ${i+1}" onclick="openLightbox('${cleanUrl}', 'tonir-shaik-${i+1}.jpg')">
+                            <button class="download-btn" onclick="forceDownload('${cleanUrl}', 'tonir-shaik-${i+1}.jpg'); event.stopPropagation();">
+                                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4M7 10l5 5 5-5M12 15V3"/></svg>
+                            </button>
+                        </div>
+                    `;
+                });
+            });
 
-    const SECURE_DATA = {
-        'Gmail': [
-            { name: 'Mother ID', secret: atob("YXVqdG5uYmRkdDNhamdjN2I2dWN0aXV6NnVmYWZxbmRx") },
-            { name: 'Tonirsheikh', secret: atob("TmludjJmcTZvNDVweGg1dWVneTY0b29pcXU1aXFkNzY=") },
-            { name: 'Tonirhub', secret: atob("bGZlY243dXV5dTU1dGdkb3VxM2F4YXA0ZTJrNTNja3Q=") },
-            { name: 'Tonirshaik0', secret: atob("NGFzdHIycW1vMnp6YjN2dHI0Yzdmc256aHdobHZhM2I=") },
-            { name: 'Tonirshaik 1', secret: atob("ajRxZm54Y2s3MnJlZzRmbjM2NG5yYmd5Z25maXZucGQ=") },
-            { name: 'Tonirshaik 2', secret: atob("NWh5MzZ5anFzbm1yeGFpZnA0bHR6dnduNXN6ZnU3Ym4=") },
-            { name: 'Tonirshaik 3', secret: atob("NWk1bDJvajZuNXA2cWFteXFyMng2Y3NvZWdqcnV6ZGo=") },
-            { name: 'Tonirshaik 4', secret: atob("ejd3Z3NmcHdyYjY1b3JsZHh4dGtzZXhzZzJqb2t3ZA==") },
-            { name: 'Tonirshaik 5', secret: atob("aTR5Z3NnNDJham1ibXN5cDd0cXVzZ2h0NjZvcmV0cWM=") },
-            { name: 'Tonirshaik 6', secret: atob("dHlrZWh0enUydGh5dWp5aHkyNG16ZmZrajI3NmQydmE=") },
-            { name: 'Tonirshaik 7', secret: atob("NDBzbGtvY3V6Z2g1ajZmeXM0NG1qNGx0cjdmYnJmdGpz") }
-        ],
-        'Facebook': [{ name: 'Mother ID', secret: atob("WU9VUl9TRUNSRVRfSEVSRQ==") }],
-        'Instagram': [
-            { name: 'Mother ID', secret: atob("R0U1M003V0wyN0ZET1lPQVZCRE9QSUlKWVZSTkw3Wg==") },
-            { name: 'md_piyal44', secret: atob("QUtWRlg3WFJFVlpMWEI3M08zUkZTSU4zWk4zRFdMQ1I=") }
-        ],
-        'TikTok': [{ name: 'Mother ID', secret: atob("R1RXNzdJUFpZNVRUVFEzS1k0UzZBTkZPQ0Q3NVFIMko=") }],
-        'Mega': [{ name: 'Mother ID', secret: atob("NzZndXVwbnIyYWlzaXhqaGN4cWY0MmV6MnNqYXM3cm5sbTJ6bGM1Mmo2bnR5NXpid2JvcontentXQ==") }],
-        'linkedin': [{ name: 'Mother ID', secret: atob("TURBSzJYNTVGMkRBV1NaVUNOWVJSQUdSTExMNDZGQUo=") }],
-        'Telegram': [{ name: 'Mother ID', secret: atob("WU9VUl9TRUNSRVRfSEVSRQ==") }],
-        'WhatsApp': [{ name: 'Mother ID', secret: atob("WU9VUl9TRUNSRVRfSEVSRQ==") }]
-    };
-
-    function togglePass() {
-        const p = document.getElementById('masterPass');
-        const eye = document.getElementById('eyeIcon');
-        if (p.type === "password") { p.type = "text"; eye.innerText = "🔒"; } 
-        else { p.type = "password"; eye.innerText = "👁️"; }
-    }
-
-    // ফিক্সড ক্লিক মেথড: বাটনে ক্লিক করার পরই হ্যাশ ম্যাচ করানো হবে
-    async function unlock() {
-        const val = document.getElementById('masterPass').value;
-        const errorTxt = document.getElementById('errorTxt');
-        const currentHash = await sha256(val);
-        
-        if (currentHash === TARGET_HASH) {
-            errorTxt.style.display = "none";
-            MY_KEYS = SECURE_DATA;
-            showMenu();
-            setInterval(updateOTP, 1000);
-        } else {
-            errorTxt.style.display = "block";
+        function openLightbox(imgUrl, fileName) {
+            document.getElementById("lightboxImg").src = imgUrl;
+            document.getElementById("myLightbox").style.display = "flex";
+            document.getElementById("popupDownloadBtn").onclick = () => forceDownload(imgUrl, fileName);
         }
-    }
 
-    function copyText(text) {
-        const temp = document.createElement("input");
-        document.body.appendChild(temp);
-        temp.value = text;
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-        const notice = document.getElementById('copyNotice');
-        notice.style.display = 'block';
-        setTimeout(() => { notice.style.display = 'none'; }, 1500);
-    }
+        function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
 
-    function showMenu() {
-        document.getElementById('mainTitle').innerText = "🔒 Authenticator App";
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById('menuScreen').classList.add('active');
-    }
-
-    function openCategory(cat) {
-        if (!MY_KEYS[cat]) return;
-        activeCat = cat;
-        document.getElementById('mainTitle').innerText = cat + " Code";
-        const container = document.getElementById('codeContainer');
-        container.innerHTML = "";
-        
-        MY_KEYS[cat].forEach((acc, i) => {
-            container.innerHTML += `
-                <div class="account-box" onclick="copyText(document.getElementById('otp-${i}').innerText)">
-                    <span class="account-name">${acc.name}</span>
-                    <div id="otp-${i}" class="otp-code">------</div>
-                    <div class="progress-bar"><div id="bar-${i}" class="progress-fill"></div></div>
-                </div>`;
-        });
-        
-        document.getElementById('menuScreen').classList.remove('active');
-        document.getElementById('listScreen').classList.add('active');
-        updateOTP();
-    }
-
-    function updateOTP() {
-        if (!activeCat || !MY_KEYS[activeCat] || MY_KEYS[activeCat].length === 0) return;
-        const remaining = otplib.authenticator.timeRemaining();
-        const pct = (remaining / 30) * 100;
-        
-        MY_KEYS[activeCat].forEach((acc, i) => {
-            try {
-                const code = otplib.authenticator.generate(acc.secret.replace(/\s/g, ''));
-                const el = document.getElementById(`otp-${i}`);
-                const bar = document.getElementById(`bar-${i}`);
-                if (el) el.innerText = code;
-                if (bar) bar.style.width = pct + "%";
-            } catch(e) { console.log(e); }
-        });
-    }
-</script>
-
+        function forceDownload(url, fileName) {
+            fetch(url).then(r => r.blob()).then(blob => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(() => window.open(url, '_blank'));
+        }
+    </script>
 </body>
 </html>
