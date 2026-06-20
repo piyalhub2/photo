@@ -7,46 +7,18 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0b0c10; color: #c5a059; text-align: center; margin: 0; padding: 20px; }
         h1 { color: #ffffff; margin-bottom: 20px; }
+        .visit-btn { display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 40px; transition: 0.4s; }
+        .visit-btn:hover { background-color: #c5a059; color: #000; box-shadow: 0 0 20px #c5a059; }
         
-        .visit-btn { 
-            display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; 
-            color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 40px; 
-            transition: 0.4s; position: relative; 
-        }
-        .visit-btn:hover { 
-            background-color: #c5a059; color: #000; 
-            box-shadow: 0 0 20px #c5a059;
-        }
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .photo-card { position: relative; width: 200px; height: 260px; border-radius: 12px; overflow: hidden; background: #1a1a1a; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; cursor: pointer; }
+        .photo-card img.loaded { opacity: 1; }
         
-        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-bottom: 80px; min-height: 200px; }
-        
-        .photo-card { 
-            position: relative; width: 200px; height: 260px; cursor: pointer; border-radius: 12px; 
-            overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
-            transition: transform 0.4s, box-shadow 0.4s; 
-        }
-        .photo-card:hover { 
-            transform: translateY(-10px); 
-            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4); 
-        }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        
-        .dl-btn { 
-            position: absolute; top: 10px; right: 10px; 
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff; width: 28px; height: 28px; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; z-index: 10; font-size: 14px; transition: 0.3s;
-        }
-        .dl-btn:hover { background: #c5a059; color: #000; }
+        .dl-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 14px; }
         
         .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .lightbox-content { position: relative; max-width: 80%; }
-        .lightbox-content img { max-height: 80vh; border-radius: 12px; }
-        .lightbox .dl-btn { top: 15px; right: 15px; width: 32px; height: 32px; font-size: 16px; }
-        
-        footer { margin-top: 50px; padding: 20px; border-top: 1px solid rgba(197, 160, 89, 0.2); color: #c5a059; }
+        .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 12px; }
     </style>
 </head>
 <body>
@@ -54,29 +26,19 @@
     <h1>Tonir Shaik</h1>
     <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" class="visit-btn">🌐 VISIT MY OFFICIAL GOOGLE SITE</a>
 
-    <div class="gallery" id="gallery">Loading images...</div>
+    <div class="gallery" id="gallery"></div>
 
-    <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
-        <div class="lightbox-content" onclick="event.stopPropagation()">
-            <div id="lightboxDl" class="dl-btn">↓</div>
-            <img id="lightboxImg" src="">
-        </div>
+    <div id="myLightbox" class="lightbox" onclick="this.style.display='none'">
+        <img id="lightboxImg" src="">
     </div>
 
-    <footer>
-        <div style="font-weight: 600; color: #fff; margin-bottom: 5px;">Tonir Shaik | Official Photo Gallery</div>
-        <div style="font-size: 13px;">© 2026 Tonir Shaik. All Rights Reserved.</div>
-    </footer>
-
     <script>
-        // Cache busting যোগ করা হয়েছে যাতে আপডেট সাথে সাথে দেখা যায়
-        const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + new Date().getTime();
+        const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
         
         fetch(csvUrl)
             .then(res => res.text())
             .then(data => {
                 const gallery = document.getElementById('gallery');
-                gallery.innerHTML = '';
                 const links = data.split('\n').filter(l => l.trim() !== '');
                 
                 links.forEach((url, i) => {
@@ -84,36 +46,14 @@
                     if(cleanUrl.startsWith('http')) {
                         const div = document.createElement('div');
                         div.className = 'photo-card';
-                        // loading="lazy" যোগ করা হয়েছে ফাস্ট লোডিংয়ের জন্য
                         div.innerHTML = `
-                            <div class="dl-btn" onclick="downloadImage('${cleanUrl}', 'Tonir-${i+1}.jpg'); event.stopPropagation();">↓</div>
-                            <img src="${cleanUrl}" loading="lazy" onclick="openLightbox('${cleanUrl}')">
+                            <div class="dl-btn" onclick="event.stopPropagation(); window.open('${cleanUrl}', '_blank')">↓</div>
+                            <img src="${cleanUrl}" loading="lazy" onload="this.classList.add('loaded')" onclick="document.getElementById('lightboxImg').src='${cleanUrl}'; document.getElementById('myLightbox').style.display='flex'">
                         `;
                         gallery.appendChild(div);
                     }
                 });
             });
-
-        function openLightbox(url) {
-            document.getElementById("lightboxImg").src = url;
-            document.getElementById("lightboxDl").onclick = () => downloadImage(url, 'Tonir-Original.jpg');
-            document.getElementById("myLightbox").style.display = "flex";
-        }
-        function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
-
-        function downloadImage(url, filename) {
-            fetch(url, {mode: 'cors'})
-                .then(res => res.blob())
-                .then(blob => {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                })
-                .catch(() => window.open(url, '_blank'));
-        }
     </script>
 </body>
 </html>
