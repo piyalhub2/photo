@@ -7,24 +7,23 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0b0c10; color: #c5a059; text-align: center; margin: 0; padding: 20px; }
         h1 { color: #ffffff; margin-bottom: 20px; }
-        .visit-btn { display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 30px; transition: 0.3s; }
+        .visit-btn { display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 40px; transition: 0.3s; }
         .visit-btn:hover { background-color: #c5a059; color: #0b0c10; }
         
-        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
-        .photo-card { position: relative; width: 180px; cursor: pointer; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .photo-card img { width: 100%; height: 240px; object-fit: cover; display: block; }
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .photo-card { position: relative; width: 200px; height: 260px; cursor: pointer; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* ডাউনলোড বাটন স্টাইল */
-        .download-btn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; }
+        /* প্রিমিয়াম ডাউনলোড বাটন */
+        .premium-dl { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); color: #c5a059; border: 1px solid #c5a059; padding: 6px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; text-transform: uppercase; transition: 0.3s; z-index: 5; }
+        .premium-dl:hover { background: #c5a059; color: #000; }
         
-        .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(11,12,16,0.95); align-items: center; justify-content: center; }
-        .lightbox-content { position: relative; max-width: 90%; }
-        .lightbox-content img { max-width: 100%; max-height: 85vh; border-radius: 12px; }
+        .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+        .lightbox-content { position: relative; max-width: 80%; }
+        .lightbox-content img { max-height: 80vh; border-radius: 8px; }
         
-        /* পপআপ ডাউনলোড বাটন */
-        .lightbox-download { position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); background: #c5a059; color: #0b0c10; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; }
-        
-        .site-footer { margin-top: 80px; padding: 25px; border-top: 1px solid rgba(197,160,89,0.15); }
+        /* বড় ছবির নিচের বাটন */
+        .big-dl-btn { display: block; margin-top: 15px; background: #c5a059; color: #000; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -37,25 +36,27 @@
     <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <img id="lightboxImg" src="">
-            <a id="popupDownloadBtn" href="#" class="lightbox-download" download>Download Original</a>
+            <a id="popupDl" href="#" class="big-dl-btn" download>PREMIUM DOWNLOAD</a>
         </div>
     </div>
 
-    <footer class="site-footer">
-        <div style="font-weight: 600; color: #fff; margin-bottom: 8px;">Tonir Shaik | Official Photo Gallery</div>
-        <div style="font-size: 13px; color: #c5a059;">© 2026 Tonir Shaik. All Rights Reserved.</div>
+    <footer style="margin-top: 80px; padding: 20px; border-top: 1px solid #333;">
+        <div style="color: #fff;">Tonir Shaik | Official Photo Gallery</div>
+        <div style="font-size: 12px; color: #666;">© 2026 Tonir Shaik. All Rights Reserved.</div>
     </footer>
 
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6wwhCaP2ieMo_2Y08kbFai3iK2g2AO8StNvCxbBTm_gFOKk3yCQ82y4IkOfwwtKtNtbxv-4vWBoIb/pub?output=csv';
+        
         fetch(csvUrl).then(res => res.text()).then(data => {
             const links = data.split('\n').filter(l => l.trim() !== '');
             const gallery = document.getElementById('gallery');
             links.forEach((url, i) => {
+                const cleanUrl = url.trim();
                 gallery.innerHTML += `
-                    <div class="photo-card">
-                        <button class="download-btn" onclick="forceDownload('${url.trim()}', 'photo-${i+1}.jpg'); event.stopPropagation();">↓</button>
-                        <img src="${url.trim()}" onclick="openLightbox('${url.trim()}')">
+                    <div class="photo-card" onclick="openLightbox('${cleanUrl}')">
+                        <button class="premium-dl" onclick="downloadImage('${cleanUrl}', 'Tonir-Photo-${i+1}.jpg'); event.stopPropagation();">Download</button>
+                        <img src="${cleanUrl}">
                     </div>
                 `;
             });
@@ -63,14 +64,21 @@
 
         function openLightbox(url) {
             document.getElementById("lightboxImg").src = url;
-            document.getElementById("popupDownloadBtn").href = url;
+            document.getElementById("popupDl").href = url;
             document.getElementById("myLightbox").style.display = "flex";
         }
         function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
-        function forceDownload(url, name) {
-            fetch(url).then(r => r.blob()).then(b => {
-                const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; a.click();
-            }).catch(() => window.open(url, '_blank'));
+
+        // সরাসরি ডাউনলোডের জন্য ফাংশন
+        function downloadImage(url, filename) {
+            fetch(url).then(res => res.blob()).then(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
         }
     </script>
 </body>
