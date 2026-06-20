@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tonir Shaik</title>
-    <meta name="description" content="Official photo gallery of Tonir Shaik.">
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0b0c10; color: #c5a059; text-align: center; margin: 0; padding: 20px; }
-        h1 { color: #ffffff; margin-bottom: 30px; }
-        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-bottom: 50px; }
+        h1 { color: #ffffff; margin-bottom: 20px; }
+        /* বাটন স্টাইল */
+        .visit-btn { display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600; margin-bottom: 30px; transition: 0.3s; }
+        .visit-btn:hover { background-color: #c5a059; color: #0b0c10; }
+        
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
         .photo-card { position: relative; width: 180px; cursor: pointer; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.3s; }
         .photo-card:hover { transform: translateY(-5px); }
         .photo-card img { width: 100%; height: 240px; object-fit: cover; display: block; }
@@ -16,12 +19,17 @@
         .lightbox { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(11,12,16,0.95); align-items: center; justify-content: center; }
         .lightbox-content img { max-width: 90%; max-height: 85vh; border-radius: 12px; }
         .site-footer { margin-top: 60px; padding: 25px; border-top: 1px solid rgba(197,160,89,0.15); }
-        .footer-title { font-weight: 600; color: #fff; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
     <h1>Tonir Shaik</h1>
+
+    <!-- বাটনটি এখন এখানে -->
+    <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" class="visit-btn">
+        🌐 VISIT MY OFFICIAL GOOGLE SITE
+    </a>
+
     <div class="gallery" id="gallery"></div>
 
     <div id="myLightbox" class="lightbox" onclick="closeLightbox()">
@@ -30,37 +38,27 @@
         </div>
     </div>
 
-    <!-- VISIT BUTTON -->
-    <div style="margin-top: 50px;">
-        <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" style="display: inline-block; padding: 12px 30px; border: 2px solid #c5a059; border-radius: 25px; color: #c5a059; text-decoration: none; font-weight: 600;">
-            🌐 VISIT MY OFFICIAL GOOGLE SITE
-        </a>
-    </div>
-
     <footer class="site-footer">
-        <div class="footer-title">Tonir Shaik | Official Photo Gallery</div>
+        <div style="font-weight: 600; color: #fff; margin-bottom: 8px;">Tonir Shaik | Official Photo Gallery</div>
         <div style="font-size: 13px; color: #c5a059;">© 2026 Tonir Shaik. All Rights Reserved.</div>
     </footer>
 
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6wwhCaP2ieMo_2Y08kbFai3iK2g2AO8StNvCxbBTm_gFOKk3yCQ82y4IkOfwwtKtNtbxv-4vWBoIb/pub?output=csv';
-
-        fetch(csvUrl)
-            .then(res => res.text())
-            .then(data => {
-                const links = data.split('\n').filter(l => l.trim() !== '');
-                const gallery = document.getElementById('gallery');
-                links.forEach((url, i) => {
-                    gallery.innerHTML += `
-                        <div class="photo-card">
-                            <img src="${url.trim()}" onclick="openLightbox('${url.trim()}')">
-                            <button class="download-btn" onclick="forceDownload('${url.trim()}', 'tonir-shaik-${i+1}.jpg'); event.stopPropagation();">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4M7 10l5 5 5-5M12 15V3"/></svg>
-                            </button>
-                        </div>
-                    `;
-                });
+        fetch(csvUrl).then(res => res.text()).then(data => {
+            const links = data.split('\n').filter(l => l.trim() !== '');
+            const gallery = document.getElementById('gallery');
+            links.forEach((url, i) => {
+                gallery.innerHTML += `
+                    <div class="photo-card">
+                        <img src="${url.trim()}" onclick="openLightbox('${url.trim()}')">
+                        <button class="download-btn" onclick="forceDownload('${url.trim()}', 'tonir-shaik-${i+1}.jpg'); event.stopPropagation();">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4M7 10l5 5 5-5M12 15V3"/></svg>
+                        </button>
+                    </div>
+                `;
             });
+        });
 
         function openLightbox(url) {
             document.getElementById("lightboxImg").src = url;
