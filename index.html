@@ -1,1 +1,46 @@
+<script>
+    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + new Date().getTime();
+    
+    fetch(csvUrl)
+        .then(res => res.text())
+        .then(data => {
+            const gallery = document.getElementById('gallery');
+            const links = data.split('\n').filter(l => l.trim() !== '');
+            
+            links.forEach((url, i) => {
+                const cleanUrl = url.trim();
+                if(cleanUrl.startsWith('http')) {
+                    const div = document.createElement('div');
+                    div.className = 'photo-card';
+                    // এখানে loading="lazy" যোগ করা হয়েছে যাতে ফাস্ট লোড হয়
+                    div.innerHTML = `
+                        <div class="dl-btn" onclick="downloadImage('${cleanUrl}', 'Tonir-${i+1}.jpg'); event.stopPropagation();">↓</div>
+                        <img src="${cleanUrl}" loading="lazy" onclick="openLightbox('${cleanUrl}')">
+                    `;
+                    gallery.appendChild(div);
+                }
+            });
+        });
 
+    function openLightbox(url) {
+        document.getElementById("lightboxImg").src = url;
+        document.getElementById("lightboxDl").onclick = () => downloadImage(url, 'Tonir-Original.jpg');
+        document.getElementById("myLightbox").style.display = "flex";
+    }
+    function closeLightbox() { document.getElementById("myLightbox").style.display = "none"; }
+
+    // ডাউনলোড ফাংশনটি আরও দ্রুত করার জন্য পরিবর্তন করা হয়েছে
+    function downloadImage(url, filename) {
+        fetch(url, {mode: 'cors'})
+            .then(res => res.blob())
+            .then(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            })
+            .catch(() => window.open(url, '_blank'));
+    }
+</script>
