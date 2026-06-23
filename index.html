@@ -41,7 +41,8 @@
         /* ── HERO ── */
         .hero {
             position: relative;
-            height: 100vh;
+            min-height: auto;
+            padding: 100px 20px 40px;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
@@ -61,7 +62,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 11px; font-weight: 500;
             letter-spacing: 0.25em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 24px;
+            color: var(--gold); margin-bottom: 10px;
             display: flex; align-items: center; gap: 12px; justify-content: center;
         }
         .hero-eyebrow::before, .hero-eyebrow::after {
@@ -71,8 +72,8 @@
         }
         .hero-name {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(64px, 10vw, 120px);
-            font-weight: 300; line-height: 0.9;
+            font-size: clamp(42px, 6vw, 72px);
+            font-weight: 300; line-height: 0.95;
             letter-spacing: -0.02em;
             color: #fff;
         }
@@ -80,12 +81,12 @@
             font-style: italic; color: var(--gold-light);
         }
         .hero-tagline {
-            margin-top: 28px;
-            font-size: 13px; font-weight: 300;
+            margin-top: 10px;
+            font-size: 12px; font-weight: 300;
             letter-spacing: 0.12em; color: var(--muted);
         }
         .hero-cta {
-            margin-top: 48px;
+            margin-top: 20px;
             display: inline-flex; align-items: center; gap: 10px;
             font-size: 12px; font-weight: 500;
             letter-spacing: 0.15em; text-transform: uppercase;
@@ -95,22 +96,7 @@
             transition: background 0.3s, color 0.3s;
         }
         .hero-cta:hover { background: var(--gold); color: #000; }
-        .hero-scroll {
-            position: absolute; bottom: 40px; left: 50%;
-            transform: translateX(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase;
-        }
-        .hero-scroll-line {
-            width: 1px; height: 48px;
-            background: linear-gradient(to bottom, var(--gold), transparent);
-            animation: scrollLine 2s ease-in-out infinite;
-        }
-        @keyframes scrollLine {
-            0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
-            50% { opacity: 1; transform: scaleY(1); }
-            100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
-        }
+        .hero-scroll { display: none; }
 
         /* ── NAV ── */
         nav {
@@ -136,7 +122,7 @@
 
         /* ── SECTION HEADER ── */
         .section-header {
-            text-align: center; padding: 80px 20px 48px;
+            text-align: center; padding: 40px 20px 28px;
         }
         .section-eyebrow {
             font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
@@ -236,18 +222,18 @@
 
         /* ── STATS ── */
         .stats-row {
-            display: flex; justify-content: center; gap: 60px;
-            padding: 60px 20px; flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 40px;
+            padding: 8px 20px 24px; flex-wrap: wrap;
         }
         .stat { text-align: center; }
         .stat-num {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 48px; font-weight: 300; color: var(--gold-light);
+            font-size: 28px; font-weight: 300; color: var(--gold-light);
             line-height: 1;
         }
         .stat-label {
-            font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-            color: var(--muted); margin-top: 8px;
+            font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--muted); margin-top: 4px;
         }
 
         /* ── LIGHTBOX ── */
@@ -357,39 +343,6 @@
     </ul>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-lines"></div>
-    <div class="hero-content">
-        <p class="hero-eyebrow">Official Photo Gallery</p>
-        <h1 class="hero-name">Tonir<br><em>Shaik</em></h1>
-        <p class="hero-tagline">A curated collection of moments</p>
-        <a href="#gallery" class="hero-cta">
-            <span>↓</span> Explore Gallery
-        </a>
-    </div>
-    <div class="hero-scroll">
-        <div class="hero-scroll-line"></div>
-        <span>Scroll</span>
-    </div>
-</section>
-
-<!-- STATS -->
-<div class="stats-row reveal">
-    <div class="stat">
-        <div class="stat-num" id="photoCount">—</div>
-        <div class="stat-label">Photos</div>
-    </div>
-    <div class="stat">
-        <div class="stat-num">2026</div>
-        <div class="stat-label">Collection</div>
-    </div>
-    <div class="stat">
-        <div class="stat-num">∞</div>
-        <div class="stat-label">Memories</div>
-    </div>
-</div>
 
 <!-- GALLERY -->
 <section id="gallery">
@@ -397,6 +350,22 @@
         <p class="section-eyebrow">Portfolio</p>
         <h2 class="section-title">Photo <em>Gallery</em></h2>
         <div class="section-rule"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row reveal">
+        <div class="stat">
+            <div class="stat-num" id="photoCount">—</div>
+            <div class="stat-label">Photos</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">Collection</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Memories</div>
+        </div>
     </div>
 
     <div class="filters reveal">
