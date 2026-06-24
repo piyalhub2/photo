@@ -63,7 +63,7 @@
             padding: 12px 20px;
             color: #cccccc;
             text-decoration: none;
-            font-size: 13.5px;
+            font-size: 14px;
             transition: all 0.3s;
             border-left: 4px solid transparent;
         }
@@ -142,8 +142,8 @@
         .banner-img {
             width: 180px;
             height: 180px;
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* ছবির ক্লাউড আকৃতির ফ্রেম */
-            background: url('https://via.placeholder.com/180') center/cover; /* এখানে আপনার ছবি বসাবেন */
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: url('https://via.placeholder.com/180') center/cover;
             border: 4px solid rgba(255, 255, 255, 0.2);
             object-fit: cover;
         }
@@ -179,7 +179,7 @@
         .telegram { background-color: #0088cc; }
         .maps { background-color: #4285F4; }
 
-        /* মাঝখানের কন্টেন্ট (ম্যাপ এবং ছবি) */
+        /* মাঝখানের কন্টেন্ট */
         .content-body {
             padding: 40px;
             display: flex;
@@ -190,53 +190,3 @@
         }
 
         .card-box {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-            width: 450px;
-            height: 300px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        /* নিচের ফুটার */
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #f1f1f1;
-            font-size: 13px;
-            color: #666;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        @keyframes bounce {
-            from { transform: scaleY(0.5); }
-            to { transform: scaleY(1.2); }
-        }
-
-        /* মোবাইল ফ্রেন্ডলি করার জন্য */
-        @media (max-width: 900px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-content { margin-left: 0; width: 100%; }
-            .hero-banner { flex-direction: column; text-align: center; gap: 20px; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="sidebar">
-        <div class="sidebar-profile">
-            <img src="https://via.placeholder.com/50" alt="Profile">
-            <h3>Tonir Shaik</h3>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="#" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
-            <li><a href="#"><i class="fa-regular fa-file-lines"></i> Tonir Shaik Universal Notepad</a></li>
-            <li><a href="#"><i class="fa-solid fa-key"></i> Tonir Shaik 2FA Code</a></li>
-            <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Tonir Shaik All Security Key</a></li>
-            <li><a href="#"><i class="fa-regular fa-id-card"></i> Tonir Shaik CV</a></li>
-            <li><a href="#"><i class="fa-solid fa-graduation-cap"></i> Tonir Shaik Diploma certificate</a></li>
-            <li><a href="#"><i class="fa-solid fa-school"></i> Tonir Shaik School certificate.</a></li>
-            <li><a href="#"><i class="fa-solid fa-file-invoice"></i> Tonir Shaik Citizen Paper</a></li>
-            <li><a href="#"><i class="fa-solid fa-landmark"></i> Tonir Shaik ভূমি উন্নয়ন কর</a></li>
