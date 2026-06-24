@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tonir Shaik - Personal Documents Web</title>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -231,7 +230,7 @@
         }
         #notepad-submit-btn:hover { transform: translateY(-2px); }
 
-        /* --- ৩. অল সিকিউরিটি কি (পাসওয়ার্ড কার্ড লেআউট) --- */
+        /* --- ৩. অল সিকিউরিটি কি লেআউট --- */
         #security-content {
             display: none;
             width: 100%;
@@ -284,6 +283,7 @@
         .submit-btn { display: none; background: #27ae60; color: white; border-radius: 50px; justify-content: center; border-left: none; }
         #main-menu { display: none; }
 
+        /* Footer */
         footer {
             text-align: center;
             padding: 15px;
@@ -306,7 +306,6 @@
 </head>
 <body>
 
-    <!-- সাইডবার মেনু -->
     <div class="sidebar">
         <div class="sidebar-profile">
             <img src="https://via.placeholder.com/50" alt="Profile">
@@ -332,36 +331,35 @@
         </ul>
     </div>
 
-    <!-- মূল কন্টেন্ট এরিয়া -->
     <div class="main-content">
-        <div class="hero-banner">
-            <div class="banner-text">
-                <h1>WELCOME</h1>
-                <h2>TO THE WEBSITE 
-                    <div class="wave-icon">
-                        <span></span><span></span><span></span><span></span>
-                    </div>
-                </h2>
-                <p>Welcome aboard! This is my personal documents web.</p>
+        <div id="top-header-section">
+            <div class="hero-banner">
+                <div class="banner-text">
+                    <h1>WELCOME</h1>
+                    <h2>TO THE WEBSITE 
+                        <div class="wave-icon">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </h2>
+                    <p>Welcome aboard! This is my personal documents web.</p>
+                </div>
+                <div class="banner-img-container">
+                    <img class="banner-img" src="https://via.placeholder.com/180" alt="Tonir Shaik">
+                </div>
             </div>
-            <div class="banner-img-container">
-                <img class="banner-img" src="https://via.placeholder.com/180" alt="Tonir Shaik">
+
+            <div class="social-bar">
+                <a href="#" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="social-icon insta"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-icon tiktok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" class="social-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" class="social-icon telegram"><i class="fa-brands fa-telegram"></i></a>
+                <a href="#" class="social-icon maps"><i class="fa-solid fa-map-location-dot"></i></a>
             </div>
         </div>
 
-        <div class="social-bar">
-            <a href="#" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" class="social-icon insta"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" class="social-icon tiktok"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="#" class="social-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
-            <a href="#" class="social-icon telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a href="#" class="social-icon maps"><i class="fa-solid fa-map-location-dot"></i></a>
-        </div>
-
-        <!-- ডাইনামিক কন্টেন্ট এরিয়া -->
         <div class="content-body">
             
-            <!-- ১. হোম কন্টেন্ট -->
             <div id="home-content">
                 <div class="card-box">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8383344211617!2d90.4064563!3d23.7531233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzExLjIiTiA5MMKwMjQnMjMuMiJF!5e0!3m2!1sbn!2sbd!4v1650000000000!5m2!1sbn!2sbd" 
@@ -372,7 +370,6 @@
                 </div>
             </div>
 
-            <!-- ২. ইউনিভার্সাল নোটপ্যাড কন্টেন্ট -->
             <div id="notepad-content">
                 <div class="notepad-card">
                     <div class="notepad-icon-box">
@@ -387,7 +384,6 @@
                 </div>
             </div>
 
-            <!-- ৩. অল সিকিউরিটি কি কন্টেন্ট (পাসওয়ার্ড প্রোটেক্টেড) -->
             <div id="security-content">
                 <div class="security-card">
                     <div id="timer-display">Session ends in: <span id="seconds">30</span>s</div>
@@ -423,23 +419,27 @@
 
         </div>
 
-        <footer>
-            Welcome to My Official Website
-        </footer>
+        <div id="footer-section">
+            <footer>
+                Welcome to My Official Website
+            </footer>
+        </div>
     </div>
 
-    <!-- ডাইনামিক মেনু ও সিকিউরিটি লজিক এর JavaScript -->
     <script>
         const menuHome = document.getElementById('menu-home');
         const menuNotepad = document.getElementById('menu-notepad');
         const menuSecurity = document.getElementById('menu-security');
         
+        const headerSection = document.getElementById('top-header-section');
+        const footerSection = document.getElementById('footer-section');
+        
         const homeContent = document.getElementById('home-content');
         const notepadContent = document.getElementById('notepad-content');
         const securityContent = document.getElementById('security-content');
 
-        // সব কন্টেন্ট হাইড করার ফাংশন
-        function hideAllContents() {
+        // সব কন্টেন্ট ডিফল্ট হাইড করার মাস্টার ফাংশন
+        function resetDisplay() {
             homeContent.style.display = 'none';
             notepadContent.style.display = 'none';
             securityContent.style.display = 'none';
@@ -449,26 +449,34 @@
             menuSecurity.classList.remove('active');
         }
 
-        // মেনু নেভিগেশন
+        // Home ক্লিক লজিক (ব্যানার এবং ফুটার দেখাবে)
         menuHome.addEventListener('click', function() {
-            hideAllContents();
+            resetDisplay();
             menuHome.classList.add('active');
+            headerSection.style.display = 'block';
+            footerSection.style.display = 'block';
             homeContent.style.display = 'flex';
         });
 
+        // Universal Notepad ক্লিক লজিক (ব্যানার এবং ফুটার লুকিয়ে যাবে)
         menuNotepad.addEventListener('click', function() {
-            hideAllContents();
+            resetDisplay();
             menuNotepad.classList.add('active');
+            headerSection.style.display = 'none';
+            footerSection.style.display = 'none';
             notepadContent.style.display = 'flex';
         });
 
+        // All Security Key ক্লিক লজিক (ব্যানার এবং ফুটার লুকিয়ে যাবে)
         menuSecurity.addEventListener('click', function() {
-            hideAllContents();
+            resetDisplay();
             menuSecurity.classList.add('active');
+            headerSection.style.display = 'none';
+            footerSection.style.display = 'none';
             securityContent.style.display = 'flex';
         });
 
-        // --- আপনার অল সিকিউরিটি কি এর আসল জাভাস্ক্রিপ্ট কোড ---
+        // --- সিকিউরিটি সিস্টেম লজিক ---
         let timer;
         let timeLeft = 30;
         let timerRunning = false;
