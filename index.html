@@ -342,6 +342,42 @@
     box-shadow:0 8px 20px rgba(0,0,0,0.18);
   }
 
+  /* ---------------- CV view ---------------- */
+  .cv-wrap{
+    max-width:380px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+    text-align:center;
+  }
+  .cv-icon{ font-size:2.4rem; margin-bottom:8px; color:var(--teal); }
+  .cv-title{
+    font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
+  }
+  .cv-input-wrap{ position:relative; margin-bottom:18px; }
+  .cv-input-wrap input{
+    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
+    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
+    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
+  }
+  .cv-input-wrap input:focus{ border-color:var(--teal); }
+  .cv-toggle-eye{
+    position:absolute; right:18px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+  .cv-download-btn{
+    display:none; width:100%; padding:14px; margin-top:6px;
+    background:var(--ink); color:var(--paper); border:none;
+    border-radius:50px; cursor:pointer; font-size:0.95rem; font-weight:600;
+    text-decoration:none; transition:0.2s; box-shadow:0 2px 6px rgba(27,36,48,0.05);
+  }
+  .cv-download-btn.show{ display:block; animation:authFade 0.3s ease-in-out; }
+  .cv-download-btn:hover{ background:var(--teal); }
+
   @media (max-width:780px){
     .sidebar{ width:84%; max-width:300px; }
     main{ padding:88px 22px 40px; }
@@ -374,7 +410,7 @@
       <a href="#" data-view="notepad">Universal Notepad</a>
       <a href="#" data-view="totp">2FA Code</a>
       <a href="#" data-view="security">All Security Key</a>
-      <a href="#docs">CV</a>
+      <a href="#" data-view="cv">CV</a>
       <a href="#docs">Diploma certificate</a>
       <a href="#docs">School certificate.</a>
       <a href="#docs">Citizen Paper</a>
@@ -545,6 +581,28 @@
       </div>
     </div>
 
+    <div class="view view-default" id="view-cv">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>CV</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-file-invoice"></i></div>
+        <h2 class="cv-title">CV TONIR SHAIK PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="cvPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="cvCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="cvEyeIcon" onclick="cvToggleVisibility()"></i>
+        </div>
+
+        <a href="https://drive.google.com/drive/u/1/folders/1Vyprx7X6VQxj_JCeTFHQppVVK4Tmi7BT"
+           target="_blank" id="cvDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -567,7 +625,7 @@
       link.addEventListener('click', () => setOpen(false));
     });
 
-    // View switching between Home / Universal Notepad / 2FA Code
+    // View switching between Home / Universal Notepad / 2FA Code / CV / etc.
     const views = document.querySelectorAll('.view');
     function showView(name){
       views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
@@ -583,6 +641,9 @@
         }
         if(el.dataset.view === 'security'){
           secLogout(true);
+        }
+        if(el.dataset.view === 'cv'){
+          cvResetLock();
         }
         showView(el.dataset.view);
         setOpen(false);
@@ -775,6 +836,37 @@
       if(!silent){
         alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
       }
+    }
+
+    /* ---------------- CV module ---------------- */
+
+    const CV_PASSWORD = "cv2002";
+
+    function cvCheckPassword(){
+      const val = document.getElementById('cvPasswordField').value;
+      const btn = document.getElementById('cvDownloadBtn');
+      btn.classList.toggle('show', val === CV_PASSWORD);
+    }
+
+    function cvToggleVisibility(){
+      const pf = document.getElementById('cvPasswordField');
+      const icon = document.getElementById('cvEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function cvResetLock(){
+      const pf = document.getElementById('cvPasswordField');
+      const icon = document.getElementById('cvEyeIcon');
+      const btn = document.getElementById('cvDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
     }
   </script>
 </body>
