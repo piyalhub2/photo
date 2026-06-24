@@ -1,1026 +1,591 @@
-<!doctype html>
-<html lang="bn">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tonir Shaik Official Gallery</title>
-  <meta name="theme-color" content="#090b18" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#090b18;
-      --bg2:#0d1230;
-      --surface:rgba(255,255,255,.06);
-      --surface-2:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.12);
-      --text:#f8f9ff;
-      --muted:rgba(248,249,255,.7);
-      --gold:#ffd166;
-      --pink:#ff5ea8;
-      --cyan:#4ddcff;
-      --violet:#9b7bff;
-      --shadow:0 20px 80px rgba(0,0,0,.42);
-      --radius:22px;
-      --radius-xl:30px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      overflow-x:hidden;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(77,220,255,.18), transparent 26%),
-        radial-gradient(circle at 85% 0%, rgba(255,94,168,.16), transparent 24%),
-        radial-gradient(circle at 80% 85%, rgba(155,123,255,.16), transparent 28%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
-      background-size:60px 60px;
-      mask-image:radial-gradient(circle at center, black 36%, transparent 88%);
-      opacity:.45;
-    }
-
-    .container{
-      width:min(1400px,calc(100% - 40px));
-      margin:0 auto;
-      padding:24px 0 40px;
-    }
-
-    .nav{
-      position:sticky;
-      top:18px;
-      z-index:60;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      padding:14px 18px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(10,14,30,.62);
-      backdrop-filter:blur(18px);
-      box-shadow:var(--shadow);
-    }
-
-    .nav-logo{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-      letter-spacing:.02em;
-    }
-
-    .nav-logo-badge{
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg,var(--gold),var(--pink),var(--cyan));
-      color:#09101b;
-      font-weight:900;
-      box-shadow:0 12px 30px rgba(255,94,168,.18);
-    }
-
-    .nav-links{
-      display:flex;
-      gap:20px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .nav-links a{
-      color:var(--muted);
-      text-decoration:none;
-      font-size:13px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      transition:.2s ease;
-    }
-
-    .nav-links a:hover{color:var(--gold)}
-
-    .hero{
-      padding:78px 0 34px;
-      display:grid;
-      grid-template-columns:1.12fr .88fr;
-      gap:26px;
-      align-items:center;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:9px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      backdrop-filter:blur(12px);
-    }
-
-    .eyebrow i{
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:linear-gradient(135deg,var(--gold),var(--pink));
-      box-shadow:0 0 0 6px rgba(255,209,102,.08);
-    }
-
-    h1{
-      margin:18px 0 14px;
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(3.2rem,6.8vw,6.4rem);
-      line-height:.92;
-      font-weight:600;
-      letter-spacing:-.03em;
-    }
-
-    .grad{
-      background:linear-gradient(90deg,var(--gold),#fff, var(--cyan), var(--pink));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    .lead{
-      max-width:58ch;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.85;
-      margin:0 0 26px;
-    }
-
-    .cta-row{
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:14px 20px;
-      text-decoration:none;
-      font-weight:700;
-      font-size:13px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      transition:.25s ease;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .btn-primary{
-      color:#08101b;
-      background:linear-gradient(135deg,var(--gold),#fff3bf);
-    }
-
-    .btn-secondary{
-      color:var(--text);
-      background:rgba(255,255,255,.05);
-    }
-
-    .btn:hover{
-      transform:translateY(-2px);
-      box-shadow:0 14px 28px rgba(0,0,0,.26);
-    }
-
-    .hero-card{
-      position:relative;
-      min-height:430px;
-      border-radius:var(--radius-xl);
-      border:1px solid var(--line);
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.03));
-      box-shadow:var(--shadow);
-      isolation:isolate;
-    }
-
-    .hero-card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:conic-gradient(from 180deg, rgba(77,220,255,.9), rgba(255,94,168,.9), rgba(155,123,255,.9), rgba(255,209,102,.9), rgba(77,220,255,.9));
-      filter:blur(24px);
-      opacity:.32;
-      z-index:-1;
-    }
-
-    .hero-card-inner{
-      position:absolute;
-      inset:14px;
-      border-radius:calc(var(--radius-xl) - 12px);
-      background:linear-gradient(180deg, rgba(8,12,23,.76), rgba(8,12,23,.32));
-      backdrop-filter:blur(18px);
-      border:1px solid rgba(255,255,255,.08);
-      display:grid;
-      grid-template-rows:auto 1fr;
-      gap:14px;
-      padding:18px;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-    }
-
-    .stat{
-      padding:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .stat b{
-      display:block;
-      font-size:24px;
-      line-height:1.1;
-    }
-
-    .stat span{
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .preview-grid{
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:12px;
-      min-height:0;
-    }
-
-    .preview, .preview2{
-      border-radius:20px;
-      overflow:hidden;
-      position:relative;
-      min-height:240px;
-      background:
-        linear-gradient(135deg, rgba(77,220,255,.22), rgba(255,94,168,.18), rgba(155,123,255,.18)),
-        linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.03));
-    }
-
-    .preview2{min-height:190px}
-
-    .preview::after, .preview2::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, transparent 45%, rgba(0,0,0,.5));
-    }
-
-    .preview-info{
-      position:absolute;
-      left:16px;
-      right:16px;
-      bottom:16px;
-      z-index:1;
-    }
-
-    .preview-info strong{
-      display:block;
-      font-size:18px;
-      margin-bottom:4px;
-    }
-
-    .preview-info small{color:rgba(255,255,255,.8)}
-
-    .section-title{
-      display:flex;
-      justify-content:space-between;
-      gap:16px;
-      align-items:end;
-      padding:18px 4px 18px;
-      margin-top:10px;
-    }
-
-    .section-title h2{
-      margin:0;
-      font-family:'Cormorant Garamond',serif;
-      font-size:clamp(2rem,4vw,3.35rem);
-      font-weight:600;
-    }
-
-    .section-title p{
-      margin:0;
-      color:var(--muted);
-      max-width:58ch;
-      line-height:1.75;
-    }
-
-    .filters{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:8px 0 20px;
-    }
-
-    .filter-btn{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border-radius:999px;
-      padding:10px 16px;
-      font-size:12px;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-      cursor:pointer;
-      transition:.2s ease;
-      backdrop-filter:blur(10px);
-    }
-
-    .filter-btn.active,
-    .filter-btn:hover{
-      background:linear-gradient(135deg, rgba(77,220,255,.26), rgba(255,94,168,.24));
-      border-color:rgba(255,255,255,.24);
-      transform:translateY(-1px);
-    }
-
-    .gallery-section{padding:0 0 80px}
-
-    .loading-state{
-      text-align:center;
-      padding:80px 20px;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    .loading-spinner{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      border:1px solid var(--line);
-      border-top-color:var(--gold);
-      animation:spin 1s linear infinite;
-      margin:0 auto 16px;
-    }
-
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    .masonry{columns:4;column-gap:16px}
-
-    .photo-item{
-      break-inside:avoid;
-      margin-bottom:16px;
-      position:relative;
-      border-radius:20px;
-      overflow:hidden;
-      cursor:pointer;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow);
-      transform:translateZ(0);
-    }
-
-    .photo-item img{
-      width:100%;
-      display:block;
-      transition:transform .7s cubic-bezier(.2,.8,.2,1), filter .4s ease;
-      min-height:160px;
-      object-fit:cover;
-      background:#141827;
-    }
-
-    .photo-item:hover img{
-      transform:scale(1.06);
-      filter:saturate(1.14) contrast(1.05);
-    }
-
-    .photo-overlay{
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, transparent 40%, rgba(5,8,18,.86));
-      opacity:0;
-      transition:opacity .25s ease;
-      display:flex;
-      align-items:flex-end;
-      padding:16px;
-    }
-
-    .photo-item:hover .photo-overlay{opacity:1}
-
-    .photo-meta{
-      display:flex;
-      width:100%;
-      justify-content:space-between;
-      gap:12px;
-      align-items:end;
-    }
-
-    .photo-tag{
-      display:inline-flex;
-      padding:7px 11px;
-      border-radius:999px;
-      background:rgba(255,255,255,.10);
-      backdrop-filter:blur(10px);
-      font-size:9px;
-      letter-spacing:.2em;
-      text-transform:uppercase;
-      color:#fff;
-      margin-bottom:8px;
-    }
-
-    .photo-title{
-      font-size:14px;
-      font-weight:500;
-      color:#fff;
-      line-height:1.35;
-    }
-
-    .photo-actions{display:flex;gap:8px}
-
-    .photo-action-btn{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      background:rgba(255,255,255,.1);
-      backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.14);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      cursor:pointer;
-      font-size:14px;
-      transition:all .2s ease;
-    }
-
-    .photo-action-btn:hover{
-      background:linear-gradient(135deg,var(--gold),var(--pink));
-      color:#06101b;
-      border-color:transparent;
-      transform:translateY(-1px);
-    }
-
-    .featured-strip{
-      padding:80px 0;
-      overflow:hidden;
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-      margin-bottom:80px;
-    }
-
-    .strip-track{
-      display:flex;
-      gap:24px;
-      animation:marquee 30s linear infinite;
-      width:max-content;
-    }
-
-    .strip-track:hover{animation-play-state:paused}
-
-    .strip-item{
-      width:280px;
-      height:380px;
-      flex-shrink:0;
-      border-radius:20px;
-      overflow:hidden;
-      position:relative;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow);
-    }
-
-    .strip-item img{width:100%;height:100%;object-fit:cover}
-
-    @keyframes marquee{
-      from{transform:translateX(0)}
-      to{transform:translateX(-50%)}
-    }
-
-    .stats-row{
-      display:flex;
-      justify-content:center;
-      gap:40px;
-      padding:8px 20px 24px;
-      flex-wrap:wrap;
-    }
-
-    .stat-num{
-      font-family:'Cormorant Garamond',serif;
-      font-size:28px;
-      font-weight:300;
-      color:var(--gold);
-      line-height:1;
-    }
-
-    .stat-label{
-      font-size:9px;
-      letter-spacing:.2em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-top:4px;
-    }
-
-    .lightbox{
-      display:none;
-      position:fixed;
-      inset:0;
-      z-index:1000;
-      background:rgba(0,0,0,.95);
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-
-    .lightbox.open{display:flex}
-
-    .lb-inner{
-      position:relative;
-      width:min(1100px,94vw);
-      max-height:92vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:16px;
-    }
-
-    .lb-inner img{
-      max-width:100%;
-      max-height:80vh;
-      border-radius:18px;
-      box-shadow:0 40px 100px rgba(0,0,0,.8);
-      background:#05070f;
-    }
-
-    .lb-meta{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      flex-wrap:wrap;
-      justify-content:center;
-      text-align:center;
-    }
-
-    .lb-title{
-      font-family:'Cormorant Garamond',serif;
-      font-size:20px;
-      color:#fff;
-    }
-
-    .lb-close{
-      position:fixed;
-      top:24px;
-      right:28px;
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.08);
-      color:#fff;
-      cursor:pointer;
-      font-size:26px;
-      line-height:1;
-      transition:.2s ease;
-    }
-
-    .lb-close:hover{color:var(--gold)}
-    .lb-nav{
-      position:fixed;
-      top:50%;
-      transform:translateY(-50%);
-      font-size:34px;
-      color:var(--muted);
-      cursor:pointer;
-      background:none;
-      border:none;
-      transition:color .2s ease, transform .2s ease;
-      padding:16px;
-    }
-
-    .lb-nav:hover{
-      color:var(--gold);
-      transform:translateY(-50%) scale(1.08);
-    }
-
-    .lb-prev{left:14px}
-    .lb-next{right:14px}
-
-    .lb-counter{
-      font-size:11px;
-      letter-spacing:.15em;
-      color:var(--muted);
-      text-transform:uppercase;
-    }
-
-    .lb-dl{
-      font-size:12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--gold);
-      text-decoration:none;
-      border:1px solid var(--line);
-      padding:10px 18px;
-      border-radius:999px;
-      background:none;
-      cursor:pointer;
-      transition:background .2s ease, color .2s ease, transform .2s ease;
-    }
-
-    .lb-dl:hover{
-      background:var(--gold);
-      color:#000;
-      transform:translateY(-1px);
-    }
-
-    footer{
-      padding:48px 4px;
-      border-top:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:20px;
-    }
-
-    .footer-logo{
-      font-family:'Cormorant Garamond',serif;
-      font-size:28px;
-      font-weight:300;
-      color:#fff;
-    }
-
-    .footer-logo span{color:var(--gold)}
-    .footer-copy{font-size:12px;color:var(--muted);letter-spacing:.05em}
-    .footer-site-link{
-      font-size:11px;
-      letter-spacing:.15em;
-      text-transform:uppercase;
-      color:var(--gold);
-      text-decoration:none;
-      border-bottom:1px solid var(--line);
-      padding-bottom:2px;
-      transition:border-color .2s ease;
-    }
-
-    .footer-site-link:hover{border-color:var(--gold)}
-
-    .reveal{
-      opacity:0;
-      transform:translateY(24px);
-      transition:opacity .65s ease, transform .65s ease;
-    }
-
-    .reveal.visible{
-      opacity:1;
-      transform:none;
-    }
-
-    @media (max-width:1100px){
-      .hero{grid-template-columns:1fr}
-      .masonry{columns:3}
-      .nav{border-radius:28px}
-    }
-
-    @media (max-width:760px){
-      .container{width:min(100% - 24px,1400px)}
-      .nav-links{display:none}
-      .hero{padding-top:50px}
-      .stats{grid-template-columns:1fr}
-      .preview-grid{grid-template-columns:1fr}
-      .section-title{flex-direction:column;align-items:flex-start}
-      .masonry{columns:2}
-      .featured-strip{margin-bottom:48px}
-      .lb-title{font-size:18px}
-      .lb-prev{left:0}
-      .lb-next{right:0}
-    }
-
-    @media (max-width:520px){
-      .masonry{columns:1}
-      .photo-item{border-radius:18px}
-      .hero-card{min-height:500px}
-      .hero-card-inner{padding:14px}
-      .nav{padding:12px 14px}
-      .btn{width:100%;justify-content:center}
-      .cta-row{flex-direction:column}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tonir Shaik Official Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#090b18;
+  --surface:#0f1225;
+  --card:#141729;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --muted:rgba(255,255,255,0.4);
+  --text:#e8eaf0;
+  --grad1:linear-gradient(135deg,#667eea,#764ba2);
+  --grad2:linear-gradient(135deg,#f093fb,#f5576c);
+  --grad3:linear-gradient(135deg,#4facfe,#00f2fe);
+  --grad4:linear-gradient(135deg,#43e97b,#38f9d7);
+  --accent:#a78bfa;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(167,139,250,0.3);border-radius:2px}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(9,11,24,0.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--grad1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;letter-spacing:0.05em;
+}
+.nav-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:#fff}
+.nav-name span{color:var(--accent)}
+.nav-links{display:flex;gap:6px}
+.nav-links a{
+  font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:7px 14px;border-radius:6px;
+  border:1px solid transparent;
+  transition:all 0.2s;
+}
+.nav-links a:hover{color:#fff;border-color:var(--border2);background:rgba(255,255,255,0.05)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;padding:100px 48px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+  max-width:1200px;margin:0 auto;
+}
+@media(max-width:768px){.hero{grid-template-columns:1fr;padding:100px 20px 40px}}
+
+.hero-left{}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);
+  border-radius:20px;padding:6px 14px;
+  font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:28px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(48px,6vw,80px);
+  font-weight:800;line-height:1;
+  color:#fff;margin-bottom:4px;
+}
+.hero-title-gradient{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(48px,6vw,80px);
+  font-weight:800;line-height:1;
+  background:linear-gradient(135deg,#a78bfa,#ec4899,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:28px;
+}
+.hero-desc{
+  font-size:14px;line-height:1.7;color:var(--muted);
+  max-width:360px;margin-bottom:36px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  color:#fff;text-decoration:none;
+  font-size:13px;font-weight:600;
+  padding:12px 24px;border-radius:8px;border:none;cursor:pointer;
+  transition:opacity 0.2s,transform 0.2s;
+}
+.btn-primary:hover{opacity:0.85;transform:translateY(-1px)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border2);
+  color:var(--text);text-decoration:none;
+  font-size:13px;font-weight:500;
+  padding:12px 24px;border-radius:8px;cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+
+/* ── HERO RIGHT PANEL ── */
+.hero-right{}
+.hero-panel{
+  background:rgba(20,23,41,0.8);
+  border:1px solid var(--border2);
+  border-radius:16px;
+  padding:20px;
+  backdrop-filter:blur(20px);
+}
+.stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat-mini-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:10px;padding:14px 10px;text-align:center;
+}
+.stat-mini-num{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:700;
+  color:#fff;line-height:1;margin-bottom:4px;
+}
+.stat-mini-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.preview-card{
+  border-radius:10px;overflow:hidden;position:relative;
+  height:140px;
+}
+.preview-card-grad{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:14px;
+}
+.preview-card:nth-child(1) .preview-card-grad{background:linear-gradient(135deg,#3a1c71,#d76d77,#ffaf7b)}
+.preview-card:nth-child(2) .preview-card-grad{background:linear-gradient(135deg,#1a1a2e,#16213e,#533483)}
+.preview-card-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px}
+.preview-card-sub{font-size:10px;color:rgba(255,255,255,0.6)}
+
+/* ── GALLERY SECTION ── */
+.gallery-section{
+  max-width:1200px;margin:0 auto;
+  padding:0 24px 80px;
+}
+.gallery-header{margin-bottom:12px}
+.gallery-header h2{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#fff;
+  margin-bottom:6px;
+}
+.gallery-header p{font-size:13px;color:var(--muted);max-width:480px;margin-bottom:20px}
+
+.stats-row{
+  display:flex;gap:32px;margin-bottom:24px;flex-wrap:wrap;
+}
+.stat-item{text-align:center}
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:700;
+  background:linear-gradient(135deg,#a78bfa,#ec4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-label{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.filter-btn{
+  font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  padding:8px 18px;border-radius:20px;
+  border:1px solid var(--border2);
+  background:transparent;color:var(--muted);
+  cursor:pointer;transition:all 0.2s;
+}
+.filter-btn:hover{color:#fff;border-color:rgba(167,139,250,0.4)}
+.filter-btn.active{
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  border-color:transparent;color:#fff;
+}
+
+/* ── MASONRY ── */
+.masonry{columns:4;column-gap:14px}
+@media(max-width:1100px){.masonry{columns:3}}
+@media(max-width:700px){.masonry{columns:2}}
+@media(max-width:400px){.masonry{columns:1}}
+
+.photo-item{
+  break-inside:avoid;margin-bottom:14px;
+  position:relative;border-radius:10px;overflow:hidden;
+  cursor:pointer;border:1px solid var(--border);
+  transition:transform 0.4s,border-color 0.3s,box-shadow 0.4s;
+}
+.photo-item:hover{
+  transform:translateY(-4px);
+  border-color:rgba(167,139,250,0.3);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5),0 0 0 1px rgba(167,139,250,0.1);
+}
+.photo-item img{
+  width:100%;display:block;min-height:140px;
+  background:var(--card);
+  transition:transform 0.5s;
+}
+.photo-item:hover img{transform:scale(1.03)}
+.photo-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(9,11,24,0.9) 0%,transparent 55%);
+  opacity:0;transition:opacity 0.3s;
+  display:flex;align-items:flex-end;padding:14px;
+}
+.photo-item:hover .photo-overlay{opacity:1}
+.photo-meta{flex:1}
+.photo-tag{
+  font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:3px;
+}
+.photo-title{font-size:12px;font-weight:500;color:#fff}
+.photo-actions{display:flex;gap:6px}
+.photo-action-btn{
+  width:30px;height:30px;border-radius:8px;
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;cursor:pointer;font-size:13px;transition:all 0.2s;
+}
+.photo-action-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── LOADING ── */
+.loading-state{
+  text-align:center;padding:60px 20px;
+  color:var(--muted);font-size:12px;letter-spacing:0.1em;
+}
+.loading-spinner{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--border2);border-top-color:var(--accent);
+  animation:spin 0.8s linear infinite;margin:0 auto 12px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── STRIP ── */
+.featured-strip{
+  padding:40px 0;overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin-bottom:60px;
+}
+.strip-track{display:flex;gap:14px;animation:marquee 35s linear infinite;width:max-content}
+.strip-track:hover{animation-play-state:paused}
+.strip-item{width:220px;height:300px;flex-shrink:0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.strip-item img{width:100%;height:100%;object-fit:cover}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── FOOTER ── */
+footer{
+  padding:32px 48px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--grad1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;
+}
+.footer-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:#fff}
+.footer-name span{color:var(--accent)}
+.footer-copy{font-size:11px;color:var(--muted)}
+.footer-link{
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
+  border:1px solid rgba(167,139,250,0.2);
+  padding:7px 16px;border-radius:6px;transition:all 0.2s;
+}
+.footer-link:hover{background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.4)}
+
+/* ── LIGHTBOX ── */
+.lightbox{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.95);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+}
+.lightbox.open{display:flex}
+.lb-inner{position:relative;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center}
+.lb-inner img{max-width:100%;max-height:78vh;border-radius:10px;box-shadow:0 40px 80px rgba(0,0,0,0.8)}
+.lb-meta{margin-top:14px;display:flex;align-items:center;gap:16px}
+.lb-title{font-family:'Syne',sans-serif;font-size:16px;color:#fff}
+.lb-counter{font-size:11px;color:var(--muted)}
+.lb-close{
+  position:fixed;top:20px;right:28px;
+  font-size:26px;color:var(--muted);cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border2);
+  width:40px;height:40px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.lb-close:hover{color:#fff;background:rgba(255,255,255,0.1)}
+.lb-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  font-size:28px;color:var(--muted);cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid var(--border2);
+  width:44px;height:44px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+}
+.lb-nav:hover{color:#fff;background:rgba(255,255,255,0.1)}
+.lb-prev{left:16px}.lb-next{right:16px}
+.lb-dl{
+  font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
+  color:#fff;background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  border:none;padding:8px 18px;border-radius:6px;cursor:pointer;transition:opacity 0.2s;
+}
+.lb-dl:hover{opacity:0.85}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:600px){
+  nav{padding:12px 16px}
+  footer{padding:24px 16px;flex-direction:column;text-align:center}
+  .gallery-section{padding:0 14px 60px}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <nav class="nav">
-      <a href="#" class="nav-logo">
-        <span class="nav-logo-badge">TS</span>
-        <span>Tonir Shaik</span>
-      </a>
-      <div class="nav-links">
-        <a href="#gallery">Gallery</a>
-        <a href="https://sites.google.com/view/tonirshaik2" target="_blank">Official Site</a>
-      </div>
-    </nav>
 
-    <section class="hero reveal">
-      <div>
-        <span class="eyebrow"><i></i>Portfolio</span>
-        <h1>Photo <span class="grad">Gallery</span></h1>
-        <p class="lead">
-          This gallery showcases premium-style visuals with modern animations, beautiful color accents, clean layout, and smooth user experience.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#gallery">Explore Gallery</a>
-          <a class="btn btn-secondary" href="https://sites.google.com/view/tonirshaik2" target="_blank">Visit Official Site</a>
-        </div>
-      </div>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-avatar">TS</div>
+    <span class="nav-name">Tonir <span>Shaik</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#gallery">Gallery</a>
+    <a href="https://sites.google.com/view/tonirshaik2/" target="_blank">Official Site</a>
+  </div>
+</nav>
 
-      <div class="hero-card">
-        <div class="hero-card-inner">
-          <div class="stats">
-            <div class="stat"><b id="photoCount">0</b><span>Photos</span></div>
-            <div class="stat"><b>2026</b><span>Collection</span></div>
-            <div class="stat"><b>HD</b><span>Memories</span></div>
-          </div>
-
-          <div class="preview-grid">
-            <div class="preview">
-              <div class="preview-info">
-                <strong>Elegant Storytelling</strong>
-                <small>Luxury cinematic presentation</small>
-              </div>
-            </div>
-            <div class="preview2">
-              <div class="preview-info">
-                <strong>Modern Interface</strong>
-                <small>Glass + gradients + motion</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="gallery" class="reveal">
-      <div class="section-title">
-        <div>
-          <h2>Photo Gallery</h2>
-          <p>Filter, view, and download images using a premium interface designed for both desktop and mobile.</p>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div><div class="stat-num" id="photoCount2">0</div><div class="stat-label">Photos</div></div>
-        <div><div class="stat-num">2026</div><div class="stat-label">Collection</div></div>
-        <div><div class="stat-num">∞</div><div class="stat-label">Memories</div></div>
-      </div>
-
-      <div class="filters">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="portrait">Portrait</button>
-        <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
-        <button class="filter-btn" data-filter="editorial">Editorial</button>
-      </div>
-
-      <div class="gallery-section">
-        <div class="loading-state" id="loadingState">
-          <div class="loading-spinner"></div>
-          Loading gallery…
-        </div>
-        <div class="masonry" id="masonry" style="display:none;"></div>
-      </div>
-    </section>
-
-    <section class="featured-strip reveal" id="stripSection" style="display:none;">
-      <div class="strip-track" id="stripTrack"></div>
-    </section>
-
-    <footer class="reveal">
-      <div>
-        <div class="footer-logo">Tonir <span>Shaik</span></div>
-        <div class="footer-copy" style="margin-top:8px;">2026 Tonir Shaik. All Rights Reserved.</div>
-      </div>
-      <div>
-        <a href="https://sites.google.com/view/tonirshaik2" target="_blank" class="footer-site-link">Visit Official Site</a>
-      </div>
-    </footer>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left reveal">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Portfolio
+    </div>
+    <div class="hero-title">Photo</div>
+    <div class="hero-title-gradient">Gallery</div>
+    <p class="hero-desc">This gallery showcases premium-style visuals with modern animations, beautiful color accents, clean layout, and smooth user experience.</p>
+    <div class="hero-btns">
+      <a href="#gallery" class="btn-primary">↓ Explore Gallery</a>
+      <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" class="btn-secondary">Visit Official Site</a>
+    </div>
   </div>
 
-  <div class="lightbox" id="lightbox">
-    <button class="lb-close" id="lbClose" aria-label="Close">×</button>
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">‹</button>
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
-    <div class="lb-inner">
-      <img id="lbImg" src="" alt="">
-      <div class="lb-meta">
-        <span class="lb-title" id="lbTitle"></span>
-        <span class="lb-counter" id="lbCounter"></span>
-        <a class="lb-dl" id="lbDl" href="#" download>Download</a>
+  <div class="hero-right reveal">
+    <div class="hero-panel">
+      <div class="stats-mini">
+        <div class="stat-mini-card">
+          <div class="stat-mini-num" id="heroPhotoCount">0</div>
+          <div class="stat-mini-label">Photos</div>
+        </div>
+        <div class="stat-mini-card">
+          <div class="stat-mini-num">2026</div>
+          <div class="stat-mini-label">Collection</div>
+        </div>
+        <div class="stat-mini-card">
+          <div class="stat-mini-num">HD</div>
+          <div class="stat-mini-label">Memories</div>
+        </div>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-card">
+          <div class="preview-card-grad">
+            <div class="preview-card-title">Elegant Storytelling</div>
+            <div class="preview-card-sub">Luxury cinematic presentation</div>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-grad">
+            <div class="preview-card-title">Modern Interface</div>
+            <div class="preview-card-sub">Glass + gradients + motion</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="gallery-header reveal">
+    <h2>Photo Gallery</h2>
+    <p>Filter, view, and download images using a premium interface designed for both desktop and mobile.</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num" id="photoCount">0</div>
+        <div class="stat-label">Photos</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2026</div>
+        <div class="stat-label">Collection</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Memories</div>
       </div>
     </div>
   </div>
 
-  <script>
-    const cursor = document.createElement('div');
-    cursor.id = 'cursor';
-    document.body.appendChild(cursor);
+  <div class="filters reveal">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="portrait">Portrait</button>
+    <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
+    <button class="filter-btn" data-filter="editorial">Editorial</button>
+  </div>
 
-    const styleEl = document.createElement('style');
-    styleEl.textContent = `
-      #cursor{
-        position:fixed;width:10px;height:10px;border-radius:50%;
-        background:linear-gradient(135deg,#ffd166,#ff5ea8,#4ddcff);
-        pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
-        box-shadow:0 0 0 10px rgba(255,255,255,.03), 0 0 24px rgba(255,94,168,.25);
-        transition:transform .08s linear, opacity .2s ease;
-      }
-      @media (max-width: 760px){ #cursor{display:none} }
-    `;
-    document.head.appendChild(styleEl);
+  <div class="loading-state" id="loadingState">
+    <div class="loading-spinner"></div>
+    Loading gallery…
+  </div>
+  <div class="masonry" id="masonry" style="display:none;"></div>
+</section>
 
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
-    });
+<!-- STRIP -->
+<div class="featured-strip" id="stripSection" style="display:none;">
+  <div class="strip-track" id="stripTrack"></div>
+</div>
 
-    const categories = ['portrait','lifestyle','editorial'];
-    const catLabels = ['Portrait','Lifestyle','Editorial'];
-    let allPhotos = [];
-    let currentIdx = 0;
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">
+      <div class="footer-avatar">TS</div>
+      <span class="footer-name">Tonir <span>Shaik</span></span>
+    </div>
+    <div class="footer-copy" style="margin-top:6px;margin-left:40px;">2026 Tonir Shaik. All Rights Reserved.</div>
+  </div>
+  <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" class="footer-link">Visit Official Site</a>
+</footer>
 
-    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaikrefs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-inner">
+    <img id="lbImg" src="" alt="">
+    <div class="lb-meta">
+      <span class="lb-title" id="lbTitle"></span>
+      <span class="lb-counter" id="lbCounter"></span>
+      <button class="lb-dl" id="lbDl">↓ Download</button>
+    </div>
+  </div>
+</div>
 
-    fetch(csvUrl)
-      .then(r => r.text())
-      .then(data => {
-        const links = data.split('\n').map(l => l.trim()).filter(l => l.startsWith('http'));
-        allPhotos = links.map((url, i) => ({
-          url,
-          idx: i,
-          cat: categories[i % 3],
-          title: `Photo ${i + 1}`
-        }));
-        document.getElementById('photoCount').textContent = allPhotos.length;
-        document.getElementById('photoCount2').textContent = allPhotos.length;
-        document.getElementById('loadingState').style.display = 'none';
-        document.getElementById('masonry').style.display = 'block';
-        renderGallery(allPhotos);
-        buildStrip(allPhotos);
-      })
-      .catch(() => {
-        document.getElementById('loadingState').innerHTML =
-          '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
-      });
+<script>
+const categories = ['portrait','lifestyle','editorial'];
+const catLabels  = ['Portrait','Lifestyle','Editorial'];
+let allPhotos = [], currentIdx = 0;
 
-    const imgObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting){
-          const img = entry.target;
-          if(img.dataset.src){
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-            imgObserver.unobserve(img);
-          }
-        }
-      });
-    }, {rootMargin:'300px 0px'});
+const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
 
-    function renderGallery(photos){
-      const masonry = document.getElementById('masonry');
-      masonry.innerHTML = '';
+fetch(csvUrl)
+  .then(r => r.text())
+  .then(data => {
+    const links = data.split('\n').map(l=>l.trim()).filter(l=>l.startsWith('http'));
+    allPhotos = links.map((url,i) => ({url, idx:i, cat:categories[i%3], title:'Photo '+(i+1)}));
+    const n = allPhotos.length;
+    document.getElementById('photoCount').textContent = n;
+    document.getElementById('heroPhotoCount').textContent = n;
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('masonry').style.display = '';
+    renderGallery(allPhotos);
+    buildStrip(allPhotos);
+  })
+  .catch(() => {
+    document.getElementById('loadingState').innerHTML = '<p style="color:rgba(255,255,255,0.3)">Could not load photos. Check your connection.</p>';
+  });
 
-      photos.forEach((p, i) => {
-        const item = document.createElement('div');
-        item.className = 'photo-item reveal';
-
-        const placeholder = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="%23141A30"/></svg>';
-
-        item.innerHTML = `
-          <img data-src="${p.url}" src="${placeholder}" alt="${p.title}" style="min-height:160px;background:#141827;">
-          <div class="photo-overlay">
-            <div class="photo-meta">
-              <div class="photo-info">
-                <div class="photo-tag">${catLabels[categories.indexOf(p.cat)]}</div>
-                <div class="photo-title">${p.title}</div>
-              </div>
-              <div class="photo-actions">
-                <button class="photo-action-btn" title="View">↗</button>
-                <button class="photo-action-btn" title="Download">↓</button>
-              </div>
-            </div>
-          </div>
-        `;
-
-        item.addEventListener('click', () => openLightbox(p.idx));
-        masonry.appendChild(item);
-        imgObserver.observe(item.querySelector('img'));
-        setTimeout(() => item.classList.add('visible'), i * 40);
-      });
-
-      observeReveal();
+// Lazy load
+const imgObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const img = e.target;
+      if(img.dataset.src){ img.src = img.dataset.src; img.removeAttribute('data-src'); }
+      imgObs.unobserve(img);
     }
+  });
+}, {rootMargin:'300px 0px'});
 
-    function buildStrip(photos){
-      const track = document.getElementById('stripTrack');
-      const doubled = [...photos, ...photos];
-      track.innerHTML = doubled.map(p => `
-        <div class="strip-item">
-          <img src="${p.url}" alt="${p.title}" loading="lazy">
+function renderGallery(photos){
+  const m = document.getElementById('masonry');
+  m.innerHTML = '';
+  const ph = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%23141729'/%3E%3C/svg%3E";
+  photos.forEach((p,i) => {
+    const item = document.createElement('div');
+    item.className = 'photo-item reveal';
+    item.dataset.cat = p.cat;
+    item.innerHTML = `
+      <img data-src="${p.url}" src="${ph}" alt="${p.title}" style="min-height:150px;background:#141729;">
+      <div class="photo-overlay">
+        <div class="photo-meta">
+          <div class="photo-tag">${catLabels[categories.indexOf(p.cat)]}</div>
+          <div class="photo-title">${p.title}</div>
         </div>
-      `).join('');
-      document.getElementById('stripSection').style.display = 'block';
-    }
+        <div class="photo-actions">
+          <button class="photo-action-btn" title="View" onclick="openLightbox(${p.idx});event.stopPropagation()">⤢</button>
+          <button class="photo-action-btn" title="Download" onclick="dlImg('${p.url}','Tonir-${i+1}.jpg');event.stopPropagation()">↓</button>
+        </div>
+      </div>`;
+    item.addEventListener('click', () => openLightbox(p.idx));
+    m.appendChild(item);
+    imgObs.observe(item.querySelector('img'));
+    setTimeout(() => item.classList.add('visible'), i*35);
+  });
+}
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const f = btn.dataset.filter;
-        const filtered = f === 'all' ? allPhotos : allPhotos.filter(p => p.cat === f);
-        renderGallery(filtered);
-      });
-    });
+function buildStrip(photos){
+  const track = document.getElementById('stripTrack');
+  const doubled = [...photos,...photos];
+  track.innerHTML = doubled.map(p=>`<div class="strip-item"><img src="${p.url}" alt="" loading="lazy"></div>`).join('');
+  document.getElementById('stripSection').style.display='block';
+}
 
-    function openLightbox(idx){
-      currentIdx = idx;
-      updateLightbox();
-      document.getElementById('lightbox').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
+// Filters
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    renderGallery(f==='all' ? allPhotos : allPhotos.filter(p=>p.cat===f));
+  });
+});
 
-    function closeLightbox(){
-      document.getElementById('lightbox').classList.remove('open');
-      document.body.style.overflow = '';
-    }
+// Lightbox
+function openLightbox(idx){
+  currentIdx=idx; updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+function updateLightbox(){
+  const p=allPhotos[currentIdx];
+  document.getElementById('lbImg').src=p.url;
+  document.getElementById('lbTitle').textContent=p.title;
+  document.getElementById('lbCounter').textContent=(currentIdx+1)+' / '+allPhotos.length;
+  document.getElementById('lbDl').onclick=()=>dlImg(p.url,'Tonir-'+(currentIdx+1)+'.jpg');
+}
+document.getElementById('lbClose').onclick=closeLightbox;
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLightbox()});
+document.getElementById('lbPrev').onclick=()=>{currentIdx=(currentIdx-1+allPhotos.length)%allPhotos.length;updateLightbox()};
+document.getElementById('lbNext').onclick=()=>{currentIdx=(currentIdx+1)%allPhotos.length;updateLightbox()};
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lightbox').classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowLeft')document.getElementById('lbPrev').click();
+  if(e.key==='ArrowRight')document.getElementById('lbNext').click();
+});
 
-    function updateLightbox(){
-      const p = allPhotos[currentIdx];
-      document.getElementById('lbImg').src = p.url;
-      document.getElementById('lbTitle').textContent = p.title;
-      document.getElementById('lbCounter').textContent = `${currentIdx + 1} / ${allPhotos.length}`;
-      document.getElementById('lbDl').onclick = () => downloadImage(p.url, `Tonir-${currentIdx + 1}.jpg`);
-    }
+function dlImg(url,filename){
+  fetch(url).then(r=>r.blob()).then(blob=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+  }).catch(()=>window.open(url,'_blank'));
+}
 
-    function downloadImage(url, filename){
-      fetch(url)
-        .then(r => r.blob())
-        .then(blob => {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = filename;
-          a.click();
-        })
-        .catch(() => window.open(url, '_blank'));
-    }
-
-    document.getElementById('lbClose').onclick = closeLightbox;
-    document.getElementById('lightbox').addEventListener('click', e => {
-      if(e.target === e.currentTarget) closeLightbox();
-    });
-
-    document.getElementById('lbPrev').onclick = () => {
-      currentIdx = (currentIdx - 1 + allPhotos.length) % allPhotos.length;
-      updateLightbox();
-    };
-
-    document.getElementById('lbNext').onclick = () => {
-      currentIdx = (currentIdx + 1) % allPhotos.length;
-      updateLightbox();
-    };
-
-    document.addEventListener('keydown', e => {
-      const lb = document.getElementById('lightbox');
-      if(!lb.classList.contains('open')) return;
-      if(e.key === 'Escape') closeLightbox();
-      if(e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
-      if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
-    });
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if(e.isIntersecting) e.target.classList.add('visible');
-      });
-    }, {threshold:0.12});
-
-    function observeReveal(){
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    }
-    observeReveal();
-  </script>
+// Reveal
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+</script>
 </body>
 </html>
