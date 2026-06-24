@@ -4,23 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tonir Shaik - Personal Documents Web</title>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
             display: flex;
             background-color: #ffffff;
-            color: #333;
+            color: #333333;
             min-height: 100vh;
         }
 
-        /* বাম পাশের সাইডবার মেনু */
+        /* Sidebar Style */
         .sidebar {
             width: 280px;
             background-color: #1a1a1a;
@@ -29,13 +30,13 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            z-index: 100;
         }
 
         .sidebar-profile {
             text-align: center;
             padding: 10px 20px 20px 20px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #333333;
         }
 
         .sidebar-profile img {
@@ -43,14 +44,13 @@
             height: 50px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #fff;
+            border: 2px solid #ffffff;
             margin-bottom: 10px;
         }
 
         .sidebar-profile h3 {
             font-size: 18px;
-            font-weight: 600;
-            color: #fff;
+            color: #ffffff;
         }
 
         .sidebar-menu {
@@ -64,18 +64,17 @@
             color: #cccccc;
             text-decoration: none;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: 0.3s;
             border-left: 4px solid transparent;
         }
 
-        /* মাউস নিলে বা একটিভ থাকলে কালার পরিবর্তন */
         .sidebar-menu li a:hover, .sidebar-menu li a.active {
-            color: #ffeb3b; /* হলুদ কালার */
+            color: #ffeb3b;
             background-color: #2a2a2a;
             border-left: 4px solid #ffeb3b;
         }
 
-        /* মূল কন্টেন্ট এরিয়া (ডান পাশে) */
+        /* Main Content Style */
         .main-content {
             margin-left: 280px;
             width: calc(100% - 280px);
@@ -84,15 +83,14 @@
             flex-direction: column;
         }
 
-        /* ওপরের ব্যানার */
+        /* Hero Banner */
         .hero-banner {
             background: linear-gradient(135deg, #0b1e36 0%, #16365c 100%);
-            color: white;
+            color: #ffffff;
             padding: 40px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
             min-height: 250px;
         }
 
@@ -106,56 +104,41 @@
         .banner-text h2 {
             font-size: 24px;
             font-weight: 400;
-            letter-spacing: 1px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        /* অডিও ওয়েভ ইফেক্ট */
-        .wave-icon {
-            display: inline-flex;
-            gap: 3px;
-            align-items: center;
-        }
         .wave-icon span {
+            display: inline-block;
             width: 3px;
             height: 20px;
-            background-color: #fff;
-            animation: bounce 0.8s infinite alternate;
+            background-color: #ffffff;
+            margin-right: 2px;
         }
-        .wave-icon span:nth-child(2) { height: 30px; animation-delay: 0.2s; }
-        .wave-icon span:nth-child(3) { height: 15px; animation-delay: 0.4s; }
-        .wave-icon span:nth-child(4) { height: 25px; animation-delay: 0.1s; }
 
         .banner-text p {
             font-size: 16px;
             color: #b0c4de;
         }
 
-        /* ব্যানারের গোল ফ্রেমের ছবি */
-        .banner-img-container {
-            position: relative;
-        }
-
         .banner-img {
             width: 180px;
             height: 180px;
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            background: url('https://via.placeholder.com/180') center/cover;
             border: 4px solid rgba(255, 255, 255, 0.2);
             object-fit: cover;
         }
 
-        /* সোশ্যাল মিডিয়া আইকন বার */
+        /* Social Bar */
         .social-bar {
             display: flex;
             justify-content: center;
             gap: 15px;
             padding: 20px;
             background-color: #f9f9f9;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #eeeeee;
         }
 
         .social-icon {
@@ -165,10 +148,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #ffffff;
             text-decoration: none;
             font-size: 16px;
-            transition: transform 0.3s;
+            transition: 0.3s;
         }
 
         .social-icon:hover { transform: scale(1.1); }
@@ -179,7 +162,7 @@
         .telegram { background-color: #0088cc; }
         .maps { background-color: #4285F4; }
 
-        /* মাঝখানের কন্টেন্ট */
+        /* Body Content */
         .content-body {
             padding: 40px;
             display: flex;
@@ -190,3 +173,102 @@
         }
 
         .card-box {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 450px;
+            height: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f1f1f1;
+            font-size: 13px;
+            color: #666666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; width: 100%; }
+            .hero-banner { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- সাইডবার মেনু -->
+    <div class="sidebar">
+        <div class="sidebar-profile">
+            <img src="https://via.placeholder.com/50" alt="Profile">
+            <h3>Tonir Shaik</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="#"><i class="fa-regular fa-file-lines"></i> Universal Notepad</a></li>
+            <li><a href="#"><i class="fa-solid fa-key"></i> 2FA Code</a></li>
+            <li><a href="#"><i class="fa-solid fa-shield-halved"></i> All Security Key</a></li>
+            <li><a href="#"><i class="fa-regular fa-id-card"></i> CV</a></li>
+            <li><a href="#"><i class="fa-solid fa-graduation-cap"></i> Diploma certificate</a></li>
+            <li><a href="#"><i class="fa-solid fa-school"></i> School certificate.</a></li>
+            <li><a href="#"><i class="fa-solid fa-file-invoice"></i> Citizen Paper</a></li>
+            <li><a href="#"><i class="fa-solid fa-landmark"></i> ভূমি উন্নয়ন কর</a></li>
+            <li><a href="passport.html"><i class="fa-solid fa-passport"></i> Passport 🛂</a></li>
+            <li><a href="#"><i class="fa-solid fa-address-card"></i> NID card</a></li>
+            <li><a href="#"><i class="fa-regular fa-image"></i> 5 feet size photo</a></li>
+            <li><a href="#"><i class="fa-solid fa-lock"></i> private photo 🔒</a></li>
+            <li><a href="#"><i class="fa-brands fa-google"></i> Google Photo in Gmail</a></li>
+            <li><a href="#"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Sites</a></li>
+            <li><a href="#"><i class="fa-solid fa-phone"></i> public phone number</a></li>
+        </ul>
+    </div>
+
+    <!-- মূল কন্টেন্ট এরিয়া -->
+    <div class="main-content">
+        <div class="hero-banner">
+            <div class="banner-text">
+                <h1>WELCOME</h1>
+                <h2>TO THE WEBSITE 
+                    <div class="wave-icon">
+                        <span></span><span></span><span></span><span></span>
+                    </div>
+                </h2>
+                <p>Welcome aboard! This is my personal documents web.</p>
+            </div>
+            <div class="banner-img-container">
+                <img class="banner-img" src="https://via.placeholder.com/180" alt="Tonir Shaik">
+            </div>
+        </div>
+
+        <div class="social-bar">
+            <a href="#" class="social-icon fb"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-icon insta"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-icon tiktok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="#" class="social-icon whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" class="social-icon telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="#" class="social-icon maps"><i class="fa-solid fa-map-location-dot"></i></a>
+        </div>
+
+        <div class="content-body">
+            <div class="card-box">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8383344211617!2d90.4064563!3d23.7531233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzExLjIiTiA5MMKwMjQnMjMuMiJF!5e0!3m2!1sbn!2sbd!4v1650000000000!5m2!1sbn!2sbd" 
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <div class="card-box" style="display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
+                <img src="https://via.placeholder.com/450x300" alt="Tonir Shaik Sitting" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+        </div>
+
+        <footer>
+            Welcome to My Official Website
+        </footer>
+    </div>
+
+</body>
+</html>
