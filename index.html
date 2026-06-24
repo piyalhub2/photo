@@ -411,10 +411,10 @@
       <a href="#" data-view="totp">2FA Code</a>
       <a href="#" data-view="security">All Security Key</a>
       <a href="#" data-view="cv">CV</a>
-      <a href="#docs">Diploma certificate</a>
-      <a href="#docs">School certificate.</a>
-      <a href="#docs">Citizen Paper</a>
-      <a href="#docs">ভূমি উন্নয়ন কর</a>
+      <a href="#" data-view="diploma">Diploma certificate</a>
+      <a href="#" data-view="school">School certificate.</a>
+      <a href="#" data-view="citizen">Citizen Paper</a>
+      <a href="#" data-view="vumi">ভূমি উন্নয়ন কর</a>
       <a href="#docs">Passport 🛂</a>
       <a href="#docs">NID card</a>
       <a href="#docs">5 feet size photo</a>
@@ -603,6 +603,94 @@
       </div>
     </div>
 
+    <div class="view view-default" id="view-diploma">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Diploma certificate</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h2 class="cv-title">Diploma certificate PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="diplomaPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="diplomaCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="diplomaEyeIcon" onclick="diplomaToggleVisibility()"></i>
+        </div>
+
+        <a href="https://drive.google.com/drive/u/1/folders/1l4CXO_c6BIhlAJC97TlQStgv2nW8SUC3"
+           target="_blank" id="diplomaDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-school">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>School certificate</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-school"></i></div>
+        <h2 class="cv-title">School certificate PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="schoolPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="schoolCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="schoolEyeIcon" onclick="schoolToggleVisibility()"></i>
+        </div>
+
+        <a href="https://drive.google.com/drive/u/1/folders/1RdjKywXAC7pCeVyto4L3BERgwk0OUCs-"
+           target="_blank" id="schoolDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-citizen">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Citizen Paper</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-file-signature"></i></div>
+        <h2 class="cv-title">নাগরিক সনদপত্র PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="citizenPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="citizenCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="citizenEyeIcon" onclick="citizenToggleVisibility()"></i>
+        </div>
+
+        <a href="https://drive.google.com/drive/folders/1enC-sIFTH5XWdB4u4bklLkMcGJlTnG1g?usp=sharing"
+           target="_blank" id="citizenDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-vumi">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>ভূমি উন্নয়ন কর</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-landmark"></i></div>
+        <h2 class="cv-title">ভূমি উন্নয়ন কর</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="vumiPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="vumiCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="vumiEyeIcon" onclick="vumiToggleVisibility()"></i>
+        </div>
+
+        <a href="https://mega.nz/folder/75JjhZ7T#vKPTZC5p8qpbyS0qm-wkBg"
+           target="_blank" id="vumiDownloadBtn" class="cv-download-btn">
+           সাবমিট করুন
+        </a>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -644,6 +732,18 @@
         }
         if(el.dataset.view === 'cv'){
           cvResetLock();
+        }
+        if(el.dataset.view === 'diploma'){
+          diplomaResetLock();
+        }
+        if(el.dataset.view === 'school'){
+          schoolResetLock();
+        }
+        if(el.dataset.view === 'citizen'){
+          citizenResetLock();
+        }
+        if(el.dataset.view === 'vumi'){
+          vumiResetLock();
         }
         showView(el.dataset.view);
         setOpen(false);
@@ -864,6 +964,130 @@
       const pf = document.getElementById('cvPasswordField');
       const icon = document.getElementById('cvEyeIcon');
       const btn = document.getElementById('cvDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- Diploma certificate module ---------------- */
+
+    const DIPLOMA_PASSWORD = "diploma2002";
+
+    function diplomaCheckPassword(){
+      const val = document.getElementById('diplomaPasswordField').value;
+      const btn = document.getElementById('diplomaDownloadBtn');
+      btn.classList.toggle('show', val === DIPLOMA_PASSWORD);
+    }
+
+    function diplomaToggleVisibility(){
+      const pf = document.getElementById('diplomaPasswordField');
+      const icon = document.getElementById('diplomaEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function diplomaResetLock(){
+      const pf = document.getElementById('diplomaPasswordField');
+      const icon = document.getElementById('diplomaEyeIcon');
+      const btn = document.getElementById('diplomaDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- School certificate module ---------------- */
+
+    const SCHOOL_PASSWORD = "school2002";
+
+    function schoolCheckPassword(){
+      const val = document.getElementById('schoolPasswordField').value;
+      const btn = document.getElementById('schoolDownloadBtn');
+      btn.classList.toggle('show', val === SCHOOL_PASSWORD);
+    }
+
+    function schoolToggleVisibility(){
+      const pf = document.getElementById('schoolPasswordField');
+      const icon = document.getElementById('schoolEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function schoolResetLock(){
+      const pf = document.getElementById('schoolPasswordField');
+      const icon = document.getElementById('schoolEyeIcon');
+      const btn = document.getElementById('schoolDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- Citizen Paper module ---------------- */
+
+    const CITIZEN_PASSWORD = "citizen2002";
+
+    function citizenCheckPassword(){
+      const val = document.getElementById('citizenPasswordField').value;
+      const btn = document.getElementById('citizenDownloadBtn');
+      btn.classList.toggle('show', val === CITIZEN_PASSWORD);
+    }
+
+    function citizenToggleVisibility(){
+      const pf = document.getElementById('citizenPasswordField');
+      const icon = document.getElementById('citizenEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function citizenResetLock(){
+      const pf = document.getElementById('citizenPasswordField');
+      const icon = document.getElementById('citizenEyeIcon');
+      const btn = document.getElementById('citizenDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- ভূমি উন্নয়ন কর module ---------------- */
+
+    const VUMI_PASSWORD = "vumi2002";
+
+    function vumiCheckPassword(){
+      const val = document.getElementById('vumiPasswordField').value;
+      const btn = document.getElementById('vumiDownloadBtn');
+      btn.classList.toggle('show', val === VUMI_PASSWORD);
+    }
+
+    function vumiToggleVisibility(){
+      const pf = document.getElementById('vumiPasswordField');
+      const icon = document.getElementById('vumiEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function vumiResetLock(){
+      const pf = document.getElementById('vumiPasswordField');
+      const icon = document.getElementById('vumiEyeIcon');
+      const btn = document.getElementById('vumiDownloadBtn');
       if(pf){ pf.value = ''; pf.type = 'password'; }
       if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
       if(btn){ btn.classList.remove('show'); }
