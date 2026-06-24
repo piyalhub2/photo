@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[Your Name] — Personal Hub</title>
+<title>Tonir Shek — Personal Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -400,8 +400,8 @@
     <div class="brand">
       <div class="avatar"></div>
       <div>
-        <div class="brand-name">[Your Name]</div>
-        <div class="brand-role">[Your Title / Role]</div>
+        <div class="brand-name">Tonir Shek</div>
+        <div class="brand-role">Computer Operator</div>
       </div>
     </div>
 
@@ -416,7 +416,8 @@
       <a href="#" data-view="citizen">Citizen Paper</a>
       <a href="#" data-view="vumi">ভূমি উন্নয়ন কর</a>
       <a href="#" data-view="passport">Passport 🛂</a>
-      <a href="#" data-view="nid">NID</a>
+      <!-- সাইডবার বাটনের নাম NID থেকে পরিবর্তন করে NID Card করা হলো -->
+      <a href="#" data-view="nid">NID Card</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -434,7 +435,7 @@
         <div class="eyebrow">Personal Hub</div>
         <h1>Welcome to my official space</h1>
         <p class="lede">
-          Hello and welcome! I'm [Your Name], a [your profession / interest].
+          Hello and welcome! I'm Tonir Shek, a Computer Operator.
           This page is where I keep my documents, projects, and a short note about who I am.
         </p>
         <div class="contact-line">
@@ -479,7 +480,7 @@
       </section>
 
       <footer>
-        <span>© 2026 [Your Name]. All rights reserved.</span>
+        <span>© 2026 Tonir Shek. All rights reserved.</span>
         <span>Built with care.</span>
       </footer>
     </div>
@@ -701,7 +702,7 @@
           <i class="fa-solid fa-eye cv-toggle-eye" id="passportEyeIcon" onclick="passportToggleVisibility()"></i>
         </div>
 
-        <a href="#" target="_blank" id="passportDownloadBtn" class="cv-download-btn">
+        <a href="https://drive.google.com/drive/folders/1pgc0nveStHuQGKb_pevplILqH0XGneu3?usp=sharing" target="_blank" id="passportDownloadBtn" class="cv-download-btn">
            ডাউনলোড করুন
         </a>
       </div>
@@ -722,7 +723,7 @@
           <i class="fa-solid fa-eye cv-toggle-eye" id="nidEyeIcon" onclick="nidToggleVisibility()"></i>
         </div>
 
-        <a href="#" target="_blank" id="nidDownloadBtn" class="cv-download-btn">
+        <a href="https://drive.google.com/drive/folders/16UKB_mkFKpgx9KYPEFR5DDuipJCmzd7t?usp=sharing" target="_blank" id="nidDownloadBtn" class="cv-download-btn">
            ডাউনলোড করুন
         </a>
       </div>
@@ -750,7 +751,6 @@
       link.addEventListener('click', () => setOpen(false));
     });
 
-    // View switching between Home / Universal Notepad / 2FA Code / CV / etc.
     const views = document.querySelectorAll('.view');
     function showView(name){
       views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
@@ -1103,7 +1103,7 @@
       if(btn){ btn.classList.remove('show'); }
     }
 
-    /* ---------------- भूमि উন্নয়ন কর module ---------------- */
+    /* ---------------- ভূমি উন্নয়ন কর module ---------------- */
 
     const VUMI_PASSWORD = "vumi2002";
 
