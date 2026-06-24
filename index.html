@@ -172,7 +172,7 @@
             align-items: center;
         }
 
-        /* --- হোম পেজের কন্টেন্ট লেআউট --- */
+        /* --- ১. হোম পেজ লেআউট --- */
         #home-content {
             display: flex;
             justify-content: center;
@@ -191,46 +191,29 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* --- ইউনিভার্সাল নোটপ্যাড কার্ড লেআউট --- */
+        /* --- ২. ইউনিভার্সাল নোটপ্যাড লেআউট --- */
         #notepad-content {
-            display: none; /* শুরুতে লুকিয়ে থাকবে */
+            display: none;
             width: 100%;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
 
         .notepad-card {
             background: #ffffff;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             width: 380px;
             text-align: center;
             border: 1px solid #eee;
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.4s ease;
         }
 
-        .notepad-icon-box {
-            font-size: 50px;
-            color: #764ba2;
-            margin-bottom: 15px;
-        }
-
-        .notepad-card h2 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 22px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .notepad-card p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
+        .notepad-icon-box { font-size: 50px; color: #764ba2; margin-bottom: 15px; }
+        .notepad-card h2 { color: #2c3e50; margin-bottom: 10px; font-size: 22px; font-weight: 700; text-transform: uppercase; }
+        .notepad-card p { color: #666; font-size: 14px; margin-bottom: 25px; }
+        
         #notepad-submit-btn {
             display: inline-block;
             width: 100%;
@@ -246,12 +229,60 @@
             text-decoration: none;
             box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
         }
+        #notepad-submit-btn:hover { transform: translateY(-2px); }
 
-        #notepad-submit-btn:hover {
-            background: linear-gradient(to right, #764ba2, #667eea);
-            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
-            transform: translateY(-2px);
+        /* --- ৩. অল সিকিউরিটি কি (পাসওয়ার্ড কার্ড লেআউট) --- */
+        #security-content {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
         }
+
+        .security-card {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            text-align: center;
+            width: 360px;
+            min-height: 460px;
+            border: 1px solid #eee;
+            position: relative;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .icon-top { font-size: 55px; margin-bottom: 10px; }
+        .security-card h2 { color: #2c3e50; margin-bottom: 25px; font-size: 20px; text-transform: uppercase; font-weight: bold; }
+        
+        #timer-display {
+            display: none;
+            color: #3498db; 
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        .time-low { color: #e74c3c !important; }
+
+        .input-container { position: relative; margin-bottom: 20px; width: 100%; }
+        .security-card input {
+            width: 100%; padding: 14px; border: 2px solid #764ba2;
+            border-radius: 50px; outline: none; text-align: center; font-size: 16px;
+        }
+        .toggle-password { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #7f8c8d; }
+        
+        .sec-btn {
+            display: flex; align-items: center; width: 100%; padding: 14px 20px; margin: 12px 0;
+            border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s;
+            cursor: pointer; border: none; font-size: 16px; background: #f1f5f9; color: #2c3e50;
+            border-left: 6px solid #764ba2; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .sec-btn i { margin-right: 15px; width: 20px; text-align: center; }
+        .sec-btn:hover { background: #764ba2; color: white !important; transform: translateY(-2px); }
+
+        .submit-btn { display: none; background: #27ae60; color: white; border-radius: 50px; justify-content: center; border-left: none; }
+        #main-menu { display: none; }
 
         footer {
             text-align: center;
@@ -262,10 +293,7 @@
             border-top: 1px solid #e0e0e0;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Responsive */
         @media (max-width: 900px) {
@@ -288,7 +316,7 @@
             <li><a id="menu-home" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
             <li><a id="menu-notepad"><i class="fa-regular fa-file-lines"></i> Universal Notepad</a></li>
             <li><a><i class="fa-solid fa-key"></i> 2FA Code</a></li>
-            <li><a><i class="fa-solid fa-shield-halved"></i> All Security Key</a></li>
+            <li><a id="menu-security"><i class="fa-solid fa-shield-halved"></i> All Security Key</a></li>
             <li><a><i class="fa-regular fa-id-card"></i> CV</a></li>
             <li><a><i class="fa-solid fa-graduation-cap"></i> Diploma certificate</a></li>
             <li><a><i class="fa-solid fa-school"></i> School certificate.</a></li>
@@ -330,10 +358,10 @@
             <a href="#" class="social-icon maps"><i class="fa-solid fa-map-location-dot"></i></a>
         </div>
 
-        <!-- ডাইনামিক কন্টেন্ট বডি -->
+        <!-- ডাইনামিক কন্টেন্ট এরিয়া -->
         <div class="content-body">
             
-            <!-- ১. হোম কন্টেন্ট (ম্যাপ ও ছবি) -->
+            <!-- ১. হোম কন্টেন্ট -->
             <div id="home-content">
                 <div class="card-box">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8383344211617!2d90.4064563!3d23.7531233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzExLjIiTiA5MMKwMjQnMjMuMiJF!5e0!3m2!1sbn!2sbd!4v1650000000000!5m2!1sbn!2sbd" 
@@ -344,7 +372,7 @@
                 </div>
             </div>
 
-            <!-- ২. ইউনিভার্সাল নোটপ্যাড কন্টেন্ট (যা ক্লিক করলে দেখাবে) -->
+            <!-- ২. ইউনিভার্সাল নোটপ্যাড কন্টেন্ট -->
             <div id="notepad-content">
                 <div class="notepad-card">
                     <div class="notepad-icon-box">
@@ -359,6 +387,40 @@
                 </div>
             </div>
 
+            <!-- ৩. অল সিকিউরিটি কি কন্টেন্ট (পাসওয়ার্ড প্রোটেক্টেড) -->
+            <div id="security-content">
+                <div class="security-card">
+                    <div id="timer-display">Session ends in: <span id="seconds">30</span>s</div>
+
+                    <div id="auth-section">
+                        <div class="icon-top">🔐</div>
+                        <h2>All Security Key</h2>
+                        <div class="input-container">
+                            <input type="password" id="passwordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="checkPassword()">
+                            <i class="fas fa-eye toggle-password" id="eyeIcon" onclick="toggleVisibility()"></i>
+                        </div>
+                        <button id="submit-btn" class="sec-btn submit-btn" onclick="loginAction()">Submit</button>
+                    </div>
+
+                    <div id="main-menu">
+                        <div class="icon-top">📂</div>
+                        <h2>DASHBOARD</h2>
+                        <a href="https://mega.nz/folder/jwJXnbqb#ALwYPYGGT_E_pU6nKoiR4Q" target="_blank" class="sec-btn">
+                            <i class="fab fa-google"></i> Google Login Key
+                        </a>
+                        <a href="https://mega.nz/folder/G0pHkIoJ#4Sl-4-AwY6nmd6mtTde4JQ" target="_blank" class="sec-btn">
+                            <i class="fab fa-facebook"></i> Facebook Login Key
+                        </a>
+                        <a href="https://mega.nz/folder/DhxHBQhY#EuBGdlKXrzvep4h0HiZ21g" target="_blank" class="sec-btn">
+                            <i class="fab fa-instagram"></i> Instagram Login Key
+                        </a>
+                        <a href="https://mega.nz/folder/TtQSQIjC#gJKaWsMcFoMH5oHkXBCzqw" target="_blank" class="sec-btn">
+                            <i class="fas fa-cloud"></i> Mega Login Key
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <footer>
@@ -366,31 +428,114 @@
         </footer>
     </div>
 
-    <!-- ডাইনামিক পেজ পরিবর্তনের JavaScript লজিক -->
+    <!-- ডাইনামিক মেনু ও সিকিউরিটি লজিক এর JavaScript -->
     <script>
         const menuHome = document.getElementById('menu-home');
         const menuNotepad = document.getElementById('menu-notepad');
+        const menuSecurity = document.getElementById('menu-security');
         
         const homeContent = document.getElementById('home-content');
         const notepadContent = document.getElementById('notepad-content');
+        const securityContent = document.getElementById('security-content');
 
-        // হোমে ক্লিক করলে কি হবে
-        menuHome.addEventListener('click', function() {
-            menuHome.classList.add('active');
-            menuNotepad.classList.remove('active');
-            
-            homeContent.style.display = 'flex';
+        // সব কন্টেন্ট হাইড করার ফাংশন
+        function hideAllContents() {
+            homeContent.style.display = 'none';
             notepadContent.style.display = 'none';
+            securityContent.style.display = 'none';
+            
+            menuHome.classList.remove('active');
+            menuNotepad.classList.remove('active');
+            menuSecurity.classList.remove('active');
+        }
+
+        // মেনু নেভিগেশন
+        menuHome.addEventListener('click', function() {
+            hideAllContents();
+            menuHome.classList.add('active');
+            homeContent.style.display = 'flex';
         });
 
-        // ইউনিভার্সাল নোটপ্যাডে ক্লিক করলে কি হবে
         menuNotepad.addEventListener('click', function() {
+            hideAllContents();
             menuNotepad.classList.add('active');
-            menuHome.classList.remove('active');
-            
-            homeContent.style.display = 'none';
             notepadContent.style.display = 'flex';
         });
+
+        menuSecurity.addEventListener('click', function() {
+            hideAllContents();
+            menuSecurity.classList.add('active');
+            securityContent.style.display = 'flex';
+        });
+
+        // --- আপনার অল সিকিউরিটি কি এর আসল জাভাস্ক্রিপ্ট কোড ---
+        let timer;
+        let timeLeft = 30;
+        let timerRunning = false;
+
+        function toggleVisibility() {
+            const pf = document.getElementById('passwordField');
+            const icon = document.getElementById('eyeIcon');
+            if (pf.type === "password") {
+                pf.type = "text";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pf.type = "password";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        function checkPassword() {
+            const btn = document.getElementById('submit-btn');
+            if (document.getElementById('passwordField').value === "@TasFim2002") {
+                btn.style.display = "flex";
+            } else {
+                btn.style.display = "none";
+            }
+        }
+
+        function loginAction() {
+            document.getElementById('auth-section').style.display = "none";
+            document.getElementById('main-menu').style.display = "block";
+            if (!timerRunning) {
+                startGlobalTimer();
+            }
+        }
+
+        function startGlobalTimer() {
+            timerRunning = true;
+            timeLeft = 30;
+            const timerDisplay = document.getElementById('timer-display');
+            const secondsSpan = document.getElementById('seconds');
+            timerDisplay.style.display = "block";
+
+            timer = setInterval(() => {
+                timeLeft--;
+                secondsSpan.innerText = timeLeft;
+
+                if (timeLeft <= 5) {
+                    timerDisplay.classList.add('time-low');
+                } else {
+                    timerDisplay.classList.remove('time-low');
+                }
+
+                if (timeLeft <= 0) {
+                    logout();
+                }
+            }, 1000);
+        }
+
+        function logout() {
+            clearInterval(timer);
+            timerRunning = false;
+            document.getElementById('passwordField').value = "";
+            document.getElementById('timer-display').style.display = "none";
+            document.getElementById('timer-display').classList.remove('time-low');
+            document.getElementById('main-menu').style.display = "none";
+            document.getElementById('auth-section').style.display = "block";
+            document.getElementById('submit-btn').style.display = "none";
+            alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
+        }
     </script>
 
 </body>
