@@ -485,10 +485,27 @@
     document.querySelectorAll('[data-view]').forEach(el => {
       el.addEventListener('click', (e) => {
         e.preventDefault();
+        if(el.dataset.view === 'totp'){
+          resetAuthLock();
+        }
         showView(el.dataset.view);
         setOpen(false);
       });
     });
+
+    function resetAuthLock(){
+      authActiveCat = null;
+      const passInput = document.getElementById('authMasterPass');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const errorEl = document.getElementById('authLockError');
+      if(passInput){ passInput.value = ''; passInput.type = 'password'; }
+      if(submitBtn){ submitBtn.style.display = 'none'; }
+      if(errorEl){ errorEl.textContent = ''; }
+      document.getElementById('authEyeIcon').innerHTML = '<i class="fa-solid fa-eye"></i>';
+      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authLockScreen').classList.add('active');
+      document.getElementById('authMainTitle').textContent = '🔒 Authenticator App';
+    }
 
     /* ---------------- 2FA / Authenticator module ---------------- */
 
