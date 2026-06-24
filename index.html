@@ -1,1 +1,781 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Your Name] — Personal Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://unpkg.com/@otplib/preset-browser@12.0.1/buffer.js"></script>
+<script src="https://unpkg.com/@otplib/preset-browser@12.0.1/index.js"></script>
+<style>
+  :root{
+    --ink:#1B2430;
+    --paper:#F7F4EC;
+    --paper-deep:#EFEAE0;
+    --teal:#3E7C7B;
+    --gold:#C9A66B;
+    --slate:#5B6573;
+    --line:#DFD9CB;
+    --danger:#B23B3B;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
 
+  /* Menu toggle icon */
+  .menu-toggle{
+    position:fixed;
+    top:22px;
+    left:22px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:var(--ink);
+    border:none;
+    cursor:pointer;
+    z-index:1100;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
+    transition:left 0.3s ease;
+  }
+  .menu-toggle span{
+    width:20px;
+    height:2px;
+    background:var(--paper);
+    border-radius:2px;
+    transition:transform 0.25s ease, opacity 0.2s ease;
+  }
+  body.sidebar-open .menu-toggle{ left:300px; }
+  body.sidebar-open .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  body.sidebar-open .menu-toggle span:nth-child(2){opacity:0;}
+  body.sidebar-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease;
+    z-index:1000;
+  }
+  body.sidebar-open .overlay{ opacity:1; visibility:visible; }
+
+  /* Sidebar */
+  .sidebar{
+    width:280px;
+    flex-shrink:0;
+    background:var(--ink);
+    color:var(--paper);
+    padding:36px 28px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform 0.3s ease;
+    z-index:1050;
+  }
+  body.sidebar-open .sidebar{ transform:translateX(0); }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .avatar{
+    width:52px; height:52px; border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--teal));
+    flex-shrink:0;
+  }
+  .brand-name{ font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600; line-height:1.2; }
+  .brand-role{ font-size:0.75rem; color:#B9C2C6; margin-top:2px; }
+  nav{ display:flex; flex-direction:column; gap:2px; margin-top:8px; }
+  .nav-eyebrow{
+    font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:#8C97A0; margin:18px 0 10px;
+  }
+  nav a{
+    padding:10px 12px; border-radius:8px; font-size:0.92rem; color:#D8DEE2;
+    border-left:2px solid transparent;
+    transition:background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  nav a:hover, nav a.active{
+    background:rgba(255,255,255,0.06);
+    border-left-color:var(--gold);
+    color:var(--paper);
+  }
+  .sidebar-footer{ margin-top:auto; display:flex; gap:14px; flex-wrap:wrap; }
+  .sidebar-footer a{
+    width:34px;height:34px; border-radius:50%;
+    background:rgba(255,255,255,0.07);
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.85rem;
+  }
+  .sidebar-footer a:hover{ background:var(--teal); }
+
+  /* Main content */
+  main{
+    flex:1;
+    width:100%;
+    padding:56px 64px 56px 100px;
+    max-width:1000px;
+    margin:0 auto;
+  }
+  .hero{ border-bottom:1px solid var(--line); padding-bottom:36px; margin-bottom:36px; }
+  .eyebrow{
+    font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin-bottom:14px;
+  }
+  h1{ font-family:'Fraunces',serif; font-weight:600; font-size:2.6rem; line-height:1.1; margin:0 0 18px; }
+  .lede{ font-size:1.05rem; color:var(--slate); line-height:1.7; max-width:560px; }
+  .contact-line{ margin-top:18px; font-size:0.92rem; color:var(--slate); }
+  .contact-line a{ color:var(--teal); font-weight:500; }
+
+  section{ margin-bottom:44px; }
+  section h2{ font-family:'Fraunces',serif; font-size:1.4rem; font-weight:600; margin-bottom:14px; }
+  section p{ color:var(--slate); line-height:1.75; max-width:620px; }
+
+  .doc-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px; margin-top:18px;
+  }
+  .doc-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; display:flex; flex-direction:column; gap:6px;
+    transition:border-color 0.15s, transform 0.15s;
+  }
+  .doc-card:hover{ border-color:var(--teal); transform:translateY(-2px); }
+  .doc-card .tag{
+    font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--gold); font-weight:600;
+  }
+  .doc-card .name{ font-weight:600; font-size:0.98rem; }
+  .doc-card .desc{ font-size:0.82rem; color:var(--slate); }
+
+  footer{
+    border-top:1px solid var(--line); padding-top:24px; font-size:0.82rem;
+    color:var(--slate); display:flex; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+  }
+
+  /* View switching */
+  .view{ display:none; }
+  .view.active{ display:block; }
+  .view-embed{ flex-direction:column; height:100vh; }
+  .view-embed.active{ display:flex; }
+  .embed-header{
+    display:flex; align-items:center; gap:14px;
+    padding:18px 0 14px; border-bottom:1px solid var(--line);
+  }
+  .embed-header h2{ margin:0; font-family:'Fraunces',serif; font-size:1.3rem; }
+  .back-link{
+    font-size:0.85rem; font-weight:600; color:var(--teal); cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+  .embed-frame-wrap{
+    flex:1; margin-top:18px; border-radius:var(--radius); overflow:hidden;
+    border:1px solid var(--line); background:#fff;
+  }
+  .embed-frame-wrap iframe{ width:100%; height:100%; border:0; display:block; }
+
+  /* ---------------- All Security Key view ---------------- */
+  .sec-wrap{
+    max-width:380px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+    text-align:center;
+  }
+  .sec-icon{ font-size:2.4rem; margin-bottom:8px; }
+  .sec-title{
+    font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
+  }
+  .sec-timer{
+    display:none; color:var(--teal); font-weight:600; font-size:0.82rem;
+    margin-bottom:14px; transition:color 0.3s ease;
+  }
+  .sec-timer.time-low{ color:var(--danger); }
+
+  .sec-input-wrap{ position:relative; margin-bottom:18px; }
+  .sec-input-wrap input{
+    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
+    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
+    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
+  }
+  .sec-input-wrap input:focus{ border-color:var(--teal); }
+  .sec-toggle-eye{
+    position:absolute; right:18px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+
+  .sec-btn{
+    display:flex; align-items:center; width:100%; padding:14px 18px; margin:10px 0;
+    border-radius:12px; font-weight:600; text-decoration:none; transition:0.2s;
+    cursor:pointer; border:none; font-size:0.95rem; background:var(--paper); color:var(--ink);
+    border-left:5px solid var(--teal); box-shadow:0 2px 6px rgba(27,36,48,0.05);
+    text-align:left;
+  }
+  .sec-btn i{ margin-right:14px; width:18px; text-align:center; }
+  .sec-btn:hover{ background:var(--teal); color:#fff; transform:translateY(-2px); }
+
+  .sec-submit-btn{
+    display:none; background:var(--ink); color:var(--paper);
+    border-radius:50px; justify-content:center; border-left:none;
+  }
+  .sec-submit-btn:hover{ background:var(--teal); }
+
+  .sec-screen{ display:none; }
+  .sec-screen.active{ display:block; animation:authFade 0.3s ease-in-out; }
+  .sec-error{ color:var(--danger); font-size:0.8rem; margin-top:8px; min-height:1.1em; }
+
+  /* ---------------- 2FA / Authenticator view ---------------- */
+  .auth-wrap{
+    max-width:430px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+  }
+  .auth-title{
+    text-align:center;
+    font-family:'Fraunces',serif;
+    font-size:1.35rem;
+    font-weight:600;
+    margin:0 0 22px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+  }
+  .auth-screen{ display:none; }
+  .auth-screen.active{ display:block; animation:authFade 0.25s ease-in-out; }
+  @keyframes authFade{ from{opacity:0;} to{opacity:1;} }
+
+  .auth-pass-wrap{ position:relative; margin-bottom:16px; }
+  .auth-pass-wrap input{
+    width:100%; padding:15px 44px 15px 16px; border:1px solid var(--line);
+    border-radius:12px; box-sizing:border-box; font-size:0.98rem;
+    text-align:center; outline:none; background:var(--paper); font-family:'Inter',sans-serif;
+  }
+  .auth-pass-wrap input:focus{ border-color:var(--teal); }
+  .auth-toggle-eye{
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+  .auth-submit{
+    width:100%; padding:14px; background:var(--ink); color:var(--paper);
+    border:none; border-radius:12px; cursor:pointer; font-size:0.98rem;
+    font-weight:600; display:none;
+  }
+  .auth-submit:hover{ background:var(--teal); }
+  .auth-error{ color:var(--danger); font-size:0.82rem; text-align:center; margin-top:10px; min-height:1.1em; }
+
+  .auth-category-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .auth-cat-btn{
+    padding:18px 10px; border-radius:14px; border:1px solid var(--line);
+    background:var(--paper); cursor:pointer; font-weight:600; font-size:0.92rem;
+    text-align:center; color:var(--ink);
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    transition:border-color 0.15s, background 0.15s;
+  }
+  .auth-cat-btn:hover{ border-color:var(--teal); background:#fff; }
+  .auth-cat-btn .fa-envelope{ color:#EA4335; }
+  .auth-cat-btn .fa-facebook{ color:#1877F2; }
+  .auth-cat-btn .fa-instagram{ color:#E4405F; }
+  .auth-cat-btn .fa-tiktok{ color:#000; }
+  .auth-cat-btn .fa-cloud{ color:#00A1FF; }
+  .auth-cat-btn .fa-linkedin{ color:#0077B5; }
+  .auth-cat-btn .fa-telegram{ color:#24A1DE; }
+  .auth-cat-btn .fa-whatsapp{ color:#25D366; }
+
+  .auth-back-btn{
+    margin-bottom:14px; cursor:pointer; color:var(--teal); font-weight:600;
+    display:flex; align-items:center; gap:8px; font-size:0.88rem;
+  }
+
+  #authCodeContainer{ max-height:430px; overflow-y:auto; padding-right:4px; }
+  #authCodeContainer::-webkit-scrollbar{ width:6px; }
+  #authCodeContainer::-webkit-scrollbar-thumb{ background:var(--line); border-radius:10px; }
+
+  .auth-account-box{
+    background:var(--paper); border:1px solid var(--line); padding:15px 16px;
+    border-radius:14px; margin-bottom:12px; text-align:left; cursor:pointer;
+    transition:0.15s;
+  }
+  .auth-account-box:hover{ border-color:var(--teal); }
+  .auth-account-box:active{ background:var(--paper-deep); }
+  .auth-account-name{
+    font-size:0.7rem; font-weight:700; color:var(--slate);
+    text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:6px;
+  }
+  .auth-otp-code{
+    font-size:1.9rem; font-weight:700; color:var(--ink);
+    letter-spacing:0.12em; font-family:'Courier New', monospace;
+  }
+  .auth-progress-bar{ height:5px; background:var(--line); border-radius:10px; margin-top:10px; overflow:hidden; }
+  .auth-progress-fill{ height:100%; background:var(--gold); width:0%; transition:width 1s linear; }
+
+  .auth-copy-alert{
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    background:var(--teal); color:#fff; padding:10px 26px;
+    border-radius:50px; font-weight:600; font-size:0.85rem; display:none; z-index:1200;
+    box-shadow:0 8px 20px rgba(0,0,0,0.18);
+  }
+
+  @media (max-width:780px){
+    .sidebar{ width:84%; max-width:300px; }
+    main{ padding:88px 22px 40px; }
+    h1{ font-size:2rem; }
+    .auth-wrap{ padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="authCopyNotice" class="auth-copy-alert">Copied!</div>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="avatar"></div>
+      <div>
+        <div class="brand-name">[Your Name]</div>
+        <div class="brand-role">[Your Title / Role]</div>
+      </div>
+    </div>
+
+    <nav>
+      <a href="#home" class="active" data-view="default">Home</a>
+      <a href="#" data-view="notepad">Universal Notepad</a>
+      <a href="#" data-view="totp">2FA Code</a>
+      <a href="#" data-view="security">All Security Key</a>
+      <a href="#docs">CV</a>
+      <a href="#docs">Diploma certificate</a>
+      <a href="#docs">School certificate.</a>
+      <a href="#docs">Citizen Paper</a>
+      <a href="#docs">ভূমি উন্নয়ন কর</a>
+      <a href="#docs">Passport 🛂</a>
+      <a href="#docs">NID card</a>
+      <a href="#docs">5 feet size photo</a>
+      <a href="#docs">private photo 🔏</a>
+      <a href="#docs">Google Photo in Gmail</a>
+      <a href="#docs">Backup Sites</a>
+      <a href="#docs">public phone number</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">ig</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="GitHub">gh</a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="view view-default active" id="view-default">
+      <section class="hero" id="home">
+        <div class="eyebrow">Personal Hub</div>
+        <h1>Welcome to my official space</h1>
+        <p class="lede">
+          Hello and welcome! I'm [Your Name], a [your profession / interest].
+          This page is where I keep my documents, projects, and a short note about who I am.
+        </p>
+        <div class="contact-line">
+          Email: <a href="mailto:you@example.com">you@example.com</a>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          Write a short paragraph here about your background, what you do, and what
+          visitors can find on this page. Keep it to two or three sentences so it stays
+          easy to read.
+        </p>
+      </section>
+
+      <section id="docs">
+        <h2>Documents &amp; Links</h2>
+        <p>Quick links to the things you want to share or keep handy.</p>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <span class="tag">Profile</span>
+            <span class="name">Resume / CV</span>
+            <span class="desc">Latest version of your resume</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Profile</span>
+            <span class="name">Certificates</span>
+            <span class="desc">Diplomas and course certificates</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Notes</span>
+            <span class="name">Notepad</span>
+            <span class="desc">Personal notes or reminders</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Media</span>
+            <span class="name">Gallery</span>
+            <span class="desc">Photos you'd like to share</span>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>© 2026 [Your Name]. All rights reserved.</span>
+        <span>Built with care.</span>
+      </footer>
+    </div>
+
+    <div class="view view-embed" id="view-notepad">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Universal Notepad</h2>
+      </div>
+      <div class="embed-frame-wrap">
+        <iframe
+          src="https://padlet.com/embed/nr4reivmk131jnpk"
+          allow="camera;microphone;geolocation"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-security">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>All Security Key</h2>
+      </div>
+
+      <div class="sec-wrap">
+        <div class="sec-timer" id="secTimerDisplay">Session ends in: <span id="secSeconds">30</span>s</div>
+
+        <div id="secAuthScreen" class="sec-screen active">
+          <div class="sec-icon">🔐</div>
+          <h2 class="sec-title">All Security Key</h2>
+          <div class="sec-input-wrap">
+            <input type="password" id="secPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="secCheckPassword()">
+            <i class="fas fa-eye sec-toggle-eye" id="secEyeIcon" onclick="secToggleVisibility()"></i>
+          </div>
+          <button id="secSubmitBtn" class="sec-btn sec-submit-btn" onclick="secLoginAction()">Submit</button>
+          <div class="sec-error" id="secLockError"></div>
+        </div>
+
+        <div id="secMainMenu" class="sec-screen">
+          <div class="sec-icon">📂</div>
+          <h2 class="sec-title">Dashboard</h2>
+          <a href="https://mega.nz/folder/jwJXnbqb#ALwYPYGGT_E_pU6nKoiR4Q" target="_blank" class="sec-btn">
+            <i class="fab fa-google"></i> Google Login Key
+          </a>
+          <a href="https://mega.nz/folder/G0pHkIoJ#4Sl-4-AwY6nmd6mtTde4JQ" target="_blank" class="sec-btn">
+            <i class="fab fa-facebook"></i> Facebook Login Key
+          </a>
+          <a href="https://mega.nz/folder/DhxHBQhY#EuBGdlKXrzvep4h0HiZ21g" target="_blank" class="sec-btn">
+            <i class="fab fa-instagram"></i> Instagram Login Key
+          </a>
+          <a href="https://mega.nz/folder/TtQSQIjC#gJKaWsMcFoMH5oHkXBCzqw" target="_blank" class="sec-btn">
+            <i class="fas fa-cloud"></i> Mega Login Key
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-totp">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>2FA Code</h2>
+      </div>
+
+      <div class="auth-wrap">
+        <h2 class="auth-title" id="authMainTitle">🔒 Authenticator App</h2>
+
+        <div id="authLockScreen" class="auth-screen active">
+          <div class="auth-pass-wrap">
+            <input type="password" id="authMasterPass" placeholder="Enter Password" oninput="authValidatePass()">
+            <span class="auth-toggle-eye" id="authEyeIcon" onclick="authTogglePass()"><i class="fa-solid fa-eye"></i></span>
+          </div>
+          <button id="authSubmitBtn" class="auth-submit" onclick="authUnlock()">Submit</button>
+          <div class="auth-error" id="authLockError"></div>
+        </div>
+
+        <div id="authMenuScreen" class="auth-screen">
+          <div class="auth-category-grid">
+            <div class="auth-cat-btn" onclick="authOpenCategory('Gmail')"><i class="fa-solid fa-envelope"></i> Gmail</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Facebook')"><i class="fa-brands fa-facebook"></i> Facebook</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Instagram')"><i class="fa-brands fa-instagram"></i> Instagram</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('TikTok')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Mega')"><i class="fa-solid fa-cloud"></i> Mega</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('linkedin')"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Telegram')"><i class="fa-brands fa-telegram"></i> Telegram</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('WhatsApp')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</div>
+          </div>
+        </div>
+
+        <div id="authListScreen" class="auth-screen">
+          <div class="auth-back-btn" onclick="authShowMenu()"><i class="fa-solid fa-arrow-left"></i> Back to Menu</div>
+          <div id="authCodeContainer"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const body = document.body;
+    const menuToggle = document.getElementById('menuToggle');
+    const overlay = document.getElementById('overlay');
+    const sidebar = document.getElementById('sidebar');
+
+    function setOpen(open){
+      body.classList.toggle('sidebar-open', open);
+      menuToggle.setAttribute('aria-expanded', open);
+    }
+
+    menuToggle.addEventListener('click', () => {
+      setOpen(!body.classList.contains('sidebar-open'));
+    });
+    overlay.addEventListener('click', () => setOpen(false));
+
+    sidebar.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    // View switching between Home / Universal Notepad / 2FA Code
+    const views = document.querySelectorAll('.view');
+    function showView(name){
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      sidebar.querySelectorAll('[data-view]').forEach(el => {
+        el.classList.toggle('active', el.dataset.view === name && el.tagName === 'A');
+      });
+    }
+    document.querySelectorAll('[data-view]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(el.dataset.view === 'totp'){
+          resetAuthLock();
+        }
+        if(el.dataset.view === 'security'){
+          secLogout(true);
+        }
+        showView(el.dataset.view);
+        setOpen(false);
+      });
+    });
+
+    function resetAuthLock(){
+      authActiveCat = null;
+      const passInput = document.getElementById('authMasterPass');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const errorEl = document.getElementById('authLockError');
+      if(passInput){ passInput.value = ''; passInput.type = 'password'; }
+      if(submitBtn){ submitBtn.style.display = 'none'; }
+      if(errorEl){ errorEl.textContent = ''; }
+      document.getElementById('authEyeIcon').innerHTML = '<i class="fa-solid fa-eye"></i>';
+      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authLockScreen').classList.add('active');
+      document.getElementById('authMainTitle').textContent = '🔒 Authenticator App';
+    }
+
+    /* ---------------- 2FA / Authenticator module ---------------- */
+
+    const MASTER_PASS = "@TasFim2002";
+
+    const MY_KEYS = {
+      'Gmail': [
+        { name: "Mother ID", secret: "aujnnbddt3agjc7b6uctiuz6ufafqndq" },
+        { name: "Tonirsheikh", secret: "5inr2fq6o45pxh5uegy64ooiqu5iqd76" },
+        { name: "Tonirhub", secret: "lfecn7uuyu55tgdouq3axap4e2k53ckt" },
+        { name: "Tonirshaik0", secret: "4astr2qmo2zzb3vtr4c7fsnzhwhlva3b" },
+        { name: "Tonirshaik 1", secret: "j4qfnxck72reg4fn364nrgbygnfivnpd" },
+        { name: "Tonirshaik 2", secret: "5hy36yjqsnmrxaifp4ltzvwn5szfu7bn" },
+        { name: "Tonirshaik 3", secret: "5k5l2oj6n5p6qamyqr2x6csoegjruzdj" },
+        { name: "Tonirshaik 4", secret: "z7wgsfpwrb65orlhdxxtksexsg2jokwd" },
+        { name: "Tonirshaik 5", secret: "i4ygsg42ajmmbsyp7tqusght66oretqc" },
+        { name: "Tonirshaik 6", secret: "tykehtzu2thyujyhy24mzffkj276d2va" },
+        { name: "Tonirshaik 7", secret: "4slkocuzgh5j6fys44mj4ltr7fbrftjs" }
+      ],
+      'Facebook': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }],
+      'Instagram': [
+        { name: "Mother ID", secret: "GE53M7WL27FDOYOAVBDOPIIJYVTRNL7Z" },
+        { name: "md_piyal44", secret: "AKVFX7XREVZLXA73O3RFSIN3ZN3DWLCR" }
+      ],
+      'TikTok': [{ name: "Mother ID", secret: "GTW77ISPZ5TTTQ3KY4S6ANFOCD75QH2J" }],
+      'Mega': [{ name: "Mother ID", secret: "76guupnr2aisixjhcxqf42ez2sjas7rnlm2zlc52j6nty5zbwboq" }],
+      'linkedin': [{ name: "Mother ID", secret: "MDAK2X55F2DAWSZUCNYRRAGRLLM46FAJ" }],
+      'Telegram': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }],
+      'WhatsApp': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }]
+    };
+
+    function authTogglePass(){
+      const p = document.getElementById('authMasterPass');
+      const eye = document.getElementById('authEyeIcon');
+      if(p.type === "password"){
+        p.type = "text";
+        eye.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        p.type = "password";
+        eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
+    }
+
+    function authValidatePass(){
+      const val = document.getElementById('authMasterPass').value;
+      const btn = document.getElementById('authSubmitBtn');
+      btn.style.display = (val === MASTER_PASS) ? "block" : "none";
+      document.getElementById('authLockError').textContent = '';
+    }
+
+    let authTimerStarted = false;
+    function authUnlock(){
+      authShowMenu();
+      if(!authTimerStarted){
+        authTimerStarted = true;
+        setInterval(authUpdateOTP, 1000);
+      }
+    }
+
+    function authCopyText(text){
+      navigator.clipboard?.writeText(text);
+      const notice = document.getElementById('authCopyNotice');
+      notice.style.display = 'block';
+      setTimeout(() => { notice.style.display = 'none'; }, 1300);
+    }
+
+    function authShowMenu(){
+      document.getElementById('authMainTitle').textContent = "🔒 Authenticator App";
+      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authMenuScreen').classList.add('active');
+    }
+
+    let authActiveCat = null;
+    function authOpenCategory(cat){
+      authActiveCat = cat;
+      document.getElementById('authMainTitle').textContent = cat + " Code";
+      const container = document.getElementById('authCodeContainer');
+      container.innerHTML = "";
+
+      MY_KEYS[cat].forEach((acc, i) => {
+        container.innerHTML += `
+          <div class="auth-account-box" onclick="authCopyText(document.getElementById('auth-otp-${i}').innerText)">
+            <span class="auth-account-name">${acc.name}</span>
+            <div id="auth-otp-${i}" class="auth-otp-code">------</div>
+            <div class="auth-progress-bar"><div id="auth-bar-${i}" class="auth-progress-fill"></div></div>
+          </div>`;
+      });
+
+      document.getElementById('authMenuScreen').classList.remove('active');
+      document.getElementById('authListScreen').classList.add('active');
+      authUpdateOTP();
+    }
+
+    function authUpdateOTP(){
+      if(!authActiveCat || !MY_KEYS[authActiveCat] || MY_KEYS[authActiveCat].length === 0) return;
+      const remaining = otplib.authenticator.timeRemaining();
+      const pct = (remaining / 30) * 100;
+
+      MY_KEYS[authActiveCat].forEach((acc, i) => {
+        try{
+          const code = otplib.authenticator.generate(acc.secret.replace(/\s/g, ''));
+          const codeEl = document.getElementById(`auth-otp-${i}`);
+          const barEl = document.getElementById(`auth-bar-${i}`);
+          if(codeEl) codeEl.textContent = code;
+          if(barEl) barEl.style.width = pct + "%";
+        } catch(e){ /* invalid secret, skip */ }
+      });
+    }
+
+    /* ---------------- All Security Key module ---------------- */
+
+    const SEC_MASTER_PASS = "@TasFim2002";
+    let secTimer;
+    let secTimeLeft = 30;
+    let secTimerRunning = false;
+
+    function secToggleVisibility(){
+      const pf = document.getElementById('secPasswordField');
+      const icon = document.getElementById('secEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function secCheckPassword(){
+      const btn = document.getElementById('secSubmitBtn');
+      btn.style.display = (document.getElementById('secPasswordField').value === SEC_MASTER_PASS) ? "flex" : "none";
+      document.getElementById('secLockError').textContent = '';
+    }
+
+    function secLoginAction(){
+      document.getElementById('secAuthScreen').classList.remove('active');
+      document.getElementById('secMainMenu').classList.add('active');
+      secStartTimer();
+    }
+
+    function secStartTimer(){
+      secTimerRunning = true;
+      secTimeLeft = 30;
+      const timerDisplay = document.getElementById('secTimerDisplay');
+      const secondsSpan = document.getElementById('secSeconds');
+      timerDisplay.style.display = "block";
+      clearInterval(secTimer);
+
+      secTimer = setInterval(() => {
+        secTimeLeft--;
+        secondsSpan.innerText = secTimeLeft;
+        timerDisplay.classList.toggle('time-low', secTimeLeft <= 5);
+        if(secTimeLeft <= 0){ secLogout(false); }
+      }, 1000);
+    }
+
+    // silent = true skips the "session expired" alert (used when the
+    // person simply navigates away and back through the sidebar).
+    function secLogout(silent){
+      clearInterval(secTimer);
+      secTimerRunning = false;
+      document.getElementById('secPasswordField').value = "";
+      document.getElementById('secPasswordField').type = "password";
+      document.getElementById('secEyeIcon').classList.replace('fa-eye-slash', 'fa-eye');
+      document.getElementById('secTimerDisplay').style.display = "none";
+      document.getElementById('secTimerDisplay').classList.remove('time-low');
+      document.getElementById('secMainMenu').classList.remove('active');
+      document.getElementById('secAuthScreen').classList.add('active');
+      document.getElementById('secSubmitBtn').style.display = "none";
+      document.getElementById('secLockError').textContent = '';
+      if(!silent){
+        alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
+      }
+    }
+  </script>
+</body>
+</html>
