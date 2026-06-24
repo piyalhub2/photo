@@ -29,6 +29,54 @@
   }
   a{color:inherit;text-decoration:none;}
 
+  /* Menu toggle icon */
+  .menu-toggle{
+    position:fixed;
+    top:22px;
+    left:22px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:var(--ink);
+    border:none;
+    cursor:pointer;
+    z-index:1100;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
+    transition:left 0.3s ease;
+  }
+  .menu-toggle span{
+    width:20px;
+    height:2px;
+    background:var(--paper);
+    border-radius:2px;
+    transition:transform 0.25s ease, opacity 0.2s ease;
+  }
+  body.sidebar-open .menu-toggle{
+    left:300px;
+  }
+  body.sidebar-open .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  body.sidebar-open .menu-toggle span:nth-child(2){opacity:0;}
+  body.sidebar-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease;
+    z-index:1000;
+  }
+  body.sidebar-open .overlay{
+    opacity:1;
+    visibility:visible;
+  }
+
   /* Sidebar */
   .sidebar{
     width:280px;
@@ -39,6 +87,17 @@
     display:flex;
     flex-direction:column;
     gap:28px;
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform 0.3s ease;
+    z-index:1050;
+  }
+  body.sidebar-open .sidebar{
+    transform:translateX(0);
   }
   .brand{
     display:flex;
@@ -107,8 +166,10 @@
   /* Main content */
   main{
     flex:1;
-    padding:56px 64px;
-    max-width:920px;
+    width:100%;
+    padding:56px 64px 56px 100px;
+    max-width:1000px;
+    margin:0 auto;
   }
   .hero{
     border-bottom:1px solid var(--line);
@@ -203,18 +264,63 @@
     gap:10px;
   }
 
+  .view{display:none;}
+  .view.active{display:block;}
+  .view-embed{
+    flex-direction:column;
+    height:calc(100vh - 0px);
+  }
+  .view-embed.active{display:flex;}
+  .embed-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px 0 14px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:0;
+  }
+  .embed-header h2{margin:0;font-family:'Fraunces',serif;font-size:1.3rem;}
+  .back-link{
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--teal);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .back-link:hover{text-decoration:underline;}
+  .embed-frame-wrap{
+    flex:1;
+    margin-top:18px;
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+  .embed-frame-wrap iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+
   @media (max-width:780px){
-    body{flex-direction:column;}
-    .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;align-items:center;padding:20px;}
-    nav{display:none;}
-    main{padding:32px 22px;}
+    .sidebar{width:84%;max-width:300px;}
+    main{padding:88px 22px 40px;}
     h1{font-size:2rem;}
   }
 </style>
 </head>
 <body>
 
-  <aside class="sidebar">
+  <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="avatar"></div>
       <div>
@@ -224,14 +330,22 @@
     </div>
 
     <nav>
-      <a href="#home" class="active">Home</a>
-      <a href="#about">About</a>
-
-      <div class="nav-eyebrow">Documents</div>
-      <a href="#docs">Resume / CV</a>
-      <a href="#docs">Certificates</a>
-      <a href="#docs">Notes</a>
-      <a href="#docs">Gallery</a>
+      <a href="#home" class="active" data-view="default">Home</a>
+      <a href="#" data-view="notepad">Universal Notepad</a>
+      <a href="#docs">2FA Code</a>
+      <a href="#docs">All Security Key</a>
+      <a href="#docs">CV</a>
+      <a href="#docs">Diploma certificate</a>
+      <a href="#docs">School certificate.</a>
+      <a href="#docs">Citizen Paper</a>
+      <a href="#docs">ভূমি উন্নয়ন কর</a>
+      <a href="#docs">Passport 🛂</a>
+      <a href="#docs">NID card</a>
+      <a href="#docs">5 feet size photo</a>
+      <a href="#docs">private photo 🔏</a>
+      <a href="#docs">Google Photo in Gmail</a>
+      <a href="#docs">Backup Sites</a>
+      <a href="#docs">public phone number</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -243,59 +357,115 @@
   </aside>
 
   <main>
-    <section class="hero" id="home">
-      <div class="eyebrow">Personal Hub</div>
-      <h1>Welcome to my official space</h1>
-      <p class="lede">
-        Hello and welcome! I'm [Your Name], a [your profession / interest].
-        This page is where I keep my documents, projects, and a short note about who I am.
-      </p>
-      <div class="contact-line">
-        Email: <a href="mailto:you@example.com">you@example.com</a>
+    <div class="view view-default active" id="view-default">
+      <section class="hero" id="home">
+        <div class="eyebrow">Personal Hub</div>
+        <h1>Welcome to my official space</h1>
+        <p class="lede">
+          Hello and welcome! I'm [Your Name], a [your profession / interest].
+          This page is where I keep my documents, projects, and a short note about who I am.
+        </p>
+        <div class="contact-line">
+          Email: <a href="mailto:you@example.com">you@example.com</a>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          Write a short paragraph here about your background, what you do, and what
+          visitors can find on this page. Keep it to two or three sentences so it stays
+          easy to read.
+        </p>
+      </section>
+
+      <section id="docs">
+        <h2>Documents &amp; Links</h2>
+        <p>Quick links to the things you want to share or keep handy.</p>
+        <div class="doc-grid">
+          <div class="doc-card">
+            <span class="tag">Profile</span>
+            <span class="name">Resume / CV</span>
+            <span class="desc">Latest version of your resume</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Profile</span>
+            <span class="name">Certificates</span>
+            <span class="desc">Diplomas and course certificates</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Notes</span>
+            <span class="name">Notepad</span>
+            <span class="desc">Personal notes or reminders</span>
+          </div>
+          <div class="doc-card">
+            <span class="tag">Media</span>
+            <span class="name">Gallery</span>
+            <span class="desc">Photos you'd like to share</span>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>© 2026 [Your Name]. All rights reserved.</span>
+        <span>Built with care.</span>
+      </footer>
+    </div>
+
+    <div class="view view-embed" id="view-notepad">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Universal Notepad</h2>
       </div>
-    </section>
-
-    <section id="about">
-      <h2>About</h2>
-      <p>
-        Write a short paragraph here about your background, what you do, and what
-        visitors can find on this page. Keep it to two or three sentences so it stays
-        easy to read.
-      </p>
-    </section>
-
-    <section id="docs">
-      <h2>Documents &amp; Links</h2>
-      <p>Quick links to the things you want to share or keep handy.</p>
-      <div class="doc-grid">
-        <div class="doc-card">
-          <span class="tag">Profile</span>
-          <span class="name">Resume / CV</span>
-          <span class="desc">Latest version of your resume</span>
-        </div>
-        <div class="doc-card">
-          <span class="tag">Profile</span>
-          <span class="name">Certificates</span>
-          <span class="desc">Diplomas and course certificates</span>
-        </div>
-        <div class="doc-card">
-          <span class="tag">Notes</span>
-          <span class="name">Notepad</span>
-          <span class="desc">Personal notes or reminders</span>
-        </div>
-        <div class="doc-card">
-          <span class="tag">Media</span>
-          <span class="name">Gallery</span>
-          <span class="desc">Photos you'd like to share</span>
-        </div>
+      <div class="embed-frame-wrap">
+        <iframe
+          src="https://padlet.com/embed/nr4reivmk131jnpk"
+          allow="camera;microphone;geolocation"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
       </div>
-    </section>
-
-    <footer>
-      <span>© 2026 [Your Name]. All rights reserved.</span>
-      <span>Built with care.</span>
-    </footer>
+    </div>
   </main>
 
+  <script>
+    const body = document.body;
+    const menuToggle = document.getElementById('menuToggle');
+    const overlay = document.getElementById('overlay');
+    const sidebar = document.getElementById('sidebar');
+
+    function setOpen(open){
+      body.classList.toggle('sidebar-open', open);
+      menuToggle.setAttribute('aria-expanded', open);
+    }
+
+    menuToggle.addEventListener('click', () => {
+      setOpen(!body.classList.contains('sidebar-open'));
+    });
+    overlay.addEventListener('click', () => setOpen(false));
+
+    // Close the sidebar after picking a link, but let the link's own
+    // default action (navigating to #anchor) happen first.
+    sidebar.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    // View switching: swap between the default content and the
+    // embedded Universal Notepad view, all inside this same page.
+    const views = document.querySelectorAll('.view');
+    function showView(name){
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      sidebar.querySelectorAll('[data-view]').forEach(el => {
+        el.classList.toggle('active', el.dataset.view === name && el.tagName === 'A');
+      });
+    }
+    document.querySelectorAll('[data-view]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        showView(el.dataset.view);
+        setOpen(false);
+      });
+    });
+  </script>
 </body>
 </html>
