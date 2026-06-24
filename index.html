@@ -14,7 +14,6 @@
       --bg2:#0d1230;
       --surface:rgba(255,255,255,.06);
       --surface-2:rgba(255,255,255,.08);
-      --card:rgba(255,255,255,.08);
       --line:rgba(255,255,255,.12);
       --text:#f8f9ff;
       --muted:rgba(248,249,255,.7);
@@ -386,10 +385,7 @@
 
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    .masonry{
-      columns:4;
-      column-gap:16px;
-    }
+    .masonry{columns:4;column-gap:16px}
 
     .photo-item{
       break-inside:avoid;
@@ -459,10 +455,7 @@
       line-height:1.35;
     }
 
-    .photo-actions{
-      display:flex;
-      gap:8px;
-    }
+    .photo-actions{display:flex;gap:8px}
 
     .photo-action-btn{
       width:34px;
@@ -515,11 +508,7 @@
       box-shadow:var(--shadow);
     }
 
-    .strip-item img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
+    .strip-item img{width:100%;height:100%;object-fit:cover}
 
     @keyframes marquee{
       from{transform:translateX(0)}
@@ -613,7 +602,6 @@
     }
 
     .lb-close:hover{color:var(--gold)}
-
     .lb-nav{
       position:fixed;
       top:50%;
@@ -680,13 +668,7 @@
     }
 
     .footer-logo span{color:var(--gold)}
-
-    .footer-copy{
-      font-size:12px;
-      color:var(--muted);
-      letter-spacing:.05em;
-    }
-
+    .footer-copy{font-size:12px;color:var(--muted);letter-spacing:.05em}
     .footer-site-link{
       font-size:11px;
       letter-spacing:.15em;
@@ -771,18 +753,9 @@
       <div class="hero-card">
         <div class="hero-card-inner">
           <div class="stats">
-            <div class="stat">
-              <b id="photoCount">0</b>
-              <span>Photos</span>
-            </div>
-            <div class="stat">
-              <b>2026</b>
-              <span>Collection</span>
-            </div>
-            <div class="stat">
-              <b>HD</b>
-              <span>Memories</span>
-            </div>
+            <div class="stat"><b id="photoCount">0</b><span>Photos</span></div>
+            <div class="stat"><b>2026</b><span>Collection</span></div>
+            <div class="stat"><b>HD</b><span>Memories</span></div>
           </div>
 
           <div class="preview-grid">
@@ -812,18 +785,9 @@
       </div>
 
       <div class="stats-row">
-        <div>
-          <div class="stat-num" id="photoCount2">0</div>
-          <div class="stat-label">Photos</div>
-        </div>
-        <div>
-          <div class="stat-num">2026</div>
-          <div class="stat-label">Collection</div>
-        </div>
-        <div>
-          <div class="stat-num">∞</div>
-          <div class="stat-label">Memories</div>
-        </div>
+        <div><div class="stat-num" id="photoCount2">0</div><div class="stat-label">Photos</div></div>
+        <div><div class="stat-num">2026</div><div class="stat-label">Collection</div></div>
+        <div><div class="stat-num">∞</div><div class="stat-label">Memories</div></div>
       </div>
 
       <div class="filters">
@@ -876,7 +840,8 @@
     cursor.id = 'cursor';
     document.body.appendChild(cursor);
 
-    const cursorStyle = `
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
       #cursor{
         position:fixed;width:10px;height:10px;border-radius:50%;
         background:linear-gradient(135deg,#ffd166,#ff5ea8,#4ddcff);
@@ -886,8 +851,6 @@
       }
       @media (max-width: 760px){ #cursor{display:none} }
     `;
-    const styleEl = document.createElement('style');
-    styleEl.textContent = cursorStyle;
     document.head.appendChild(styleEl);
 
     document.addEventListener('mousemove', e => {
@@ -899,7 +862,6 @@
     const catLabels = ['Portrait','Lifestyle','Editorial'];
     let allPhotos = [];
     let currentIdx = 0;
-    let activePhotos = [];
 
     const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaikrefs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
 
@@ -913,7 +875,6 @@
           cat: categories[i % 3],
           title: `Photo ${i + 1}`
         }));
-        activePhotos = allPhotos.slice();
         document.getElementById('photoCount').textContent = allPhotos.length;
         document.getElementById('photoCount2').textContent = allPhotos.length;
         document.getElementById('loadingState').style.display = 'none';
@@ -922,7 +883,8 @@
         buildStrip(allPhotos);
       })
       .catch(() => {
-        document.getElementById('loadingState').innerHTML = '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
+        document.getElementById('loadingState').innerHTML =
+          '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
       });
 
     const imgObserver = new IntersectionObserver((entries) => {
@@ -941,12 +903,10 @@
     function renderGallery(photos){
       const masonry = document.getElementById('masonry');
       masonry.innerHTML = '';
-      activePhotos = photos;
 
       photos.forEach((p, i) => {
         const item = document.createElement('div');
         item.className = 'photo-item reveal';
-        item.dataset.cat = p.cat;
 
         const placeholder = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 4"><rect width="3" height="4" fill="%23141A30"/></svg>';
 
@@ -1032,10 +992,12 @@
     document.getElementById('lightbox').addEventListener('click', e => {
       if(e.target === e.currentTarget) closeLightbox();
     });
+
     document.getElementById('lbPrev').onclick = () => {
       currentIdx = (currentIdx - 1 + allPhotos.length) % allPhotos.length;
       updateLightbox();
     };
+
     document.getElementById('lbNext').onclick = () => {
       currentIdx = (currentIdx + 1) % allPhotos.length;
       updateLightbox();
@@ -1059,8 +1021,6 @@
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
     observeReveal();
-
-    window.openLightbox = openLightbox;
   </script>
 </body>
 </html>
