@@ -415,13 +415,8 @@
       <a href="#" data-view="school">School certificate.</a>
       <a href="#" data-view="citizen">Citizen Paper</a>
       <a href="#" data-view="vumi">ভূমি উন্নয়ন কর</a>
-      <a href="#docs">Passport 🛂</a>
-      <a href="#docs">NID card</a>
-      <a href="#docs">5 feet size photo</a>
-      <a href="#docs">private photo 🔏</a>
-      <a href="#docs">Google Photo in Gmail</a>
-      <a href="#docs">Backup Sites</a>
-      <a href="#docs">public phone number</a>
+      <a href="#" data-view="passport">Passport 🛂</a>
+      <a href="#" data-view="nid">NID</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -691,6 +686,48 @@
       </div>
     </div>
 
+    <div class="view view-default" id="view-passport">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Passport 🛂</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-passport"></i></div>
+        <h2 class="cv-title">Passport PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="passportPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="passportCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="passportEyeIcon" onclick="passportToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" id="passportDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-nid">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>NID</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-id-card"></i></div>
+        <h2 class="cv-title">NID Card PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="nidPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="nidCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="nidEyeIcon" onclick="nidToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" id="nidDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -744,6 +781,12 @@
         }
         if(el.dataset.view === 'vumi'){
           vumiResetLock();
+        }
+        if(el.dataset.view === 'passport'){
+          passportResetLock();
+        }
+        if(el.dataset.view === 'nid'){
+          nidResetLock();
         }
         showView(el.dataset.view);
         setOpen(false);
@@ -919,8 +962,6 @@
       }, 1000);
     }
 
-    // silent = true skips the "session expired" alert (used when the
-    // person simply navigates away and back through the sidebar).
     function secLogout(silent){
       clearInterval(secTimer);
       secTimerRunning = false;
@@ -1062,7 +1103,7 @@
       if(btn){ btn.classList.remove('show'); }
     }
 
-    /* ---------------- ভূমি উন্নয়ন কর module ---------------- */
+    /* ---------------- भूमि উন্নয়ন কর module ---------------- */
 
     const VUMI_PASSWORD = "vumi2002";
 
@@ -1088,6 +1129,68 @@
       const pf = document.getElementById('vumiPasswordField');
       const icon = document.getElementById('vumiEyeIcon');
       const btn = document.getElementById('vumiDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- Passport module ---------------- */
+
+    const PASSPORT_PASSWORD = "passport2002";
+
+    function passportCheckPassword(){
+      const val = document.getElementById('passportPasswordField').value;
+      const btn = document.getElementById('passportDownloadBtn');
+      btn.classList.toggle('show', val === PASSPORT_PASSWORD);
+    }
+
+    function passportToggleVisibility(){
+      const pf = document.getElementById('passportPasswordField');
+      const icon = document.getElementById('passportEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function passportResetLock(){
+      const pf = document.getElementById('passportPasswordField');
+      const icon = document.getElementById('passportEyeIcon');
+      const btn = document.getElementById('passportDownloadBtn');
+      if(pf){ pf.value = ''; pf.type = 'password'; }
+      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+      if(btn){ btn.classList.remove('show'); }
+    }
+
+    /* ---------------- NID module ---------------- */
+
+    const NID_PASSWORD = "nid2002";
+
+    function nidCheckPassword(){
+      const val = document.getElementById('nidPasswordField').value;
+      const btn = document.getElementById('nidDownloadBtn');
+      btn.classList.toggle('show', val === NID_PASSWORD);
+    }
+
+    function nidToggleVisibility(){
+      const pf = document.getElementById('nidPasswordField');
+      const icon = document.getElementById('nidEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function nidResetLock(){
+      const pf = document.getElementById('nidPasswordField');
+      const icon = document.getElementById('nidEyeIcon');
+      const btn = document.getElementById('nidDownloadBtn');
       if(pf){ pf.value = ''; pf.type = 'password'; }
       if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
       if(btn){ btn.classList.remove('show'); }
