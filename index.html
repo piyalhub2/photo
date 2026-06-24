@@ -66,6 +66,7 @@
             font-size: 14px;
             transition: 0.3s;
             border-left: 4px solid transparent;
+            cursor: pointer;
         }
 
         .sidebar-menu li a:hover, .sidebar-menu li a.active {
@@ -162,14 +163,22 @@
         .telegram { background-color: #0088cc; }
         .maps { background-color: #4285F4; }
 
-        /* Body Content */
+        /* Content Body Wrapper */
         .content-body {
             padding: 40px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- হোম পেজের কন্টেন্ট লেআউট --- */
+        #home-content {
             display: flex;
             justify-content: center;
             gap: 40px;
             flex-wrap: wrap;
-            flex: 1;
+            width: 100%;
         }
 
         .card-box {
@@ -182,6 +191,68 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
+        /* --- ইউনিভার্সাল নোটপ্যাড কার্ড লেআউট --- */
+        #notepad-content {
+            display: none; /* শুরুতে লুকিয়ে থাকবে */
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .notepad-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            width: 380px;
+            text-align: center;
+            border: 1px solid #eee;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .notepad-icon-box {
+            font-size: 50px;
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+
+        .notepad-card h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .notepad-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        #notepad-submit-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.3);
+        }
+
+        #notepad-submit-btn:hover {
+            background: linear-gradient(to right, #764ba2, #667eea);
+            box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+            transform: translateY(-2px);
+        }
+
         footer {
             text-align: center;
             padding: 15px;
@@ -189,6 +260,11 @@
             font-size: 13px;
             color: #666666;
             border-top: 1px solid #e0e0e0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive */
@@ -209,22 +285,22 @@
             <h3>Tonir Shaik</h3>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="#" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
-            <li><a href="#"><i class="fa-regular fa-file-lines"></i> Universal Notepad</a></li>
-            <li><a href="#"><i class="fa-solid fa-key"></i> 2FA Code</a></li>
-            <li><a href="#"><i class="fa-solid fa-shield-halved"></i> All Security Key</a></li>
-            <li><a href="#"><i class="fa-regular fa-id-card"></i> CV</a></li>
-            <li><a href="#"><i class="fa-solid fa-graduation-cap"></i> Diploma certificate</a></li>
-            <li><a href="#"><i class="fa-solid fa-school"></i> School certificate.</a></li>
-            <li><a href="#"><i class="fa-solid fa-file-invoice"></i> Citizen Paper</a></li>
-            <li><a href="#"><i class="fa-solid fa-landmark"></i> ভূমি উন্নয়ন কর</a></li>
+            <li><a id="menu-home" class="active"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a id="menu-notepad"><i class="fa-regular fa-file-lines"></i> Universal Notepad</a></li>
+            <li><a><i class="fa-solid fa-key"></i> 2FA Code</a></li>
+            <li><a><i class="fa-solid fa-shield-halved"></i> All Security Key</a></li>
+            <li><a><i class="fa-regular fa-id-card"></i> CV</a></li>
+            <li><a><i class="fa-solid fa-graduation-cap"></i> Diploma certificate</a></li>
+            <li><a><i class="fa-solid fa-school"></i> School certificate.</a></li>
+            <li><a><i class="fa-solid fa-file-invoice"></i> Citizen Paper</a></li>
+            <li><a><i class="fa-solid fa-landmark"></i> ভূমি উন্নয়ন কর</a></li>
             <li><a href="passport.html"><i class="fa-solid fa-passport"></i> Passport 🛂</a></li>
-            <li><a href="#"><i class="fa-solid fa-address-card"></i> NID card</a></li>
-            <li><a href="#"><i class="fa-regular fa-image"></i> 5 feet size photo</a></li>
-            <li><a href="#"><i class="fa-solid fa-lock"></i> private photo 🔒</a></li>
-            <li><a href="#"><i class="fa-brands fa-google"></i> Google Photo in Gmail</a></li>
-            <li><a href="#"><i class="fa-solid fa-cloud-arrow-up"></i> Backup Sites</a></li>
-            <li><a href="#"><i class="fa-solid fa-phone"></i> public phone number</a></li>
+            <li><a><i class="fa-solid fa-address-card"></i> NID card</a></li>
+            <li><a><i class="fa-regular fa-image"></i> 5 feet size photo</a></li>
+            <li><a><i class="fa-solid fa-lock"></i> private photo 🔒</a></li>
+            <li><a><i class="fa-brands fa-google"></i> Google Photo in Gmail</a></li>
+            <li><a><i class="fa-solid fa-cloud-arrow-up"></i> Backup Sites</a></li>
+            <li><a><i class="fa-solid fa-phone"></i> public phone number</a></li>
         </ul>
     </div>
 
@@ -254,21 +330,68 @@
             <a href="#" class="social-icon maps"><i class="fa-solid fa-map-location-dot"></i></a>
         </div>
 
+        <!-- ডাইনামিক কন্টেন্ট বডি -->
         <div class="content-body">
-            <div class="card-box">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8383344211617!2d90.4064563!3d23.7531233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzExLjIiTiA5MMKwMjQnMjMuMiJF!5e0!3m2!1sbn!2sbd!4v1650000000000!5m2!1sbn!2sbd" 
-                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            
+            <!-- ১. হোম কন্টেন্ট (ম্যাপ ও ছবি) -->
+            <div id="home-content">
+                <div class="card-box">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8383344211617!2d90.4064563!3d23.7531233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ1JzExLjIiTiA5MMKwMjQnMjMuMiJF!5e0!3m2!1sbn!2sbd!4v1650000000000!5m2!1sbn!2sbd" 
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="card-box" style="display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
+                    <img src="https://via.placeholder.com/450x300" alt="Tonir Shaik Sitting" style="width:100%; height:100%; object-fit:cover;">
+                </div>
             </div>
 
-            <div class="card-box" style="display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
-                <img src="https://via.placeholder.com/450x300" alt="Tonir Shaik Sitting" style="width:100%; height:100%; object-fit:cover;">
+            <!-- ২. ইউনিভার্সাল নোটপ্যাড কন্টেন্ট (যা ক্লিক করলে দেখাবে) -->
+            <div id="notepad-content">
+                <div class="notepad-card">
+                    <div class="notepad-icon-box">
+                        <i class="fas fa-pen-to-square"></i>
+                    </div>
+                    <h2>Universal Notepad</h2>
+                    <p>নিচের বাটনে ক্লিক করে আপনার নোট লিখুন</p>
+                    <a href="https://padlet.com/tonirshaik1/universal-notepad-nr4reivmk131jnpk" 
+                       target="_blank" id="notepad-submit-btn">
+                       লিখার জন্য ক্লিক করুন
+                    </a>
+                </div>
             </div>
+
         </div>
 
         <footer>
             Welcome to My Official Website
         </footer>
     </div>
+
+    <!-- ডাইনামিক পেজ পরিবর্তনের JavaScript লজিক -->
+    <script>
+        const menuHome = document.getElementById('menu-home');
+        const menuNotepad = document.getElementById('menu-notepad');
+        
+        const homeContent = document.getElementById('home-content');
+        const notepadContent = document.getElementById('notepad-content');
+
+        // হোমে ক্লিক করলে কি হবে
+        menuHome.addEventListener('click', function() {
+            menuHome.classList.add('active');
+            menuNotepad.classList.remove('active');
+            
+            homeContent.style.display = 'flex';
+            notepadContent.style.display = 'none';
+        });
+
+        // ইউনিভার্সাল নোটপ্যাডে ক্লিক করলে কি হবে
+        menuNotepad.addEventListener('click', function() {
+            menuNotepad.classList.add('active');
+            menuHome.classList.remove('active');
+            
+            homeContent.style.display = 'none';
+            notepadContent.style.display = 'flex';
+        });
+    </script>
 
 </body>
 </html>
