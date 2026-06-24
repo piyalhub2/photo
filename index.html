@@ -194,6 +194,60 @@
   }
   .embed-frame-wrap iframe{ width:100%; height:100%; border:0; display:block; }
 
+  /* ---------------- All Security Key view ---------------- */
+  .sec-wrap{
+    max-width:380px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+    text-align:center;
+  }
+  .sec-icon{ font-size:2.4rem; margin-bottom:8px; }
+  .sec-title{
+    font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
+  }
+  .sec-timer{
+    display:none; color:var(--teal); font-weight:600; font-size:0.82rem;
+    margin-bottom:14px; transition:color 0.3s ease;
+  }
+  .sec-timer.time-low{ color:var(--danger); }
+
+  .sec-input-wrap{ position:relative; margin-bottom:18px; }
+  .sec-input-wrap input{
+    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
+    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
+    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
+  }
+  .sec-input-wrap input:focus{ border-color:var(--teal); }
+  .sec-toggle-eye{
+    position:absolute; right:18px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+
+  .sec-btn{
+    display:flex; align-items:center; width:100%; padding:14px 18px; margin:10px 0;
+    border-radius:12px; font-weight:600; text-decoration:none; transition:0.2s;
+    cursor:pointer; border:none; font-size:0.95rem; background:var(--paper); color:var(--ink);
+    border-left:5px solid var(--teal); box-shadow:0 2px 6px rgba(27,36,48,0.05);
+    text-align:left;
+  }
+  .sec-btn i{ margin-right:14px; width:18px; text-align:center; }
+  .sec-btn:hover{ background:var(--teal); color:#fff; transform:translateY(-2px); }
+
+  .sec-submit-btn{
+    display:none; background:var(--ink); color:var(--paper);
+    border-radius:50px; justify-content:center; border-left:none;
+  }
+  .sec-submit-btn:hover{ background:var(--teal); }
+
+  .sec-screen{ display:none; }
+  .sec-screen.active{ display:block; animation:authFade 0.3s ease-in-out; }
+  .sec-error{ color:var(--danger); font-size:0.8rem; margin-top:8px; min-height:1.1em; }
+
   /* ---------------- 2FA / Authenticator view ---------------- */
   .auth-wrap{
     max-width:430px;
@@ -319,7 +373,7 @@
       <a href="#home" class="active" data-view="default">Home</a>
       <a href="#" data-view="notepad">Universal Notepad</a>
       <a href="#" data-view="totp">2FA Code</a>
-      <a href="#docs">All Security Key</a>
+      <a href="#" data-view="security">All Security Key</a>
       <a href="#docs">CV</a>
       <a href="#docs">Diploma certificate</a>
       <a href="#docs">School certificate.</a>
@@ -414,6 +468,45 @@
       </div>
     </div>
 
+    <div class="view view-default" id="view-security">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>All Security Key</h2>
+      </div>
+
+      <div class="sec-wrap">
+        <div class="sec-timer" id="secTimerDisplay">Session ends in: <span id="secSeconds">30</span>s</div>
+
+        <div id="secAuthScreen" class="sec-screen active">
+          <div class="sec-icon">🔐</div>
+          <h2 class="sec-title">All Security Key</h2>
+          <div class="sec-input-wrap">
+            <input type="password" id="secPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="secCheckPassword()">
+            <i class="fas fa-eye sec-toggle-eye" id="secEyeIcon" onclick="secToggleVisibility()"></i>
+          </div>
+          <button id="secSubmitBtn" class="sec-btn sec-submit-btn" onclick="secLoginAction()">Submit</button>
+          <div class="sec-error" id="secLockError"></div>
+        </div>
+
+        <div id="secMainMenu" class="sec-screen">
+          <div class="sec-icon">📂</div>
+          <h2 class="sec-title">Dashboard</h2>
+          <a href="https://mega.nz/folder/jwJXnbqb#ALwYPYGGT_E_pU6nKoiR4Q" target="_blank" class="sec-btn">
+            <i class="fab fa-google"></i> Google Login Key
+          </a>
+          <a href="https://mega.nz/folder/G0pHkIoJ#4Sl-4-AwY6nmd6mtTde4JQ" target="_blank" class="sec-btn">
+            <i class="fab fa-facebook"></i> Facebook Login Key
+          </a>
+          <a href="https://mega.nz/folder/DhxHBQhY#EuBGdlKXrzvep4h0HiZ21g" target="_blank" class="sec-btn">
+            <i class="fab fa-instagram"></i> Instagram Login Key
+          </a>
+          <a href="https://mega.nz/folder/TtQSQIjC#gJKaWsMcFoMH5oHkXBCzqw" target="_blank" class="sec-btn">
+            <i class="fas fa-cloud"></i> Mega Login Key
+          </a>
+        </div>
+      </div>
+    </div>
+
     <div class="view view-default" id="view-totp">
       <div class="embed-header">
         <span class="back-link" data-view="default">← Home</span>
@@ -487,6 +580,9 @@
         e.preventDefault();
         if(el.dataset.view === 'totp'){
           resetAuthLock();
+        }
+        if(el.dataset.view === 'security'){
+          secLogout(true);
         }
         showView(el.dataset.view);
         setOpen(false);
@@ -613,6 +709,72 @@
           if(barEl) barEl.style.width = pct + "%";
         } catch(e){ /* invalid secret, skip */ }
       });
+    }
+
+    /* ---------------- All Security Key module ---------------- */
+
+    const SEC_MASTER_PASS = "@TasFim2002";
+    let secTimer;
+    let secTimeLeft = 30;
+    let secTimerRunning = false;
+
+    function secToggleVisibility(){
+      const pf = document.getElementById('secPasswordField');
+      const icon = document.getElementById('secEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function secCheckPassword(){
+      const btn = document.getElementById('secSubmitBtn');
+      btn.style.display = (document.getElementById('secPasswordField').value === SEC_MASTER_PASS) ? "flex" : "none";
+      document.getElementById('secLockError').textContent = '';
+    }
+
+    function secLoginAction(){
+      document.getElementById('secAuthScreen').classList.remove('active');
+      document.getElementById('secMainMenu').classList.add('active');
+      secStartTimer();
+    }
+
+    function secStartTimer(){
+      secTimerRunning = true;
+      secTimeLeft = 30;
+      const timerDisplay = document.getElementById('secTimerDisplay');
+      const secondsSpan = document.getElementById('secSeconds');
+      timerDisplay.style.display = "block";
+      clearInterval(secTimer);
+
+      secTimer = setInterval(() => {
+        secTimeLeft--;
+        secondsSpan.innerText = secTimeLeft;
+        timerDisplay.classList.toggle('time-low', secTimeLeft <= 5);
+        if(secTimeLeft <= 0){ secLogout(false); }
+      }, 1000);
+    }
+
+    // silent = true skips the "session expired" alert (used when the
+    // person simply navigates away and back through the sidebar).
+    function secLogout(silent){
+      clearInterval(secTimer);
+      secTimerRunning = false;
+      document.getElementById('secPasswordField').value = "";
+      document.getElementById('secPasswordField').type = "password";
+      document.getElementById('secEyeIcon').classList.replace('fa-eye-slash', 'fa-eye');
+      document.getElementById('secTimerDisplay').style.display = "none";
+      document.getElementById('secTimerDisplay').classList.remove('time-low');
+      document.getElementById('secMainMenu').classList.remove('active');
+      document.getElementById('secAuthScreen').classList.add('active');
+      document.getElementById('secSubmitBtn').style.display = "none";
+      document.getElementById('secLockError').textContent = '';
+      if(!silent){
+        alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
+      }
     }
   </script>
 </body>
