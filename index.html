@@ -1,1200 +1,645 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tonir Shek — Personal Hub</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://unpkg.com/@otplib/preset-browser@12.0.1/buffer.js"></script>
-<script src="https://unpkg.com/@otplib/preset-browser@12.0.1/index.js"></script>
-<style>
-  :root{
-    --ink:#1B2430;
-    --paper:#F7F4EC;
-    --paper-deep:#EFEAE0;
-    --teal:#3E7C7B;
-    --gold:#C9A66B;
-    --slate:#5B6573;
-    --line:#DFD9CB;
-    --danger:#B23B3B;
-    --radius:10px;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    display:flex;
-    min-height:100vh;
-  }
-  a{color:inherit;text-decoration:none;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tonir Shaik | Official Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Menu toggle icon */
-  .menu-toggle{
-    position:fixed;
-    top:22px;
-    left:22px;
-    width:46px;
-    height:46px;
-    border-radius:50%;
-    background:var(--ink);
-    border:none;
-    cursor:pointer;
-    z-index:1100;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    box-shadow:0 4px 14px rgba(0,0,0,0.18);
-    transition:left 0.3s ease;
-  }
-  .menu-toggle span{
-    width:20px;
-    height:2px;
-    background:var(--paper);
-    border-radius:2px;
-    transition:transform 0.25s ease, opacity 0.2s ease;
-  }
-  body.sidebar-open .menu-toggle{ left:300px; }
-  body.sidebar-open .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  body.sidebar-open .menu-toggle span:nth-child(2){opacity:0;}
-  body.sidebar-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E8C96A;
+            --gold-dim: rgba(201,168,76,0.15);
+            --ink: #0E0D0B;
+            --surface: #161410;
+            --card-bg: #1C1A16;
+            --muted: rgba(255,255,255,0.38);
+            --border: rgba(201,168,76,0.18);
+        }
 
-  .overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-    opacity:0;
-    visibility:hidden;
-    transition:opacity 0.3s ease;
-    z-index:1000;
-  }
-  body.sidebar-open .overlay{ opacity:1; visibility:visible; }
+        html { scroll-behavior: smooth; }
 
-  /* Sidebar */
-  .sidebar{
-    width:280px;
-    flex-shrink:0;
-    background:var(--ink);
-    color:var(--paper);
-    padding:36px 28px;
-    display:flex;
-    flex-direction:column;
-    gap:28px;
-    position:fixed;
-    top:0;
-    left:0;
-    height:100vh;
-    overflow-y:auto;
-    transform:translateX(-100%);
-    transition:transform 0.3s ease;
-    z-index:1050;
-  }
-  body.sidebar-open .sidebar{ transform:translateX(0); }
-  .brand{ display:flex; align-items:center; gap:14px; }
-  .avatar{
-    width:52px; height:52px; border-radius:50%;
-    background:linear-gradient(135deg,var(--gold),var(--teal));
-    flex-shrink:0;
-  }
-  .brand-name{ font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600; line-height:1.2; }
-  .brand-role{ font-size:0.75rem; color:#B9C2C6; margin-top:2px; }
-  nav{ display:flex; flex-direction:column; gap:2px; margin-top:8px; }
-  .nav-eyebrow{
-    font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;
-    color:#8C97A0; margin:18px 0 10px;
-  }
-  nav a{
-    padding:10px 12px; border-radius:8px; font-size:0.92rem; color:#D8DEE2;
-    border-left:2px solid transparent;
-    transition:background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  nav a:hover, nav a.active{
-    background:rgba(255,255,255,0.06);
-    border-left-color:var(--gold);
-    color:var(--paper);
-  }
-  .sidebar-footer{ margin-top:auto; display:flex; gap:14px; flex-wrap:wrap; }
-  .sidebar-footer a{
-    width:34px;height:34px; border-radius:50%;
-    background:rgba(255,255,255,0.07);
-    display:flex;align-items:center;justify-content:center;
-    font-size:0.85rem;
-  }
-  .sidebar-footer a:hover{ background:var(--teal); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--ink);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  /* Main content */
-  main{
-    flex:1;
-    width:100%;
-    padding:56px 64px 56px 100px;
-    max-width:1000px;
-    margin:0 auto;
-  }
-  .hero{ border-bottom:1px solid var(--line); padding-bottom:36px; margin-bottom:36px; }
-  .eyebrow{
-    font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
-    color:var(--teal); font-weight:600; margin-bottom:14px;
-  }
-  h1{ font-family:'Fraunces',serif; font-weight:600; font-size:2.6rem; line-height:1.1; margin:0 0 18px; }
-  .lede{ font-size:1.05rem; color:var(--slate); line-height:1.7; max-width:560px; }
-  .contact-line{ margin-top:18px; font-size:0.92rem; color:var(--slate); }
-  .contact-line a{ color:var(--teal); font-weight:500; }
+        /* ── CURSOR DOT ── */
+        #cursor {
+            position: fixed; width: 8px; height: 8px;
+            background: var(--gold); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.1s, opacity 0.3s;
+        }
 
-  section{ margin-bottom:44px; }
-  section h2{ font-family:'Fraunces',serif; font-size:1.4rem; font-weight:600; margin-bottom:14px; }
-  section p{ color:var(--slate); line-height:1.75; max-width:620px; }
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            min-height: auto;
+            padding: 100px 20px 40px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.08) 0%, transparent 70%);
+        }
+        .hero-lines {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        .hero-content { position: relative; text-align: center; z-index: 2; }
+        .hero-eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px; font-weight: 500;
+            letter-spacing: 0.25em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 10px;
+            display: flex; align-items: center; gap: 12px; justify-content: center;
+        }
+        .hero-eyebrow::before, .hero-eyebrow::after {
+            content: ''; display: block;
+            width: 40px; height: 1px; background: var(--gold);
+            opacity: 0.4;
+        }
+        .hero-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(42px, 6vw, 72px);
+            font-weight: 300; line-height: 0.95;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+        .hero-name em {
+            font-style: italic; color: var(--gold-light);
+        }
+        .hero-tagline {
+            margin-top: 10px;
+            font-size: 12px; font-weight: 300;
+            letter-spacing: 0.12em; color: var(--muted);
+        }
+        .hero-cta {
+            margin-top: 20px;
+            display: inline-flex; align-items: center; gap: 10px;
+            font-size: 12px; font-weight: 500;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 14px 32px; border-radius: 2px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .hero-cta:hover { background: var(--gold); color: #000; }
+        .hero-scroll { display: none; }
 
-  .doc-grid{
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:14px; margin-top:18px;
-  }
-  .doc-card{
-    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
-    padding:18px 20px; display:flex; flex-direction:column; gap:6px;
-    transition:border-color 0.15s, transform 0.15s;
-  }
-  .doc-card:hover{ border-color:var(--teal); transform:translateY(-2px); }
-  .doc-card .tag{
-    font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
-    color:var(--gold); font-weight:600;
-  }
-  .doc-card .name{ font-weight:600; font-size:0.98rem; }
-  .doc-card .desc{ font-size:0.82rem; color:var(--slate); }
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(to bottom, rgba(14,13,11,0.9), transparent);
+            backdrop-filter: blur(8px);
+        }
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px; font-weight: 600; color: #fff;
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--muted); text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--gold); }
 
-  footer{
-    border-top:1px solid var(--line); padding-top:24px; font-size:0.82rem;
-    color:var(--slate); display:flex; justify-content:space-between;
-    flex-wrap:wrap; gap:10px;
-  }
+        /* ── SECTION HEADER ── */
+        .section-header {
+            text-align: center; padding: 40px 20px 28px;
+        }
+        .section-eyebrow {
+            font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 5vw, 56px); font-weight: 300;
+            color: #fff; line-height: 1.1;
+        }
+        .section-title em { font-style: italic; color: var(--gold-light); }
+        .section-rule {
+            width: 48px; height: 1px;
+            background: var(--gold); opacity: 0.4;
+            margin: 20px auto 0;
+        }
 
-  /* View switching */
-  .view{ display:none; }
-  .view.active{ display:block; }
-  .view-embed{ flex-direction:column; height:100vh; }
-  .view-embed.active{ display:flex; }
-  .embed-header{
-    display:flex; align-items:center; gap:14px;
-    padding:18px 0 14px; border-bottom:1px solid var(--line);
-  }
-  .embed-header h2{ margin:0; font-family:'Fraunces',serif; font-size:1.3rem; }
-  .back-link{
-    font-size:0.85rem; font-weight:600; color:var(--teal); cursor:pointer;
-    display:flex; align-items:center; gap:6px;
-  }
-  .back-link:hover{ text-decoration:underline; }
-  .embed-frame-wrap{
-    flex:1; margin-top:18px; border-radius:var(--radius); overflow:hidden;
-    border:1px solid var(--line); background:#fff;
-  }
-  .embed-frame-wrap iframe{ width:100%; height:100%; border:0; display:block; }
+        /* ── FILTERS ── */
+        .filters {
+            display: flex; justify-content: center; flex-wrap: wrap;
+            gap: 8px; padding: 0 20px 48px;
+        }
+        .filter-btn {
+            font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 8px 20px; border-radius: 2px;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--muted);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--gold-dim);
+            border-color: var(--gold); color: var(--gold);
+        }
 
-  /* ---------------- All Security Key view ---------------- */
-  .sec-wrap{
-    max-width:380px;
-    margin:24px auto 0;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 16px 36px rgba(27,36,48,0.08);
-    text-align:center;
-  }
-  .sec-icon{ font-size:2.4rem; margin-bottom:8px; }
-  .sec-title{
-    font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;
-    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
-  }
-  .sec-timer{
-    display:none; color:var(--teal); font-weight:600; font-size:0.82rem;
-    margin-bottom:14px; transition:color 0.3s ease;
-  }
-  .sec-timer.time-low{ color:var(--danger); }
+        /* ── MASONRY GALLERY ── */
+        .gallery-section { padding: 0 24px 80px; max-width: 1400px; margin: 0 auto; }
+        .masonry {
+            columns: 4; column-gap: 16px;
+        }
+        @media (max-width: 1100px) { .masonry { columns: 3; } }
+        @media (max-width: 700px) { .masonry { columns: 2; } }
+        @media (max-width: 400px) { .masonry { columns: 1; } }
 
-  .sec-input-wrap{ position:relative; margin-bottom:18px; }
-  .sec-input-wrap input{
-    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
-    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
-    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
-  }
-  .sec-input-wrap input:focus{ border-color:var(--teal); }
-  .sec-toggle-eye{
-    position:absolute; right:18px; top:50%; transform:translateY(-50%);
-    cursor:pointer; color:var(--slate);
-  }
+        .photo-item {
+            break-inside: avoid; margin-bottom: 16px;
+            position: relative; border-radius: 4px; overflow: hidden;
+            cursor: pointer;
+        }
+        .photo-item img {
+            width: 100%; display: block;
+            transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .photo-item:hover img { transform: scale(1.04); }
+        .photo-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            opacity: 0; transition: opacity 0.3s;
+            display: flex; align-items: flex-end; padding: 16px;
+        }
+        .photo-item:hover .photo-overlay { opacity: 1; }
+        .photo-meta { flex: 1; }
+        .photo-tag {
+            font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 4px;
+        }
+        .photo-title { font-size: 13px; font-weight: 400; color: #fff; }
+        .photo-actions { display: flex; gap: 8px; }
+        .photo-action-btn {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; font-size: 14px;
+            transition: all 0.2s;
+        }
+        .photo-action-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
 
-  .sec-btn{
-    display:flex; align-items:center; width:100%; padding:14px 18px; margin:10px 0;
-    border-radius:12px; font-weight:600; text-decoration:none; transition:0.2s;
-    cursor:pointer; border:none; font-size:0.95rem; background:var(--paper); color:var(--ink);
-    border-left:5px solid var(--teal); box-shadow:0 2px 6px rgba(27,36,48,0.05);
-    text-align:left;
-  }
-  .sec-btn i{ margin-right:14px; width:18px; text-align:center; }
-  .sec-btn:hover{ background:var(--teal); color:#fff; transform:translateY(-2px); }
+        /* ── LOAD MORE BUTTON ── */
+        .load-more-wrap {
+            display: flex; justify-content: center;
+            margin-top: 40px;
+        }
+        .load-more-btn {
+            font-size: 12px; font-weight: 500;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold); background: transparent;
+            border: 1px solid var(--border);
+            padding: 14px 40px; border-radius: 2px;
+            cursor: pointer; transition: background 0.3s, color 0.3s;
+        }
+        .load-more-btn:hover { background: var(--gold); color: #000; }
+        .load-more-count {
+            display: block; margin-top: 10px;
+            text-align: center;
+            font-size: 11px; color: var(--muted);
+            letter-spacing: 0.08em;
+        }
 
-  .sec-submit-btn{
-    display:none; background:var(--ink); color:var(--paper);
-    border-radius:50px; justify-content:center; border-left:none;
-  }
-  .sec-submit-btn:hover{ background:var(--teal); }
+        /* ── FEATURED STRIP ── */
+        .featured-strip {
+            padding: 80px 0; overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 80px;
+        }
+        .strip-track {
+            display: flex; gap: 24px;
+            animation: marquee 30s linear infinite;
+            width: max-content;
+        }
+        .strip-track:hover { animation-play-state: paused; }
+        .strip-item {
+            width: 280px; height: 380px; flex-shrink: 0;
+            border-radius: 4px; overflow: hidden; position: relative;
+        }
+        .strip-item img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  .sec-screen{ display:none; }
-  .sec-screen.active{ display:block; animation:authFade 0.3s ease-in-out; }
-  .sec-error{ color:var(--danger); font-size:0.8rem; margin-top:8px; min-height:1.1em; }
+        /* ── STATS ── */
+        .stats-row {
+            display: flex; justify-content: center; gap: 40px;
+            padding: 8px 20px 24px; flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px; font-weight: 300; color: var(--gold-light);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--muted); margin-top: 4px;
+        }
 
-  /* ---------------- 2FA / Authenticator view ---------------- */
-  .auth-wrap{
-    max-width:430px;
-    margin:24px auto 0;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 16px 36px rgba(27,36,48,0.08);
-  }
-  .auth-title{
-    text-align:center;
-    font-family:'Fraunces',serif;
-    font-size:1.35rem;
-    font-weight:600;
-    margin:0 0 22px;
-    padding-bottom:16px;
-    border-bottom:1px solid var(--line);
-  }
-  .auth-screen{ display:none; }
-  .auth-screen.active{ display:block; animation:authFade 0.25s ease-in-out; }
-  @keyframes authFade{ from{opacity:0;} to{opacity:1;} }
+        /* ── LIGHTBOX ── */
+        .lightbox {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.95);
+            align-items: center; justify-content: center;
+        }
+        .lightbox.open { display: flex; }
+        .lb-inner {
+            position: relative; max-width: 90vw; max-height: 90vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .lb-inner img {
+            max-width: 100%; max-height: 80vh;
+            border-radius: 4px; box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+        }
+        .lb-meta {
+            margin-top: 16px; display: flex; align-items: center; gap: 20px;
+        }
+        .lb-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; }
+        .lb-close {
+            position: fixed; top: 24px; right: 32px;
+            font-size: 28px; color: var(--muted); cursor: pointer;
+            line-height: 1; transition: color 0.2s; background: none; border: none;
+        }
+        .lb-close:hover { color: var(--gold); }
+        .lb-nav {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            font-size: 32px; color: var(--muted); cursor: pointer;
+            background: none; border: none; transition: color 0.2s;
+            padding: 16px;
+        }
+        .lb-nav:hover { color: var(--gold); }
+        .lb-prev { left: 20px; }
+        .lb-next { right: 20px; }
+        .lb-counter {
+            font-size: 11px; letter-spacing: 0.15em; color: var(--muted);
+        }
+        .lb-dl {
+            font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border: 1px solid var(--border); padding: 8px 20px; border-radius: 2px;
+            background: none; cursor: pointer; transition: background 0.2s, color 0.2s;
+        }
+        .lb-dl:hover { background: var(--gold); color: #000; }
 
-  .auth-pass-wrap{ position:relative; margin-bottom:16px; }
-  .auth-pass-wrap input{
-    width:100%; padding:15px 44px 15px 16px; border:1px solid var(--line);
-    border-radius:12px; box-sizing:border-box; font-size:0.98rem;
-    text-align:center; outline:none; background:var(--paper); font-family:'Inter',sans-serif;
-  }
-  .auth-pass-wrap input:focus{ border-color:var(--teal); }
-  .auth-toggle-eye{
-    position:absolute; right:14px; top:50%; transform:translateY(-50%);
-    cursor:pointer; color:var(--slate);
-  }
-  .auth-submit{
-    width:100%; padding:14px; background:var(--ink); color:var(--paper);
-    border:none; border-radius:12px; cursor:pointer; font-size:0.98rem;
-    font-weight:600; display:none;
-  }
-  .auth-submit:hover{ background:var(--teal); }
-  .auth-error{ color:var(--danger); font-size:0.82rem; text-align:center; margin-top:10px; min-height:1.1em; }
+        /* ── FOOTER ── */
+        footer {
+            padding: 48px 40px;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px; font-weight: 300; color: #fff;
+        }
+        .footer-logo span { color: var(--gold); }
+        .footer-copy { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+        .footer-site-link {
+            font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2px; transition: border-color 0.2s;
+        }
+        .footer-site-link:hover { border-color: var(--gold); }
 
-  .auth-category-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .auth-cat-btn{
-    padding:18px 10px; border-radius:14px; border:1px solid var(--line);
-    background:var(--paper); cursor:pointer; font-weight:600; font-size:0.92rem;
-    text-align:center; color:var(--ink);
-    display:flex; align-items:center; justify-content:center; gap:9px;
-    transition:border-color 0.15s, background 0.15s;
-  }
-  .auth-cat-btn:hover{ border-color:var(--teal); background:#fff; }
-  .auth-cat-btn .fa-envelope{ color:#EA4335; }
-  .auth-cat-btn .fa-facebook{ color:#1877F2; }
-  .auth-cat-btn .fa-instagram{ color:#E4405F; }
-  .auth-cat-btn .fa-tiktok{ color:#000; }
-  .auth-cat-btn .fa-cloud{ color:#00A1FF; }
-  .auth-cat-btn .fa-linkedin{ color:#0077B5; }
-  .auth-cat-btn .fa-telegram{ color:#24A1DE; }
-  .auth-cat-btn .fa-whatsapp{ color:#25D366; }
+        /* ── LOADING ── */
+        .loading-state {
+            text-align: center; padding: 80px 20px;
+            color: var(--muted); font-size: 12px; letter-spacing: 0.15em;
+        }
+        .loading-spinner {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 1px solid var(--border);
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-  .auth-back-btn{
-    margin-bottom:14px; cursor:pointer; color:var(--teal); font-weight:600;
-    display:flex; align-items:center; gap:8px; font-size:0.88rem;
-  }
+        /* ── REVEAL ANIM ── */
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
 
-  #authCodeContainer{ max-height:430px; overflow-y:auto; padding-right:4px; }
-  #authCodeContainer::-webkit-scrollbar{ width:6px; }
-  #authCodeContainer::-webkit-scrollbar-thumb{ background:var(--line); border-radius:10px; }
-
-  .auth-account-box{
-    background:var(--paper); border:1px solid var(--line); padding:15px 16px;
-    border-radius:14px; margin-bottom:12px; text-align:left; cursor:pointer;
-    transition:0.15s;
-  }
-  .auth-account-box:hover{ border-color:var(--teal); }
-  .auth-account-box:active{ background:var(--paper-deep); }
-  .auth-account-name{
-    font-size:0.7rem; font-weight:700; color:var(--slate);
-    text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:6px;
-  }
-  .auth-otp-code{
-    font-size:1.9rem; font-weight:700; color:var(--ink);
-    letter-spacing:0.12em; font-family:'Courier New', monospace;
-  }
-  .auth-progress-bar{ height:5px; background:var(--line); border-radius:10px; margin-top:10px; overflow:hidden; }
-  .auth-progress-fill{ height:100%; background:var(--gold); width:0%; transition:width 1s linear; }
-
-  .auth-copy-alert{
-    position:fixed; top:20px; left:50%; transform:translateX(-50%);
-    background:var(--teal); color:#fff; padding:10px 26px;
-    border-radius:50px; font-weight:600; font-size:0.85rem; display:none; z-index:1200;
-    box-shadow:0 8px 20px rgba(0,0,0,0.18);
-  }
-
-  /* ---------------- CV view ---------------- */
-  .cv-wrap{
-    max-width:380px;
-    margin:24px auto 0;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:30px;
-    box-shadow:0 16px 36px rgba(27,36,48,0.08);
-    text-align:center;
-  }
-  .cv-icon{ font-size:2.4rem; margin-bottom:8px; color:var(--teal); }
-  .cv-title{
-    font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600;
-    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
-  }
-  .cv-input-wrap{ position:relative; margin-bottom:18px; }
-  .cv-input-wrap input{
-    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
-    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
-    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
-  }
-  .cv-input-wrap input:focus{ border-color:var(--teal); }
-  .cv-toggle-eye{
-    position:absolute; right:18px; top:50%; transform:translateY(-50%);
-    cursor:pointer; color:var(--slate);
-  }
-  .cv-download-btn{
-    display:none; width:100%; padding:14px; margin-top:6px;
-    background:var(--ink); color:var(--paper); border:none;
-    border-radius:50px; cursor:pointer; font-size:0.95rem; font-weight:600;
-    text-decoration:none; transition:0.2s; box-shadow:0 2px 6px rgba(27,36,48,0.05);
-  }
-  .cv-download-btn.show{ display:block; animation:authFade 0.3s ease-in-out; }
-  .cv-download-btn:hover{ background:var(--teal); }
-
-  @media (max-width:780px){
-    .sidebar{ width:84%; max-width:300px; }
-    main{ padding:88px 22px 40px; }
-    h1{ font-size:2rem; }
-    .auth-wrap{ padding:22px; }
-  }
-</style>
+        @media (max-width: 600px) {
+            nav { padding: 16px 20px; }
+            .nav-links { display: none; }
+            footer { flex-direction: column; text-align: center; }
+        }
+    </style>
 </head>
 <body>
 
-  <div id="authCopyNotice" class="auth-copy-alert">Copied!</div>
+<div id="cursor"></div>
 
-  <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">Tonir <span>Shaik</span></a>
+    <ul class="nav-links">
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="https://sites.google.com/view/tonirshaik2/" target="_blank">Official Site</a></li>
+    </ul>
+</nav>
 
-  <div class="overlay" id="overlay"></div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="avatar"></div>
-      <div>
-        <div class="brand-name">Tonir Shek</div>
-        <div class="brand-role">Computer Operator</div>
-      </div>
+<!-- GALLERY -->
+<section id="gallery">
+    <div class="section-header reveal">
+        <p class="section-eyebrow">Portfolio</p>
+        <h2 class="section-title">Photo <em>Gallery</em></h2>
+        <div class="section-rule"></div>
     </div>
 
-    <nav>
-      <a href="#home" class="active" data-view="default">Home</a>
-      <a href="#" data-view="notepad">Universal Notepad</a>
-      <a href="#" data-view="totp">2FA Code</a>
-      <a href="#" data-view="security">All Security Key</a>
-      <a href="#" data-view="cv">CV</a>
-      <a href="#" data-view="diploma">Diploma certificate</a>
-      <a href="#" data-view="school">School certificate.</a>
-      <a href="#" data-view="citizen">Citizen Paper</a>
-      <a href="#" data-view="vumi">ভূমি উন্নয়ন কর</a>
-      <a href="#" data-view="passport">Passport 🛂</a>
-      <!-- সাইডবার বাটনের নাম NID থেকে পরিবর্তন করে NID Card করা হলো -->
-      <a href="#" data-view="nid">NID Card</a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <a href="#" title="Facebook">f</a>
-      <a href="#" title="Instagram">ig</a>
-      <a href="#" title="LinkedIn">in</a>
-      <a href="#" title="GitHub">gh</a>
-    </div>
-  </aside>
-
-  <main>
-
-    <div class="view view-default active" id="view-default">
-      <section class="hero" id="home">
-        <div class="eyebrow">Personal Hub</div>
-        <h1>Welcome to my official space</h1>
-        <p class="lede">
-          Hello and welcome! I'm Tonir Shek, a Computer Operator.
-          This page is where I keep my documents, projects, and a short note about who I am.
-        </p>
-        <div class="contact-line">
-          Email: <a href="mailto:you@example.com">you@example.com</a>
+    <!-- STATS -->
+    <div class="stats-row reveal">
+        <div class="stat">
+            <div class="stat-num" id="photoCount">—</div>
+            <div class="stat-label">Photos</div>
         </div>
-      </section>
-
-      <section id="about">
-        <h2>About</h2>
-        <p>
-          Write a short paragraph here about your background, what you do, and what
-          visitors can find on this page. Keep it to two or three sentences so it stays
-          easy to read.
-        </p>
-      </section>
-
-      <section id="docs">
-        <h2>Documents &amp; Links</h2>
-        <p>Quick links to the things you want to share or keep handy.</p>
-        <div class="doc-grid">
-          <div class="doc-card">
-            <span class="tag">Profile</span>
-            <span class="name">Resume / CV</span>
-            <span class="desc">Latest version of your resume</span>
-          </div>
-          <div class="doc-card">
-            <span class="tag">Profile</span>
-            <span class="name">Certificates</span>
-            <span class="desc">Diplomas and course certificates</span>
-          </div>
-          <div class="doc-card">
-            <span class="tag">Notes</span>
-            <span class="name">Notepad</span>
-            <span class="desc">Personal notes or reminders</span>
-          </div>
-          <div class="doc-card">
-            <span class="tag">Media</span>
-            <span class="name">Gallery</span>
-            <span class="desc">Photos you'd like to share</span>
-          </div>
+        <div class="stat">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">Collection</div>
         </div>
-      </section>
-
-      <footer>
-        <span>© 2026 Tonir Shek. All rights reserved.</span>
-        <span>Built with care.</span>
-      </footer>
+        <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Memories</div>
+        </div>
     </div>
 
-    <div class="view view-embed" id="view-notepad">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>Universal Notepad</h2>
-      </div>
-      <div class="embed-frame-wrap">
-        <iframe
-          src="https://padlet.com/embed/nr4reivmk131jnpk"
-          allow="camera;microphone;geolocation"
-          allowfullscreen
-          loading="lazy">
-        </iframe>
-      </div>
+    <div class="filters reveal">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="portrait">Portrait</button>
+        <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
+        <button class="filter-btn" data-filter="editorial">Editorial</button>
     </div>
 
-    <div class="view view-default" id="view-security">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>All Security Key</h2>
-      </div>
-
-      <div class="sec-wrap">
-        <div class="sec-timer" id="secTimerDisplay">Session ends in: <span id="secSeconds">30</span>s</div>
-
-        <div id="secAuthScreen" class="sec-screen active">
-          <div class="sec-icon">🔐</div>
-          <h2 class="sec-title">All Security Key</h2>
-          <div class="sec-input-wrap">
-            <input type="password" id="secPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="secCheckPassword()">
-            <i class="fas fa-eye sec-toggle-eye" id="secEyeIcon" onclick="secToggleVisibility()"></i>
-          </div>
-          <button id="secSubmitBtn" class="sec-btn sec-submit-btn" onclick="secLoginAction()">Submit</button>
-          <div class="sec-error" id="secLockError"></div>
+    <div class="gallery-section">
+        <div class="loading-state" id="loadingState">
+            <div class="loading-spinner"></div>
+            Loading gallery…
         </div>
+        <div class="masonry" id="masonry" style="display:none;"></div>
 
-        <div id="secMainMenu" class="sec-screen">
-          <div class="sec-icon">📂</div>
-          <h2 class="sec-title">Dashboard</h2>
-          <a href="https://mega.nz/folder/jwJXnbqb#ALwYPYGGT_E_pU6nKoiR4Q" target="_blank" class="sec-btn">
-            <i class="fab fa-google"></i> Google Login Key
-          </a>
-          <a href="https://mega.nz/folder/G0pHkIoJ#4Sl-4-AwY6nmd6mtTde4JQ" target="_blank" class="sec-btn">
-            <i class="fab fa-facebook"></i> Facebook Login Key
-          </a>
-          <a href="https://mega.nz/folder/DhxHBQhY#EuBGdlKXrzvep4h0HiZ21g" target="_blank" class="sec-btn">
-            <i class="fab fa-instagram"></i> Instagram Login Key
-          </a>
-          <a href="https://mega.nz/folder/TtQSQIjC#gJKaWsMcFoMH5oHkXBCzqw" target="_blank" class="sec-btn">
-            <i class="fas fa-cloud"></i> Mega Login Key
-          </a>
+        <div class="load-more-wrap reveal" id="loadMoreWrap" style="display:none;">
+            <div style="text-align:center;">
+                <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+                <span class="load-more-count" id="loadMoreCount"></span>
+            </div>
         </div>
-      </div>
     </div>
+</section>
 
-    <div class="view view-default" id="view-totp">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>2FA Code</h2>
-      </div>
+<!-- FEATURED STRIP -->
+<div class="featured-strip" id="stripSection" style="display:none;">
+    <div class="strip-track" id="stripTrack"></div>
+</div>
 
-      <div class="auth-wrap">
-        <h2 class="auth-title" id="authMainTitle">🔒 Authenticator App</h2>
-
-        <div id="authLockScreen" class="auth-screen active">
-          <div class="auth-pass-wrap">
-            <input type="password" id="authMasterPass" placeholder="Enter Password" oninput="authValidatePass()">
-            <span class="auth-toggle-eye" id="authEyeIcon" onclick="authTogglePass()"><i class="fa-solid fa-eye"></i></span>
-          </div>
-          <button id="authSubmitBtn" class="auth-submit" onclick="authUnlock()">Submit</button>
-          <div class="auth-error" id="authLockError"></div>
-        </div>
-
-        <div id="authMenuScreen" class="auth-screen">
-          <div class="auth-category-grid">
-            <div class="auth-cat-btn" onclick="authOpenCategory('Gmail')"><i class="fa-solid fa-envelope"></i> Gmail</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('Facebook')"><i class="fa-brands fa-facebook"></i> Facebook</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('Instagram')"><i class="fa-brands fa-instagram"></i> Instagram</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('TikTok')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('Mega')"><i class="fa-solid fa-cloud"></i> Mega</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('linkedin')"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('Telegram')"><i class="fa-brands fa-telegram"></i> Telegram</div>
-            <div class="auth-cat-btn" onclick="authOpenCategory('WhatsApp')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</div>
-          </div>
-        </div>
-
-        <div id="authListScreen" class="auth-screen">
-          <div class="auth-back-btn" onclick="authShowMenu()"><i class="fa-solid fa-arrow-left"></i> Back to Menu</div>
-          <div id="authCodeContainer"></div>
-        </div>
-      </div>
+<!-- FOOTER -->
+<footer>
+    <div>
+        <div class="footer-logo">Tonir <span>Shaik</span></div>
+        <div class="footer-copy" style="margin-top:8px;">© 2026 Tonir Shaik. All Rights Reserved.</div>
     </div>
+    <a href="https://sites.google.com/view/tonirshaik2/" target="_blank" class="footer-site-link">
+        Visit Official Site →
+    </a>
+</footer>
 
-    <div class="view view-default" id="view-cv">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>CV</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-file-invoice"></i></div>
-        <h2 class="cv-title">CV TONIR SHAIK PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="cvPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="cvCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="cvEyeIcon" onclick="cvToggleVisibility()"></i>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+    <button class="lb-nav lb-next" id="lbNext">›</button>
+    <div class="lb-inner">
+        <img id="lbImg" src="" alt="">
+        <div class="lb-meta">
+            <span class="lb-title" id="lbTitle"></span>
+            <span class="lb-counter" id="lbCounter"></span>
+            <button class="lb-dl" id="lbDl">↓ Download</button>
         </div>
-
-        <a href="https://drive.google.com/drive/u/1/folders/1Vyprx7X6VQxj_JCeTFHQppVVK4Tmi7BT"
-           target="_blank" id="cvDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
     </div>
+</div>
 
-    <div class="view view-default" id="view-diploma">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>Diploma certificate</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-graduation-cap"></i></div>
-        <h2 class="cv-title">Diploma certificate PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="diplomaPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="diplomaCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="diplomaEyeIcon" onclick="diplomaToggleVisibility()"></i>
-        </div>
-
-        <a href="https://drive.google.com/drive/u/1/folders/1l4CXO_c6BIhlAJC97TlQStgv2nW8SUC3"
-           target="_blank" id="diplomaDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
-    </div>
-
-    <div class="view view-default" id="view-school">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>School certificate</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-school"></i></div>
-        <h2 class="cv-title">School certificate PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="schoolPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="schoolCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="schoolEyeIcon" onclick="schoolToggleVisibility()"></i>
-        </div>
-
-        <a href="https://drive.google.com/drive/u/1/folders/1RdjKywXAC7pCeVyto4L3BERgwk0OUCs-"
-           target="_blank" id="schoolDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
-    </div>
-
-    <div class="view view-default" id="view-citizen">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>Citizen Paper</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-file-signature"></i></div>
-        <h2 class="cv-title">নাগরিক সনদপত্র PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="citizenPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="citizenCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="citizenEyeIcon" onclick="citizenToggleVisibility()"></i>
-        </div>
-
-        <a href="https://drive.google.com/drive/folders/1enC-sIFTH5XWdB4u4bklLkMcGJlTnG1g?usp=sharing"
-           target="_blank" id="citizenDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
-    </div>
-
-    <div class="view view-default" id="view-vumi">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>ভূমি উন্নয়ন কর</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-landmark"></i></div>
-        <h2 class="cv-title">ভূমি উন্নয়ন কর</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="vumiPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="vumiCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="vumiEyeIcon" onclick="vumiToggleVisibility()"></i>
-        </div>
-
-        <a href="https://mega.nz/folder/75JjhZ7T#vKPTZC5p8qpbyS0qm-wkBg"
-           target="_blank" id="vumiDownloadBtn" class="cv-download-btn">
-           সাবমিট করুন
-        </a>
-      </div>
-    </div>
-
-    <div class="view view-default" id="view-passport">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>Passport 🛂</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-passport"></i></div>
-        <h2 class="cv-title">Passport PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="passportPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="passportCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="passportEyeIcon" onclick="passportToggleVisibility()"></i>
-        </div>
-
-        <a href="https://drive.google.com/drive/folders/1pgc0nveStHuQGKb_pevplILqH0XGneu3?usp=sharing" target="_blank" id="passportDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
-    </div>
-
-    <div class="view view-default" id="view-nid">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2>NID</h2>
-      </div>
-
-      <div class="cv-wrap">
-        <div class="cv-icon"><i class="fas fa-id-card"></i></div>
-        <h2 class="cv-title">NID Card PDF</h2>
-
-        <div class="cv-input-wrap">
-          <input type="password" id="nidPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="nidCheckPassword()">
-          <i class="fa-solid fa-eye cv-toggle-eye" id="nidEyeIcon" onclick="nidToggleVisibility()"></i>
-        </div>
-
-        <a href="https://drive.google.com/drive/folders/16UKB_mkFKpgx9KYPEFR5DDuipJCmzd7t?usp=sharing" target="_blank" id="nidDownloadBtn" class="cv-download-btn">
-           ডাউনলোড করুন
-        </a>
-      </div>
-    </div>
-
-  </main>
-
-  <script>
-    const body = document.body;
-    const menuToggle = document.getElementById('menuToggle');
-    const overlay = document.getElementById('overlay');
-    const sidebar = document.getElementById('sidebar');
-
-    function setOpen(open){
-      body.classList.toggle('sidebar-open', open);
-      menuToggle.setAttribute('aria-expanded', open);
-    }
-
-    menuToggle.addEventListener('click', () => {
-      setOpen(!body.classList.contains('sidebar-open'));
-    });
-    overlay.addEventListener('click', () => setOpen(false));
-
-    sidebar.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', () => setOpen(false));
+<script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
     });
 
-    const views = document.querySelectorAll('.view');
-    function showView(name){
-      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
-      sidebar.querySelectorAll('[data-view]').forEach(el => {
-        el.classList.toggle('active', el.dataset.view === name && el.tagName === 'A');
-      });
+    // Photo categories for demo labeling
+    const categories = ['portrait','lifestyle','editorial'];
+    const catLabels = ['Portrait','Lifestyle','Editorial'];
+
+    // ── PAGINATION CONFIG ──
+    const PAGE_SIZE = 15; // প্রতি ক্লিকে কতগুলো ছবি যুক্ত হবে
+
+    let allPhotos = [];      // GitHub থেকে আসা সব ছবি
+    let currentList = [];    // বর্তমান ফিল্টার অনুযায়ী লিস্ট (all / portrait / lifestyle / editorial)
+    let visibleCount = 0;    // এই মুহূর্তে কতগুলো দেখানো হচ্ছে
+    let currentIdx = 0;      // লাইটবক্সে কোন ছবি দেখানো হচ্ছে (currentList এর ইনডেক্স)
+
+    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
+
+    fetch(csvUrl)
+        .then(r => r.text())
+        .then(data => {
+            const links = data.split('\n').map(l => l.trim()).filter(l => l.startsWith('http'));
+            allPhotos = links.map((url, i) => ({
+                url,
+                idx: i,
+                cat: categories[i % 3],
+                title: 'Photo ' + (i + 1)
+            }));
+
+            document.getElementById('photoCount').textContent = allPhotos.length;
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('masonry').style.display = '';
+
+            currentList = allPhotos;
+            renderGallery(currentList, true);
+            buildStrip(allPhotos);
+        })
+        .catch(() => {
+            document.getElementById('loadingState').innerHTML =
+                '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
+        });
+
+    // Lazy load — শুধু স্ক্রিনে আসলে লোড হবে
+    const imgObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+                imgObserver.unobserve(img);
+            }
+        });
+    }, { rootMargin: '300px 0px' });
+
+    // reset = true মানে নতুন ফিল্টার/তালিকা, শুরু থেকে রেন্ডার করো (visibleCount রিসেট হবে)
+    function renderGallery(photos, reset) {
+        const masonry = document.getElementById('masonry');
+
+        if (reset) {
+            masonry.innerHTML = '';
+            visibleCount = 0;
+        }
+
+        const start = visibleCount;
+        const end = Math.min(visibleCount + PAGE_SIZE, photos.length);
+        const slice = photos.slice(start, end);
+
+        slice.forEach((p, i) => {
+            const item = document.createElement('div');
+            item.className = 'photo-item reveal';
+            item.dataset.cat = p.cat;
+            const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%231C1A16'/%3E%3C/svg%3E";
+            item.innerHTML = `
+                <img data-src="${p.url}" src="${placeholder}" alt="${p.title}" style="min-height:160px;background:#1C1A16;">
+                <div class="photo-overlay">
+                    <div class="photo-meta">
+                        <div class="photo-tag">${catLabels[categories.indexOf(p.cat)]}</div>
+                        <div class="photo-title">${p.title}</div>
+                    </div>
+                    <div class="photo-actions">
+                        <button class="photo-action-btn" title="View" onclick="openLightbox(${p.idx});event.stopPropagation()">⤢</button>
+                        <button class="photo-action-btn" title="Download" onclick="dlImg('${p.url}','Tonir-${p.idx + 1}.jpg');event.stopPropagation()">↓</button>
+                    </div>
+                </div>`;
+            item.addEventListener('click', () => openLightbox(p.idx));
+            masonry.appendChild(item);
+            imgObserver.observe(item.querySelector('img'));
+            setTimeout(() => item.classList.add('visible'), i * 40);
+        });
+
+        visibleCount = end;
+        updateLoadMoreUI(photos);
     }
-    document.querySelectorAll('[data-view]').forEach(el => {
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        if(el.dataset.view === 'totp'){
-          resetAuthLock();
+
+    function updateLoadMoreUI(photos) {
+        const wrap = document.getElementById('loadMoreWrap');
+        const countLabel = document.getElementById('loadMoreCount');
+
+        if (visibleCount >= photos.length) {
+            wrap.style.display = 'none';
+        } else {
+            wrap.style.display = 'flex';
+            wrap.classList.add('visible');
+            countLabel.textContent = visibleCount + ' / ' + photos.length + ' দেখানো হয়েছে';
         }
-        if(el.dataset.view === 'security'){
-          secLogout(true);
-        }
-        if(el.dataset.view === 'cv'){
-          cvResetLock();
-        }
-        if(el.dataset.view === 'diploma'){
-          diplomaResetLock();
-        }
-        if(el.dataset.view === 'school'){
-          schoolResetLock();
-        }
-        if(el.dataset.view === 'citizen'){
-          citizenResetLock();
-        }
-        if(el.dataset.view === 'vumi'){
-          vumiResetLock();
-        }
-        if(el.dataset.view === 'passport'){
-          passportResetLock();
-        }
-        if(el.dataset.view === 'nid'){
-          nidResetLock();
-        }
-        showView(el.dataset.view);
-        setOpen(false);
-      });
+    }
+
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        renderGallery(currentList, false); // reset=false → আগেরগুলো রেখে নতুন ১৫টা যুক্ত হবে
     });
 
-    function resetAuthLock(){
-      authActiveCat = null;
-      const passInput = document.getElementById('authMasterPass');
-      const submitBtn = document.getElementById('authSubmitBtn');
-      const errorEl = document.getElementById('authLockError');
-      if(passInput){ passInput.value = ''; passInput.type = 'password'; }
-      if(submitBtn){ submitBtn.style.display = 'none'; }
-      if(errorEl){ errorEl.textContent = ''; }
-      document.getElementById('authEyeIcon').innerHTML = '<i class="fa-solid fa-eye"></i>';
-      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('authLockScreen').classList.add('active');
-      document.getElementById('authMainTitle').textContent = '🔒 Authenticator App';
+    function buildStrip(photos) {
+        const track = document.getElementById('stripTrack');
+        // স্ট্রিপে সর্বোচ্চ ৪০টা ছবি দেখাই, পুরো হাজার হাজার ছবি লোড করলে মার্কি ভারী হয়ে যায়
+        const stripSource = photos.length > 40
+            ? photos.slice(0, 40)
+            : photos;
+        const doubled = [...stripSource, ...stripSource];
+        track.innerHTML = doubled.map(p =>
+            `<div class="strip-item"><img src="${p.url}" alt="" loading="lazy"></div>`
+        ).join('');
+        document.getElementById('stripSection').style.display = 'block';
     }
 
-    /* ---------------- 2FA / Authenticator module ---------------- */
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const f = btn.dataset.filter;
+            currentList = f === 'all' ? allPhotos : allPhotos.filter(p => p.cat === f);
+            renderGallery(currentList, true); // ফিল্টার বদলালে শুরু থেকে ১৫টা
+        });
+    });
 
-    const MASTER_PASS = "@TasFim2002";
+    // Lightbox — currentList এর ভেতরে idx খুঁজে নেভিগেট করে
+    function openLightbox(idx) {
+        const pos = currentList.findIndex(p => p.idx === idx);
+        currentIdx = pos !== -1 ? pos : 0;
+        updateLightbox();
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function updateLightbox() {
+        const p = currentList[currentIdx];
+        document.getElementById('lbImg').src = p.url;
+        document.getElementById('lbTitle').textContent = p.title;
+        document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + currentList.length;
+        document.getElementById('lbDl').onclick = () => dlImg(p.url, 'Tonir-' + (p.idx + 1) + '.jpg');
+    }
 
-    const MY_KEYS = {
-      'Gmail': [
-        { name: "Mother ID", secret: "aujnnbddt3agjc7b6uctiuz6ufafqndq" },
-        { name: "Tonirsheikh", secret: "5inr2fq6o45pxh5uegy64ooiqu5iqd76" },
-        { name: "Tonirhub", secret: "lfecn7uuyu55tgdouq3axap4e2k53ckt" },
-        { name: "Tonirshaik0", secret: "4astr2qmo2zzb3vtr4c7fsnzhwhlva3b" },
-        { name: "Tonirshaik 1", secret: "j4qfnxck72reg4fn364nrgbygnfivnpd" },
-        { name: "Tonirshaik 2", secret: "5hy36yjqsnmrxaifp4ltzvwn5szfu7bn" },
-        { name: "Tonirshaik 3", secret: "5k5l2oj6n5p6qamyqr2x6csoegjruzdj" },
-        { name: "Tonirshaik 4", secret: "z7wgsfpwrb65orlhdxxtksexsg2jokwd" },
-        { name: "Tonirshaik 5", secret: "i4ygsg42ajmmbsyp7tqusght66oretqc" },
-        { name: "Tonirshaik 6", secret: "tykehtzu2thyujyhy24mzffkj276d2va" },
-        { name: "Tonirshaik 7", secret: "4slkocuzgh5j6fys44mj4ltr7fbrftjs" }
-      ],
-      'Facebook': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }],
-      'Instagram': [
-        { name: "Mother ID", secret: "GE53M7WL27FDOYOAVBDOPIIJYVTRNL7Z" },
-        { name: "md_piyal44", secret: "AKVFX7XREVZLXA73O3RFSIN3ZN3DWLCR" }
-      ],
-      'TikTok': [{ name: "Mother ID", secret: "GTW77ISPZ5TTTQ3KY4S6ANFOCD75QH2J" }],
-      'Mega': [{ name: "Mother ID", secret: "76guupnr2aisixjhcxqf42ez2sjas7rnlm2zlc52j6nty5zbwboq" }],
-      'linkedin': [{ name: "Mother ID", secret: "MDAK2X55F2DAWSZUCNYRRAGRLLM46FAJ" }],
-      'Telegram': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }],
-      'WhatsApp': [{ name: "Mother ID", secret: "YOUR_SECRET_HERE" }]
+    document.getElementById('lbClose').onclick = closeLightbox;
+    document.getElementById('lightbox').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeLightbox();
+    });
+    document.getElementById('lbPrev').onclick = () => {
+        currentIdx = (currentIdx - 1 + currentList.length) % currentList.length;
+        updateLightbox();
     };
+    document.getElementById('lbNext').onclick = () => {
+        currentIdx = (currentIdx + 1) % currentList.length;
+        updateLightbox();
+    };
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+        if (e.key === 'ArrowRight') document.getElementById('lbNext').click();
+    });
 
-    function authTogglePass(){
-      const p = document.getElementById('authMasterPass');
-      const eye = document.getElementById('authEyeIcon');
-      if(p.type === "password"){
-        p.type = "text";
-        eye.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
-      } else {
-        p.type = "password";
-        eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
-      }
+    function dlImg(url, filename) {
+        fetch(url)
+            .then(r => r.blob())
+            .then(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                a.click();
+            })
+            .catch(() => window.open(url, '_blank'));
     }
 
-    function authValidatePass(){
-      const val = document.getElementById('authMasterPass').value;
-      const btn = document.getElementById('authSubmitBtn');
-      btn.style.display = (val === MASTER_PASS) ? "block" : "none";
-      document.getElementById('authLockError').textContent = '';
-    }
-
-    let authTimerStarted = false;
-    function authUnlock(){
-      authShowMenu();
-      if(!authTimerStarted){
-        authTimerStarted = true;
-        setInterval(authUpdateOTP, 1000);
-      }
-    }
-
-    function authCopyText(text){
-      navigator.clipboard?.writeText(text);
-      const notice = document.getElementById('authCopyNotice');
-      notice.style.display = 'block';
-      setTimeout(() => { notice.style.display = 'none'; }, 1300);
-    }
-
-    function authShowMenu(){
-      document.getElementById('authMainTitle').textContent = "🔒 Authenticator App";
-      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('authMenuScreen').classList.add('active');
-    }
-
-    let authActiveCat = null;
-    function authOpenCategory(cat){
-      authActiveCat = cat;
-      document.getElementById('authMainTitle').textContent = cat + " Code";
-      const container = document.getElementById('authCodeContainer');
-      container.innerHTML = "";
-
-      MY_KEYS[cat].forEach((acc, i) => {
-        container.innerHTML += `
-          <div class="auth-account-box" onclick="authCopyText(document.getElementById('auth-otp-${i}').innerText)">
-            <span class="auth-account-name">${acc.name}</span>
-            <div id="auth-otp-${i}" class="auth-otp-code">------</div>
-            <div class="auth-progress-bar"><div id="auth-bar-${i}" class="auth-progress-fill"></div></div>
-          </div>`;
-      });
-
-      document.getElementById('authMenuScreen').classList.remove('active');
-      document.getElementById('authListScreen').classList.add('active');
-      authUpdateOTP();
-    }
-
-    function authUpdateOTP(){
-      if(!authActiveCat || !MY_KEYS[authActiveCat] || MY_KEYS[authActiveCat].length === 0) return;
-      const remaining = otplib.authenticator.timeRemaining();
-      const pct = (remaining / 30) * 100;
-
-      MY_KEYS[authActiveCat].forEach((acc, i) => {
-        try{
-          const code = otplib.authenticator.generate(acc.secret.replace(/\s/g, ''));
-          const codeEl = document.getElementById(`auth-otp-${i}`);
-          const barEl = document.getElementById(`auth-bar-${i}`);
-          if(codeEl) codeEl.textContent = code;
-          if(barEl) barEl.style.width = pct + "%";
-        } catch(e){ /* invalid secret, skip */ }
-      });
-    }
-
-    /* ---------------- All Security Key module ---------------- */
-
-    const SEC_MASTER_PASS = "@TasFim2002";
-    let secTimer;
-    let secTimeLeft = 30;
-    let secTimerRunning = false;
-
-    function secToggleVisibility(){
-      const pf = document.getElementById('secPasswordField');
-      const icon = document.getElementById('secEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function secCheckPassword(){
-      const btn = document.getElementById('secSubmitBtn');
-      btn.style.display = (document.getElementById('secPasswordField').value === SEC_MASTER_PASS) ? "flex" : "none";
-      document.getElementById('secLockError').textContent = '';
-    }
-
-    function secLoginAction(){
-      document.getElementById('secAuthScreen').classList.remove('active');
-      document.getElementById('secMainMenu').classList.add('active');
-      secStartTimer();
-    }
-
-    function secStartTimer(){
-      secTimerRunning = true;
-      secTimeLeft = 30;
-      const timerDisplay = document.getElementById('secTimerDisplay');
-      const secondsSpan = document.getElementById('secSeconds');
-      timerDisplay.style.display = "block";
-      clearInterval(secTimer);
-
-      secTimer = setInterval(() => {
-        secTimeLeft--;
-        secondsSpan.innerText = secTimeLeft;
-        timerDisplay.classList.toggle('time-low', secTimeLeft <= 5);
-        if(secTimeLeft <= 0){ secLogout(false); }
-      }, 1000);
-    }
-
-    function secLogout(silent){
-      clearInterval(secTimer);
-      secTimerRunning = false;
-      document.getElementById('secPasswordField').value = "";
-      document.getElementById('secPasswordField').type = "password";
-      document.getElementById('secEyeIcon').classList.replace('fa-eye-slash', 'fa-eye');
-      document.getElementById('secTimerDisplay').style.display = "none";
-      document.getElementById('secTimerDisplay').classList.remove('time-low');
-      document.getElementById('secMainMenu').classList.remove('active');
-      document.getElementById('secAuthScreen').classList.add('active');
-      document.getElementById('secSubmitBtn').style.display = "none";
-      document.getElementById('secLockError').textContent = '';
-      if(!silent){
-        alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
-      }
-    }
-
-    /* ---------------- CV module ---------------- */
-
-    const CV_PASSWORD = "cv2002";
-
-    function cvCheckPassword(){
-      const val = document.getElementById('cvPasswordField').value;
-      const btn = document.getElementById('cvDownloadBtn');
-      btn.classList.toggle('show', val === CV_PASSWORD);
-    }
-
-    function cvToggleVisibility(){
-      const pf = document.getElementById('cvPasswordField');
-      const icon = document.getElementById('cvEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function cvResetLock(){
-      const pf = document.getElementById('cvPasswordField');
-      const icon = document.getElementById('cvEyeIcon');
-      const btn = document.getElementById('cvDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- Diploma certificate module ---------------- */
-
-    const DIPLOMA_PASSWORD = "diploma2002";
-
-    function diplomaCheckPassword(){
-      const val = document.getElementById('diplomaPasswordField').value;
-      const btn = document.getElementById('diplomaDownloadBtn');
-      btn.classList.toggle('show', val === DIPLOMA_PASSWORD);
-    }
-
-    function diplomaToggleVisibility(){
-      const pf = document.getElementById('diplomaPasswordField');
-      const icon = document.getElementById('diplomaEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function diplomaResetLock(){
-      const pf = document.getElementById('diplomaPasswordField');
-      const icon = document.getElementById('diplomaEyeIcon');
-      const btn = document.getElementById('diplomaDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- School certificate module ---------------- */
-
-    const SCHOOL_PASSWORD = "school2002";
-
-    function schoolCheckPassword(){
-      const val = document.getElementById('schoolPasswordField').value;
-      const btn = document.getElementById('schoolDownloadBtn');
-      btn.classList.toggle('show', val === SCHOOL_PASSWORD);
-    }
-
-    function schoolToggleVisibility(){
-      const pf = document.getElementById('schoolPasswordField');
-      const icon = document.getElementById('schoolEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function schoolResetLock(){
-      const pf = document.getElementById('schoolPasswordField');
-      const icon = document.getElementById('schoolEyeIcon');
-      const btn = document.getElementById('schoolDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- Citizen Paper module ---------------- */
-
-    const CITIZEN_PASSWORD = "citizen2002";
-
-    function citizenCheckPassword(){
-      const val = document.getElementById('citizenPasswordField').value;
-      const btn = document.getElementById('citizenDownloadBtn');
-      btn.classList.toggle('show', val === CITIZEN_PASSWORD);
-    }
-
-    function citizenToggleVisibility(){
-      const pf = document.getElementById('citizenPasswordField');
-      const icon = document.getElementById('citizenEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function citizenResetLock(){
-      const pf = document.getElementById('citizenPasswordField');
-      const icon = document.getElementById('citizenEyeIcon');
-      const btn = document.getElementById('citizenDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- ভূমি উন্নয়ন কর module ---------------- */
-
-    const VUMI_PASSWORD = "vumi2002";
-
-    function vumiCheckPassword(){
-      const val = document.getElementById('vumiPasswordField').value;
-      const btn = document.getElementById('vumiDownloadBtn');
-      btn.classList.toggle('show', val === VUMI_PASSWORD);
-    }
-
-    function vumiToggleVisibility(){
-      const pf = document.getElementById('vumiPasswordField');
-      const icon = document.getElementById('vumiEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function vumiResetLock(){
-      const pf = document.getElementById('vumiPasswordField');
-      const icon = document.getElementById('vumiEyeIcon');
-      const btn = document.getElementById('vumiDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- Passport module ---------------- */
-
-    const PASSPORT_PASSWORD = "passport2002";
-
-    function passportCheckPassword(){
-      const val = document.getElementById('passportPasswordField').value;
-      const btn = document.getElementById('passportDownloadBtn');
-      btn.classList.toggle('show', val === PASSPORT_PASSWORD);
-    }
-
-    function passportToggleVisibility(){
-      const pf = document.getElementById('passportPasswordField');
-      const icon = document.getElementById('passportEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function passportResetLock(){
-      const pf = document.getElementById('passportPasswordField');
-      const icon = document.getElementById('passportEyeIcon');
-      const btn = document.getElementById('passportDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-
-    /* ---------------- NID module ---------------- */
-
-    const NID_PASSWORD = "nid2002";
-
-    function nidCheckPassword(){
-      const val = document.getElementById('nidPasswordField').value;
-      const btn = document.getElementById('nidDownloadBtn');
-      btn.classList.toggle('show', val === NID_PASSWORD);
-    }
-
-    function nidToggleVisibility(){
-      const pf = document.getElementById('nidPasswordField');
-      const icon = document.getElementById('nidEyeIcon');
-      if(pf.type === "password"){
-        pf.type = "text";
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-      } else {
-        pf.type = "password";
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-      }
-    }
-
-    function nidResetLock(){
-      const pf = document.getElementById('nidPasswordField');
-      const icon = document.getElementById('nidEyeIcon');
-      const btn = document.getElementById('nidDownloadBtn');
-      if(pf){ pf.value = ''; pf.type = 'password'; }
-      if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
-      if(btn){ btn.classList.remove('show'); }
-    }
-  </script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
