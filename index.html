@@ -132,6 +132,60 @@
             margin: 20px auto 0;
         }
 
+        .search-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 0 20px 32px;
+        }
+        .search-bar {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; max-width: 480px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 10px 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-bar:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-dim);
+        }
+        .search-icon { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+        .search-input {
+            flex: 1; background: none; border: none; outline: none;
+            color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 14px; letter-spacing: 0.01em;
+            min-width: 0;
+        }
+        .search-input::placeholder { color: var(--muted); }
+        .search-clear {
+            background: none; border: none; color: var(--muted);
+            font-size: 18px; cursor: pointer; line-height: 1;
+            padding: 0 2px; flex-shrink: 0; transition: color 0.2s;
+        }
+        .search-clear:hover { color: var(--gold); }
+        .mic-btn {
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--gold-dim); border: 1px solid var(--border);
+            color: var(--gold); cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .mic-btn svg { width: 15px; height: 15px; }
+        .mic-btn:hover { border-color: var(--gold); }
+        .mic-btn.listening {
+            background: var(--gold); color: #000;
+            animation: micPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+        }
+        .search-status {
+            margin-top: 10px; font-size: 11px; letter-spacing: 0.08em;
+            color: var(--muted); min-height: 14px; text-align: center;
+        }
+        .search-status.active { color: var(--gold); }
+
         .filters {
             display: flex; justify-content: center; flex-wrap: wrap;
             gap: 8px; padding: 0 20px 48px;
@@ -148,53 +202,30 @@
             border-color: var(--gold); color: var(--gold);
         }
 
-        /* Google Photos connect gate */
-        .gphotos-connect-wrap {
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: center; gap: 18px;
-            padding: 90px 20px; text-align: center;
-            border: 1px solid var(--border); border-radius: 8px;
-            background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
-        }
-        .gphotos-connect-icon { font-size: 38px; line-height: 1; }
-        .gphotos-connect-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(24px, 3vw, 32px); font-weight: 300; color: #fff;
-        }
-        .gphotos-connect-title em { font-style: italic; color: var(--gold-light); }
-        .gphotos-connect-sub {
-            font-size: 12px; letter-spacing: 0.08em; color: var(--muted);
-            max-width: 360px; line-height: 1.6;
-        }
-        .gphotos-connect-btn {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px; font-weight: 500;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: #000; text-decoration: none;
-            background: linear-gradient(to right, var(--gold), var(--gold-light));
-            border: none; padding: 16px 36px; border-radius: 2px;
-            cursor: pointer; transition: opacity 0.25s, transform 0.25s;
-            display: inline-flex; align-items: center; gap: 10px;
-        }
-        .gphotos-connect-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-        .gphotos-connect-error {
-            font-size: 11px; letter-spacing: 0.05em; color: #E08A6A;
-            max-width: 360px;
-        }
-
         .gallery-section { padding: 0 24px 80px; max-width: 1400px; margin: 0 auto; }
-        .masonry { columns: 4; column-gap: 16px; }
-        @media (max-width: 1100px) { .masonry { columns: 3; } }
-        @media (max-width: 700px) { .masonry { columns: 2; } }
-        @media (max-width: 400px) { .masonry { columns: 1; } }
+        /* CSS Grid fills left-to-right, row-by-row, in DOM order —
+           unlike the old column-based masonry, which filled top-to-bottom
+           per column and visually scrambled file order across columns. */
+        .masonry {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 1100px) { .masonry { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 700px) { .masonry { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 400px) { .masonry { grid-template-columns: 1fr; } }
 
         .photo-item {
-            break-inside: avoid; margin-bottom: 16px;
             position: relative; border-radius: 4px; overflow: hidden;
             cursor: pointer;
+            /* Fixed aspect ratio keeps every row's height uniform, since
+               Grid (unlike masonry columns) doesn't auto-pack variable
+               heights — this avoids ragged rows with mixed photo shapes. */
+            aspect-ratio: 3 / 4;
         }
         .photo-item img {
-            width: 100%; display: block;
+            width: 100%; height: 100%; display: block;
+            object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
         }
         .photo-item:hover img { transform: scale(1.04); }
@@ -453,11 +484,32 @@
         </div>
     </div>
 
+    <div class="search-wrap reveal">
+        <div class="search-bar">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="Search by name… নাম লিখে খুঁজুন…"
+                   autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="searchClear" title="Clear" style="display:none;">×</button>
+            <button class="mic-btn" id="micBtn" title="Voice search">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M19 11a7 7 0 0 1-14 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <p class="search-status" id="searchStatus"></p>
+    </div>
+
     <div class="filters reveal">
         <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="portrait">Portrait</button>
-        <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
-        <button class="filter-btn" data-filter="editorial">Editorial</button>
+        <button class="filter-btn" data-filter="single">Single</button>
+        <button class="filter-btn" data-filter="dual">Dual</button>
+        <button class="filter-btn" data-filter="group">Group</button>
     </div>
 
     <div class="gallery-section">
@@ -528,129 +580,143 @@
         cursor.style.top = e.clientY + 'px';
     });
 
-    const categories = ['portrait','lifestyle','editorial'];
-    const catLabels = ['Portrait','Lifestyle','Editorial'];
+    // Maps the section header found in the text file (e.g. "#SINGLE")
+    // to the internal category key and the label shown in the gallery overlay.
+    const CATEGORY_LABELS = { single: 'Single', dual: 'Dual', group: 'Group' };
     const PAGE_SIZE = 15;
 
     let allPhotos = [];
     let currentList = [];
     let visibleCount = 0;
     let currentIdx = 0;
+    let activeFilter = 'all';   // which filter button is selected
+    let searchQuery = '';       // current lowercased search text
 
-    // ---------------------------------------------------------------
-    // Google Photos Library API integration
-    // ---------------------------------------------------------------
-    const GOOGLE_CLIENT_ID = '1030639151924-4g7jv16ev3blgkgth1iaodlp4m0s2lh7.apps.googleusercontent.com';
-    const GOOGLE_REDIRECT_URI = 'https://tonirshaik.github.io/tonirshaik/';
-    const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
+    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
 
-    // Paste your Google Photos Album ID here. Leave blank ('') to pull
-    // from the whole library instead of one specific album.
-    const ALBUM_ID = 'YOUR_GOOGLE_PHOTOS_ALBUM_ID';
+    // ---- Google Drive link handling ----
+    // Recognizes share links (file/d/ID/view), open?id=ID, and uc?...id=ID,
+    // and normalizes all of them to Google's image-serving thumbnail endpoint,
+    // which renders reliably in <img> tags (the uc?export=download endpoint
+    // can return an HTML interstitial instead of image bytes for some files).
+    function getDriveFileId(url) {
+        let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (m) return m[1];
+        m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (m) return m[1];
+        return null;
+    }
 
-    /**
-     * Kicks off the OAuth 2.0 implicit grant flow by redirecting the
-     * browser to Google's consent screen. On approval, Google redirects
-     * back to GOOGLE_REDIRECT_URI with the token in the URL hash
-     * (e.g. #access_token=...&token_type=Bearer&expires_in=3599).
-     */
-    function authenticateWithGoogle() {
-        const params = new URLSearchParams({
-            client_id: GOOGLE_CLIENT_ID,
-            redirect_uri: GOOGLE_REDIRECT_URI,
-            response_type: 'token',
-            scope: GOOGLE_SCOPE,
-            include_granted_scopes: 'true',
-            prompt: 'consent'
+    function isGoogleDriveUrl(url) {
+        return /drive\.google\.com/.test(url);
+    }
+
+    // Returns the best <img>-renderable URL for a given raw link.
+    // Non-Drive links (e.g. ImgBB) are returned unchanged.
+    function toRenderableUrl(url, size) {
+        if (isGoogleDriveUrl(url)) {
+            const id = getDriveFileId(url);
+            if (id) {
+                return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w' + (size || 1000);
+            }
+        }
+        return url;
+    }
+
+    // Returns a direct-download URL used for the Download button,
+    // so saved files come through as the original image rather than a thumbnail.
+    function toDownloadUrl(url) {
+        if (isGoogleDriveUrl(url)) {
+            const id = getDriveFileId(url);
+            if (id) {
+                return 'https://drive.google.com/uc?export=download&id=' + id;
+            }
+        }
+        return url;
+    }
+
+    // Parses the text file line by line, tracking which #SECTION header
+    // (#SINGLE, #DUAL, #GROUP) the reader is currently under. Every URL line
+    // is tagged with whatever section it falls beneath. A URL that appears
+    // before any header, or under an unrecognized header, falls back to
+    // 'uncategorized' so it still shows under "All" but won't match a filter.
+    //
+    // Optional per-photo names: a line can be just a URL, or
+    // "URL, name1 name2 ..." — anything after the first comma is treated as
+    // free-text names/tags (English and/or Bengali, space-separated) and
+    // folded into that photo's search index. This is the "keyword index"
+    // approach: raw Drive/ImgBB links carry no filename metadata themselves
+    // (Drive's image-serving endpoints return image bytes, not a title — and
+    // the actual Drive API needed for real filenames requires a server-side
+    // key, not something this page can call directly), so names have to be
+    // supplied here once and then search instantly against this index.
+    //
+    // Bengali-English search note: matching is done by direct substring
+    // comparison against whatever scripts are present in the name field, so
+    // "rakib" only matches if an English form was provided and "রাকিব" only
+    // matches if a Bengali form was provided. There's no automatic
+    // transliteration between the two — to support both spellings for a
+    // photo, include both in the name field for that line.
+    const SECTION_SEARCH_WORDS = {
+        single: ['single', 'একজন'],
+        dual: ['dual', 'couple', 'দুইজন', 'কাপল'],
+        group: ['group', 'দলগত', 'গ্রুপ']
+    };
+
+    function parsePhotoFile(text) {
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const photos = [];
+        let currentCat = 'uncategorized';
+
+        lines.forEach(line => {
+            const headerMatch = line.match(/^#\s*(single|dual|group)\b/i);
+            if (headerMatch) {
+                currentCat = headerMatch[1].toLowerCase();
+                return;
+            }
+            if (line.startsWith('http')) {
+                const commaIdx = line.indexOf(',');
+                const url = (commaIdx === -1 ? line : line.slice(0, commaIdx)).trim();
+                const namesRaw = commaIdx === -1 ? '' : line.slice(commaIdx + 1).trim();
+
+                const idx = photos.length;
+                const sectionWords = SECTION_SEARCH_WORDS[currentCat] || [];
+                const searchIndex = [namesRaw, ...sectionWords]
+                    .join(' ')
+                    .toLowerCase();
+
+                photos.push({
+                    url: toRenderableUrl(url, 1000),
+                    rawUrl: url,
+                    downloadUrl: toDownloadUrl(url),
+                    idx: idx,
+                    cat: currentCat,
+                    names: namesRaw,            // raw display string, e.g. "Rakib রাকিব"
+                    searchIndex: searchIndex,   // lowercased, used for matching
+                    title: namesRaw || ('Photo ' + (idx + 1))
+                });
+            }
+            // Any other line (blank already filtered, stray text, etc.) is ignored.
         });
-        window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+
+        return photos;
     }
 
-    /**
-     * Reads an access_token out of the URL hash left behind by Google's
-     * OAuth redirect, if one is present.
-     */
-    function getAccessTokenFromUrl() {
-        if (!window.location.hash) return null;
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        return hashParams.get('access_token');
-    }
-
-    /**
-     * Renders the "Connect Google Photos" gate inside #masonry when no
-     * access token is available yet.
-     */
-    function renderConnectGate(errorMessage) {
-        document.getElementById('loadingState').style.display = 'none';
-        const masonry = document.getElementById('masonry');
-        masonry.style.display = '';
-        masonry.style.columns = '1';
-        masonry.innerHTML = `
-            <div class="gphotos-connect-wrap">
-                <div class="gphotos-connect-icon">🔐</div>
-                <div class="gphotos-connect-title">Connect <em>Google Photos</em></div>
-                <p class="gphotos-connect-sub">Sign in with Google to load this gallery directly from your Google Photos library.</p>
-                <button class="gphotos-connect-btn" onclick="authenticateWithGoogle()">🔐 Connect Google Photos</button>
-                ${errorMessage ? `<p class="gphotos-connect-error">${errorMessage}</p>` : ''}
-            </div>`;
-    }
-
-    /**
-     * Calls mediaItems:search with the given access token, maps the
-     * results into the global allPhotos array, and renders the gallery.
-     */
-    function loadGooglePhotos(accessToken) {
-        const requestBody = { pageSize: 100 };
-        if (ALBUM_ID && ALBUM_ID !== 'YOUR_GOOGLE_PHOTOS_ALBUM_ID') {
-            requestBody.albumId = ALBUM_ID;
-        }
-
-        fetch('https://photoslibrary.googleapis.com/v1/mediaItems:search', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + accessToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
+    fetch(csvUrl)
+        .then(r => r.text())
+        .then(data => {
+            allPhotos = parsePhotoFile(data);
+            document.getElementById('photoCount').textContent = allPhotos.length;
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('masonry').style.display = '';
+            currentList = allPhotos;
+            renderGallery(currentList, true);
+            buildStrip(allPhotos);
         })
-            .then(r => {
-                if (!r.ok) throw new Error('Google Photos API request failed (' + r.status + ')');
-                return r.json();
-            })
-            .then(data => {
-                const items = data.mediaItems || [];
-                allPhotos = items.map((item, i) => ({
-                    url: `${item.baseUrl}=w1200`,
-                    idx: i,
-                    cat: categories[i % 3],
-                    title: item.filename || ('Photo ' + (i + 1))
-                }));
-                document.getElementById('photoCount').textContent = allPhotos.length;
-                document.getElementById('loadingState').style.display = 'none';
-                const masonry = document.getElementById('masonry');
-                masonry.style.display = '';
-                masonry.style.columns = '';
-                currentList = allPhotos;
-                renderGallery(currentList, true);
-                buildStrip(allPhotos);
-            })
-            .catch(err => {
-                console.error(err);
-                renderConnectGate('Could not load photos from Google. Your session may have expired — please reconnect.');
-            });
-    }
-
-    // ---- Initialization ----
-    (function initGooglePhotos() {
-        const token = getAccessTokenFromUrl();
-        if (token) {
-            // Clean the token out of the visible URL without reloading the page.
-            window.history.pushState({}, document.title, window.location.pathname + window.location.search);
-            loadGooglePhotos(token);
-        } else {
-            renderConnectGate();
-        }
-    })();
+        .catch(() => {
+            document.getElementById('loadingState').innerHTML =
+                '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
+        });
 
     const imgObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -665,6 +731,24 @@
         });
     }, { rootMargin: '300px 0px' });
 
+    // If a Drive thumbnail URL fails to load (rare, but can happen for
+    // restricted-sharing files), fall back once to the uc?export=view endpoint
+    // before giving up — keeps a single bad link from looking broken needlessly.
+    function attachImgFallback(imgEl, photo) {
+        let triedFallback = false;
+        imgEl.addEventListener('error', function onErr() {
+            if (triedFallback) return;
+            triedFallback = true;
+            if (isGoogleDriveUrl(photo.rawUrl)) {
+                const id = getDriveFileId(photo.rawUrl);
+                if (id) {
+                    imgEl.src = 'https://drive.google.com/uc?export=view&id=' + id;
+                    return;
+                }
+            }
+        });
+    }
+
     function renderGallery(photos, reset) {
         const masonry = document.getElementById('masonry');
         if (reset) { masonry.innerHTML = ''; visibleCount = 0; }
@@ -677,20 +761,22 @@
             item.dataset.cat = p.cat;
             const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%231C1A16'/%3E%3C/svg%3E";
             item.innerHTML = `
-                <img data-src="${p.url}" src="${placeholder}" alt="${p.title}" style="min-height:160px;background:#1C1A16;">
+                <img data-src="${p.url}" src="${placeholder}" alt="${p.title}" style="background:#1C1A16;">
                 <div class="photo-overlay">
                     <div class="photo-meta">
-                        <div class="photo-tag">${catLabels[categories.indexOf(p.cat)]}</div>
+                        <div class="photo-tag">${CATEGORY_LABELS[p.cat] || ''}</div>
                         <div class="photo-title">${p.title}</div>
                     </div>
                     <div class="photo-actions">
                         <button class="photo-action-btn" title="View" onclick="openLightbox(${p.idx});event.stopPropagation()">⤢</button>
-                        <button class="photo-action-btn" title="Download" onclick="dlImg('${p.url}','Tonir-${p.idx + 1}.jpg');event.stopPropagation()">↓</button>
+                        <button class="photo-action-btn" title="Download" onclick="dlImg('${p.downloadUrl}','Tonir-${p.idx + 1}.jpg');event.stopPropagation()">↓</button>
                     </div>
                 </div>`;
             item.addEventListener('click', () => openLightbox(p.idx));
             masonry.appendChild(item);
-            imgObserver.observe(item.querySelector('img'));
+            const imgEl = item.querySelector('img');
+            attachImgFallback(imgEl, p);
+            imgObserver.observe(imgEl);
             setTimeout(() => item.classList.add('visible'), i * 40);
         });
         visibleCount = end;
@@ -718,19 +804,144 @@
         const stripSource = photos.length > 40 ? photos.slice(0, 40) : photos;
         const doubled = [...stripSource, ...stripSource];
         track.innerHTML = doubled.map(p =>
-            `<div class="strip-item"><img src="${p.url}" alt="" loading="lazy"></div>`
+            `<div class="strip-item"><img src="${p.url}" alt="" loading="lazy" onerror="this.onerror=null;${isGoogleDriveUrl(p.rawUrl) ? '' : ''}"></div>`
         ).join('');
+        // Attach fallback handlers for the strip images too.
+        const stripImgs = track.querySelectorAll('img');
+        doubled.forEach((p, i) => attachImgFallback(stripImgs[i], p));
         document.getElementById('stripSection').style.display = 'block';
+    }
+
+    // Recomputes currentList from allPhotos using both the active category
+    // filter and the active search query, then re-renders the grid from
+    // scratch. Called whenever either the filter buttons or the search box
+    // change, so the two always combine rather than override each other.
+    function applyFiltersAndSearch() {
+        let list = activeFilter === 'all' ? allPhotos : allPhotos.filter(p => p.cat === activeFilter);
+        if (searchQuery) {
+            list = list.filter(p => p.searchIndex.indexOf(searchQuery) !== -1);
+        }
+        currentList = list;
+        renderGallery(currentList, true);
+        updateSearchStatus(list.length);
+    }
+
+    function updateSearchStatus(count) {
+        const status = document.getElementById('searchStatus');
+        if (!searchQuery) {
+            status.textContent = '';
+            status.classList.remove('active');
+            return;
+        }
+        status.classList.add('active');
+        status.textContent = count + (count === 1 ? ' result' : ' results') + ' for "' + searchQuery + '"';
     }
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const f = btn.dataset.filter;
-            currentList = f === 'all' ? allPhotos : allPhotos.filter(p => p.cat === f);
-            renderGallery(currentList, true);
+            activeFilter = btn.dataset.filter;
+            applyFiltersAndSearch();
         });
+    });
+
+    // ---- Typing search (debounced, instant filter) ----
+    const searchInput = document.getElementById('searchInput');
+    const searchClear = document.getElementById('searchClear');
+    let searchDebounce = null;
+
+    searchInput.addEventListener('input', () => {
+        searchClear.style.display = searchInput.value ? 'block' : 'none';
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+            searchQuery = searchInput.value.trim().toLowerCase();
+            applyFiltersAndSearch();
+        }, 150);
+    });
+
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.style.display = 'none';
+        searchQuery = '';
+        applyFiltersAndSearch();
+        searchInput.focus();
+    });
+
+    // ---- Voice search (Web Speech API, English + Bengali) ----
+    const micBtn = document.getElementById('micBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognizer = null;
+    let isListening = false;
+
+    // The Web Speech API only accepts one recognition language per session,
+    // so true simultaneous bn+en listening isn't possible in one instance.
+    // Instead: try Bengali first (since it's the less common of the two and
+    // more likely to be misrecognized by an English-default engine), and if
+    // nothing usable comes back, automatically retry the same recording
+    // window in English. This covers a single voice search working for
+    // either language without asking the user to pick one upfront.
+    function runRecognition(lang, isRetry) {
+        const rec = new SpeechRecognition();
+        rec.lang = lang;
+        rec.interimResults = false;
+        rec.maxAlternatives = 1;
+        let gotResult = false;
+        let retried = false;
+
+        function retryOrStop() {
+            if (retried) return;
+            retried = true;
+            if (!isRetry && !gotResult) {
+                runRecognition(lang === 'bn-BD' ? 'en-US' : 'bn-BD', true);
+            } else {
+                stopListening();
+            }
+        }
+
+        rec.onresult = (e) => {
+            const transcript = e.results[0][0].transcript.trim();
+            if (!transcript) return;
+            gotResult = true;
+            searchInput.value = transcript;
+            searchClear.style.display = 'block';
+            searchQuery = transcript.toLowerCase();
+            applyFiltersAndSearch();
+        };
+
+        rec.onerror = retryOrStop;
+        rec.onend = retryOrStop;
+
+        recognizer = rec;
+        rec.start();
+    }
+
+    function startListening() {
+        if (!SpeechRecognition) {
+            document.getElementById('searchStatus').textContent =
+                'Voice search isn\'t supported in this browser.';
+            return;
+        }
+        isListening = true;
+        micBtn.classList.add('listening');
+        runRecognition('bn-BD', false);
+    }
+
+    function stopListening() {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        if (recognizer) {
+            try { recognizer.onend = null; recognizer.onerror = null; recognizer.stop(); } catch (e) {}
+            recognizer = null;
+        }
+    }
+
+    micBtn.addEventListener('click', () => {
+        if (isListening) {
+            stopListening();
+        } else {
+            startListening();
+        }
     });
 
     function openLightbox(idx) {
@@ -749,7 +960,7 @@
         document.getElementById('lbImg').src = p.url;
         document.getElementById('lbTitle').textContent = p.title;
         document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + currentList.length;
-        document.getElementById('lbDl').onclick = () => dlImg(p.url, 'Tonir-' + (p.idx + 1) + '.jpg');
+        document.getElementById('lbDl').onclick = () => dlImg(p.downloadUrl, 'Tonir-' + (p.idx + 1) + '.jpg');
     }
 
     document.getElementById('lbClose').onclick = closeLightbox;
