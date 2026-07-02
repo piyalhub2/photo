@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Test</title>
+<style>
+  body{ font-family:sans-serif; padding:20px; background:#F7F4EC; }
+  button{
+    width:100%; padding:16px; font-size:1rem; margin:8px 0;
+    background:#1B2430; color:#fff; border:none; border-radius:10px;
+  }
+  #result{
+    margin-top:20px; padding:16px; background:#fff; border-radius:10px;
+    white-space:pre-wrap; word-break:break-all; font-family:monospace;
+    font-size:0.85rem; min-height:60px; border:1px solid #ddd;
+  }
+</style>
+</head>
+<body>
+  <h2>Worker API টেস্ট</h2>
+  <p>নিচের বাটনে চাপ দিন — ফলাফল নিচে দেখাবে।</p>
+
+  <button onclick="testLogin()">১. Login টেস্ট করুন (POST)</button>
+  <button onclick="testGet()">২. TOTP Groups টেস্ট করুন (GET)</button>
+
+  <div id="result">এখানে ফলাফল দেখাবে...</div>
+
+  <script>
+    const API_BASE = "https://tonir-vault-api.tonirshaik.workers.dev";
+    const resultEl = document.getElementById('result');
+
+    function showResult(label, data){
+      resultEl.textContent = `[${label}]\n\n${JSON.stringify(data, null, 2)}`;
+    }
+    function showError(label, err){
+      resultEl.textContent = `[${label}] ERROR:\n\n${err.name}: ${err.message}`;
+    }
+
+    async function testLogin(){
+      resultEl.textContent = "অপেক্ষা করুন... (login POST পাঠানো হচ্ছে)";
+      const start = Date.now();
+      try{
+        const res = await fetch(`${API_BASE}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category: "cv", password: "cv2002" })
+        });
+        const data = await res.json();
+        showResult(`LOGIN OK (status ${res.status}, ${Date.now()-start}ms)`, data);
+      }catch(err){
+        showError(`LOGIN FAILED after ${Date.now()-start}ms`, err);
+      }
+    }
+
+    async function testGet(){
+      resultEl.textContent = "অপেক্ষা করুন... (GET পাঠানো হচ্ছে)";
+      const start = Date.now();
+      try{
+        const res = await fetch(`${API_BASE}/totp-groups?token=x`);
+        const data = await res.json();
+        showResult(`GET OK (status ${res.status}, ${Date.now()-start}ms)`, data);
+      }catch(err){
+        showError(`GET FAILED after ${Date.now()-start}ms`, err);
+      }
+    }
+  </script>
+</body>
+</html>
