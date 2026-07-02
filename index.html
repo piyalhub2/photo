@@ -1,1 +1,1066 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tonir Shaik — Personal Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --ink:#1B2430;
+    --paper:#F7F4EC;
+    --paper-deep:#EFEAE0;
+    --teal:#3E7C7B;
+    --gold:#C9A66B;
+    --slate:#5B6573;
+    --line:#DFD9CB;
+    --danger:#B23B3B;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
 
+  /* Menu toggle icon */
+  .menu-toggle{
+    position:fixed;
+    top:22px;
+    left:22px;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:var(--ink);
+    border:none;
+    cursor:pointer;
+    z-index:1100;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
+    transition:left 0.3s ease;
+  }
+  .menu-toggle span{
+    width:20px;
+    height:2px;
+    background:var(--paper);
+    border-radius:2px;
+    transition:transform 0.25s ease, opacity 0.2s ease;
+  }
+  body.sidebar-open .menu-toggle{ left:300px; }
+  body.sidebar-open .menu-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  body.sidebar-open .menu-toggle span:nth-child(2){opacity:0;}
+  body.sidebar-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.3s ease;
+    z-index:1000;
+  }
+  body.sidebar-open .overlay{ opacity:1; visibility:visible; }
+
+  /* Sidebar */
+  .sidebar{
+    width:280px;
+    flex-shrink:0;
+    background:var(--ink);
+    color:var(--paper);
+    padding:36px 28px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform 0.3s ease;
+    z-index:1050;
+  }
+  body.sidebar-open .sidebar{ transform:translateX(0); }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .avatar{
+    width:52px; height:52px; border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),var(--teal));
+    flex-shrink:0;
+  }
+  .brand-name{ font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600; line-height:1.2; }
+  .brand-role{ font-size:0.75rem; color:#B9C2C6; margin-top:2px; }
+  nav{ display:flex; flex-direction:column; gap:2px; margin-top:8px; }
+  .nav-eyebrow{
+    font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:#8C97A0; margin:18px 0 10px;
+  }
+  nav a{
+    padding:10px 12px; border-radius:8px; font-size:0.92rem; color:#D8DEE2;
+    border-left:2px solid transparent;
+    transition:background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  nav a:hover, nav a.active{
+    background:rgba(255,255,255,0.06);
+    border-left-color:var(--gold);
+    color:var(--paper);
+  }
+  .sidebar-footer{ margin-top:auto; display:flex; gap:14px; flex-wrap:wrap; }
+  .sidebar-footer a{
+    width:34px;height:34px; border-radius:50%;
+    background:rgba(255,255,255,0.07);
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.85rem;
+  }
+  .sidebar-footer a:hover{ background:var(--teal); }
+
+  /* Main content */
+  main{
+    flex:1;
+    width:100%;
+    padding:56px 64px 56px 100px;
+    max-width:1000px;
+    margin:0 auto;
+  }
+  .hero{ border-bottom:1px solid var(--line); padding-bottom:36px; margin-bottom:36px; }
+  .eyebrow{
+    font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--teal); font-weight:600; margin-bottom:14px;
+  }
+  h1{ font-family:'Fraunces',serif; font-weight:600; font-size:2.6rem; line-height:1.1; margin:0 0 18px; }
+  .lede{ font-size:1.05rem; color:var(--slate); line-height:1.7; max-width:560px; }
+  .contact-line{ margin-top:18px; font-size:0.92rem; color:var(--slate); }
+  .contact-line a{ color:var(--teal); font-weight:500; }
+
+  section{ margin-bottom:44px; }
+  section h2{ font-family:'Fraunces',serif; font-size:1.4rem; font-weight:600; margin-bottom:14px; }
+  section p{ color:var(--slate); line-height:1.75; max-width:620px; }
+
+  .doc-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px; margin-top:18px;
+  }
+  .doc-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; display:flex; flex-direction:column; gap:6px;
+    transition:border-color 0.15s, transform 0.15s;
+  }
+  .doc-card:hover{ border-color:var(--teal); transform:translateY(-2px); }
+  .doc-card .tag{
+    font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--gold); font-weight:600;
+  }
+  .doc-card .name{ font-weight:600; font-size:0.98rem; }
+  .doc-card .desc{ font-size:0.82rem; color:var(--slate); }
+
+  footer{
+    border-top:1px solid var(--line); padding-top:24px; font-size:0.82rem;
+    color:var(--slate); display:flex; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+  }
+
+  /* View switching */
+  .view{ display:none; }
+  .view.active{ display:block; }
+  .view-embed{ flex-direction:column; height:100vh; }
+  .view-embed.active{ display:flex; }
+  .embed-header{
+    display:flex; align-items:center; gap:14px;
+    padding:18px 0 14px; border-bottom:1px solid var(--line);
+  }
+  .embed-header h2{ margin:0; font-family:'Fraunces',serif; font-size:1.3rem; }
+  .back-link{
+    font-size:0.85rem; font-weight:600; color:var(--teal); cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .back-link:hover{ text-decoration:underline; }
+  .embed-frame-wrap{
+    flex:1; margin-top:18px; border-radius:var(--radius); overflow:hidden;
+    border:1px solid var(--line); background:#fff;
+  }
+  .embed-frame-wrap iframe{ width:100%; height:100%; border:0; display:block; }
+
+  /* ---------------- All Security Key view ---------------- */
+  .sec-wrap{
+    max-width:380px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+    text-align:center;
+  }
+  .sec-icon{ font-size:2.4rem; margin-bottom:8px; }
+  .sec-title{
+    font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
+  }
+  .sec-timer{
+    display:none; color:var(--teal); font-weight:600; font-size:0.82rem;
+    margin-bottom:14px; transition:color 0.3s ease;
+  }
+  .sec-timer.time-low{ color:var(--danger); }
+
+  .sec-input-wrap{ position:relative; margin-bottom:18px; }
+  .sec-input-wrap input{
+    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
+    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
+    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
+  }
+  .sec-input-wrap input:focus{ border-color:var(--teal); }
+  .sec-toggle-eye{
+    position:absolute; right:18px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+
+  .sec-btn{
+    display:flex; align-items:center; width:100%; padding:14px 18px; margin:10px 0;
+    border-radius:12px; font-weight:600; text-decoration:none; transition:0.2s;
+    cursor:pointer; border:none; font-size:0.95rem; background:var(--paper); color:var(--ink);
+    border-left:5px solid var(--teal); box-shadow:0 2px 6px rgba(27,36,48,0.05);
+    text-align:left;
+  }
+  .sec-btn i{ margin-right:14px; width:18px; text-align:center; }
+  .sec-btn:hover{ background:var(--teal); color:#fff; transform:translateY(-2px); }
+
+  .sec-submit-btn{
+    display:none; background:var(--ink); color:var(--paper);
+    border-radius:50px; justify-content:center; border-left:none;
+  }
+  .sec-submit-btn:hover{ background:var(--teal); }
+
+  .sec-screen{ display:none; }
+  .sec-screen.active{ display:block; animation:authFade 0.3s ease-in-out; }
+  .sec-error{ color:var(--danger); font-size:0.8rem; margin-top:8px; min-height:1.1em; }
+
+  /* ---------------- 2FA / Authenticator view ---------------- */
+  .auth-wrap{
+    max-width:430px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+  }
+  .auth-title{
+    text-align:center;
+    font-family:'Fraunces',serif;
+    font-size:1.35rem;
+    font-weight:600;
+    margin:0 0 22px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+  }
+  .auth-screen{ display:none; }
+  .auth-screen.active{ display:block; animation:authFade 0.25s ease-in-out; }
+  @keyframes authFade{ from{opacity:0;} to{opacity:1;} }
+
+  .auth-pass-wrap{ position:relative; margin-bottom:16px; }
+  .auth-pass-wrap input{
+    width:100%; padding:15px 44px 15px 16px; border:1px solid var(--line);
+    border-radius:12px; box-sizing:border-box; font-size:0.98rem;
+    text-align:center; outline:none; background:var(--paper); font-family:'Inter',sans-serif;
+  }
+  .auth-pass-wrap input:focus{ border-color:var(--teal); }
+  .auth-toggle-eye{
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+  .auth-submit{
+    width:100%; padding:14px; background:var(--ink); color:var(--paper);
+    border:none; border-radius:12px; cursor:pointer; font-size:0.98rem;
+    font-weight:600; display:none;
+  }
+  .auth-submit:hover{ background:var(--teal); }
+  .auth-error{ color:var(--danger); font-size:0.82rem; text-align:center; margin-top:10px; min-height:1.1em; }
+
+  .auth-category-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .auth-cat-btn{
+    padding:18px 10px; border-radius:14px; border:1px solid var(--line);
+    background:var(--paper); cursor:pointer; font-weight:600; font-size:0.92rem;
+    text-align:center; color:var(--ink);
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    transition:border-color 0.15s, background 0.15s;
+  }
+  .auth-cat-btn:hover{ border-color:var(--teal); background:#fff; }
+  .auth-cat-btn .fa-envelope{ color:#EA4335; }
+  .auth-cat-btn .fa-facebook{ color:#1877F2; }
+  .auth-cat-btn .fa-instagram{ color:#E4405F; }
+  .auth-cat-btn .fa-tiktok{ color:#000; }
+  .auth-cat-btn .fa-cloud{ color:#00A1FF; }
+  .auth-cat-btn .fa-linkedin{ color:#0077B5; }
+  .auth-cat-btn .fa-telegram{ color:#24A1DE; }
+  .auth-cat-btn .fa-whatsapp{ color:#25D366; }
+
+  .auth-back-btn{
+    margin-bottom:14px; cursor:pointer; color:var(--teal); font-weight:600;
+    display:flex; align-items:center; gap:8px; font-size:0.88rem;
+  }
+
+  #authCodeContainer{ max-height:430px; overflow-y:auto; padding-right:4px; }
+  #authCodeContainer::-webkit-scrollbar{ width:6px; }
+  #authCodeContainer::-webkit-scrollbar-thumb{ background:var(--line); border-radius:10px; }
+
+  .auth-account-box{
+    background:var(--paper); border:1px solid var(--line); padding:15px 16px;
+    border-radius:14px; margin-bottom:12px; text-align:left; cursor:pointer;
+    transition:0.15s;
+  }
+  .auth-account-box:hover{ border-color:var(--teal); }
+  .auth-account-box:active{ background:var(--paper-deep); }
+  .auth-account-name{
+    font-size:0.7rem; font-weight:700; color:var(--slate);
+    text-transform:uppercase; letter-spacing:0.05em; display:block; margin-bottom:6px;
+  }
+  .auth-otp-code{
+    font-size:1.9rem; font-weight:700; color:var(--ink);
+    letter-spacing:0.12em; font-family:'Courier New', monospace;
+  }
+  .auth-progress-bar{ height:5px; background:var(--line); border-radius:10px; margin-top:10px; overflow:hidden; }
+  .auth-progress-fill{ height:100%; background:var(--gold); width:0%; transition:width 1s linear; }
+
+  .auth-copy-alert{
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    background:var(--teal); color:#fff; padding:10px 26px;
+    border-radius:50px; font-weight:600; font-size:0.85rem; display:none; z-index:1200;
+    box-shadow:0 8px 20px rgba(0,0,0,0.18);
+  }
+
+  /* ---------------- CV view ---------------- */
+  .cv-wrap{
+    max-width:380px;
+    margin:24px auto 0;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 16px 36px rgba(27,36,48,0.08);
+    text-align:center;
+  }
+  .cv-icon{ font-size:2.4rem; margin-bottom:8px; color:var(--teal); }
+  .cv-title{
+    font-family:'Fraunces',serif; font-size:1.15rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--ink);
+  }
+  .cv-input-wrap{ position:relative; margin-bottom:18px; }
+  .cv-input-wrap input{
+    width:100%; padding:14px 44px 14px 16px; border:1px solid var(--line);
+    border-radius:50px; outline:none; text-align:center; font-size:0.96rem;
+    background:var(--paper); font-family:'Inter',sans-serif; box-sizing:border-box;
+  }
+  .cv-input-wrap input:focus{ border-color:var(--teal); }
+  .cv-toggle-eye{
+    position:absolute; right:18px; top:50%; transform:translateY(-50%);
+    cursor:pointer; color:var(--slate);
+  }
+  .cv-download-btn{
+    display:none; width:100%; padding:14px; margin-top:6px;
+    background:var(--ink); color:var(--paper); border:none;
+    border-radius:50px; cursor:pointer; font-size:0.95rem; font-weight:600;
+    text-decoration:none; transition:0.2s; box-shadow:0 2px 6px rgba(27,36,48,0.05);
+  }
+  .cv-download-btn.show{ display:block; animation:authFade 0.3s ease-in-out; }
+  .cv-download-btn:hover{ background:var(--teal); }
+
+  @media (max-width:780px){
+    .sidebar{ width:84%; max-width:300px; }
+    main{ padding:88px 22px 40px; }
+    h1{ font-size:2rem; }
+    .auth-wrap{ padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="authCopyNotice" class="auth-copy-alert">Copied!</div>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="avatar"></div>
+      <div>
+        <div class="brand-name">Tonir Shaik</div>
+        <div class="brand-role">Computer Operator</div>
+      </div>
+    </div>
+
+    <nav>
+      <a href="#home" class="active" data-view="default">Home</a>
+      <a href="#" data-view="notepad">Universal Notepad</a>
+      <a href="#" data-view="totp">2FA Code</a>
+      <a href="#" data-view="security">All Security Key</a>
+      <a href="#" data-view="cv">CV</a>
+      <a href="#" data-view="diploma">Diploma certificate</a>
+      <a href="#" data-view="school">School certificate.</a>
+      <a href="#" data-view="citizen">Citizen Paper</a>
+      <a href="#" data-view="vumi">ভূমি উন্নয়ন কর</a>
+      <a href="#" data-view="passport">Passport 🛂</a>
+      <a href="#" data-view="nid">NID Card</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" title="Facebook">f</a>
+      <a href="#" title="Instagram">ig</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="GitHub">gh</a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="view view-default active" id="view-default">
+      <section class="hero" id="home">
+        <div class="eyebrow">Tonir Shaik</div>
+        <h1>Welcome to my Web-Tonir Shaik</h1>
+        <p class="lede">
+          Hello and welcome! I'm Tonir Shaik, a Computer Operator.
+          This page is where I keep my documents, projects, and a short note about who I am.
+        </p>
+        <div class="contact-line">
+          Email: <a href="mailto:tonirshaik@gmail.com">tonirshaik@gmail.com</a>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          Write a short paragraph here about your background, what you do, and what
+          visitors can find on this page. Keep it to two or three sentences so it stays
+          easy to read.
+        </p>
+      </section>
+
+      <footer>
+        <span>© 2026 Tonir Shaik. All rights reserved.</span>
+        <span>Built with care.</span>
+      </footer>
+    </div>
+
+    <div class="view view-embed" id="view-notepad">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Universal Notepad</h2>
+      </div>
+      <div class="embed-frame-wrap">
+        <iframe
+          src="https://padlet.com/embed/nr4reivmk131jnpk"
+          allow="camera;microphone;geolocation"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-security">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>All Security Key</h2>
+      </div>
+
+      <div class="sec-wrap">
+        <div class="sec-timer" id="secTimerDisplay">Session ends in: <span id="secSeconds">30</span>s</div>
+
+        <div id="secAuthScreen" class="sec-screen active">
+          <div class="sec-icon">🔐</div>
+          <h2 class="sec-title">All Security Key</h2>
+          <div class="sec-input-wrap">
+            <input type="password" id="secPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="secCheckPassword()">
+            <i class="fas fa-eye sec-toggle-eye" id="secEyeIcon" onclick="secToggleVisibility()"></i>
+          </div>
+          <button id="secSubmitBtn" class="sec-btn sec-submit-btn" onclick="secLoginAction()">Submit</button>
+          <div class="sec-error" id="secLockError"></div>
+        </div>
+
+        <div id="secMainMenu" class="sec-screen">
+          <div class="sec-icon">📂</div>
+          <h2 class="sec-title">Dashboard</h2>
+          <button class="sec-btn" onclick="secOpenLink('google')">
+            <i class="fab fa-google"></i> Google Login Key
+          </button>
+          <button class="sec-btn" onclick="secOpenLink('facebook')">
+            <i class="fab fa-facebook"></i> Facebook Login Key
+          </button>
+          <button class="sec-btn" onclick="secOpenLink('instagram')">
+            <i class="fab fa-instagram"></i> Instagram Login Key
+          </button>
+          <button class="sec-btn" onclick="secOpenLink('mega')">
+            <i class="fas fa-cloud"></i> Mega Login Key
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-totp">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>2FA Code</h2>
+      </div>
+
+      <div class="auth-wrap">
+        <h2 class="auth-title" id="authMainTitle">🔒 Authenticator App</h2>
+
+        <div id="authLockScreen" class="auth-screen active">
+          <div class="auth-pass-wrap">
+            <input type="password" id="authMasterPass" placeholder="Enter Password" oninput="authValidatePass()">
+            <span class="auth-toggle-eye" id="authEyeIcon" onclick="authTogglePass()"><i class="fa-solid fa-eye"></i></span>
+          </div>
+          <button id="authSubmitBtn" class="auth-submit" onclick="authUnlock()">Submit</button>
+          <div class="auth-error" id="authLockError"></div>
+        </div>
+
+        <div id="authMenuScreen" class="auth-screen">
+          <div class="auth-category-grid">
+            <div class="auth-cat-btn" onclick="authOpenCategory('Gmail')"><i class="fa-solid fa-envelope"></i> Gmail</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Facebook')"><i class="fa-brands fa-facebook"></i> Facebook</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Instagram')"><i class="fa-brands fa-instagram"></i> Instagram</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('TikTok')"><i class="fa-brands fa-tiktok"></i> TikTok</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Mega')"><i class="fa-solid fa-cloud"></i> Mega</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('linkedin')"><i class="fa-brands fa-linkedin"></i> LinkedIn</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('Telegram')"><i class="fa-brands fa-telegram"></i> Telegram</div>
+            <div class="auth-cat-btn" onclick="authOpenCategory('WhatsApp')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</div>
+          </div>
+        </div>
+
+        <div id="authListScreen" class="auth-screen">
+          <div class="auth-back-btn" onclick="authShowMenu()"><i class="fa-solid fa-arrow-left"></i> Back to Menu</div>
+          <div id="authCodeContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-cv">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>CV</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-file-invoice"></i></div>
+        <h2 class="cv-title">CV TONIR SHAIK PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="cvPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="cvCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="cvEyeIcon" onclick="cvToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="cvDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-diploma">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Diploma certificate</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h2 class="cv-title">Diploma certificate PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="diplomaPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="diplomaCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="diplomaEyeIcon" onclick="diplomaToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="diplomaDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-school">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>School certificate</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-school"></i></div>
+        <h2 class="cv-title">School certificate PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="schoolPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="schoolCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="schoolEyeIcon" onclick="schoolToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="schoolDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-citizen">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Citizen Paper</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-file-signature"></i></div>
+        <h2 class="cv-title">নাগরিক সনদপত্র PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="citizenPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="citizenCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="citizenEyeIcon" onclick="citizenToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="citizenDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-vumi">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>ভূমি উন্নয়ন কর</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-landmark"></i></div>
+        <h2 class="cv-title">ভূমি উন্নয়ন কর</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="vumiPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="vumiCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="vumiEyeIcon" onclick="vumiToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="vumiDownloadBtn" class="cv-download-btn">
+           সাবমিট করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-passport">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>Passport 🛂</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-passport"></i></div>
+        <h2 class="cv-title">Passport PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="passportPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="passportCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="passportEyeIcon" onclick="passportToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="passportDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+    <div class="view view-default" id="view-nid">
+      <div class="embed-header">
+        <span class="back-link" data-view="default">← Home</span>
+        <h2>NID</h2>
+      </div>
+
+      <div class="cv-wrap">
+        <div class="cv-icon"><i class="fas fa-id-card"></i></div>
+        <h2 class="cv-title">NID Card PDF</h2>
+
+        <div class="cv-input-wrap">
+          <input type="password" id="nidPasswordField" placeholder="পাসওয়ার্ড লিখুন..." oninput="nidCheckPassword()">
+          <i class="fa-solid fa-eye cv-toggle-eye" id="nidEyeIcon" onclick="nidToggleVisibility()"></i>
+        </div>
+
+        <a href="#" target="_blank" rel="noopener" id="nidDownloadBtn" class="cv-download-btn">
+           ডাউনলোড করুন
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ============================================================
+       API_BASE — এটাই আপনার Cloudflare Worker-এর URL।
+       Worker-এর নাম বা সাবডোমেইন বদলালে শুধু এই একটা লাইন বদলাবেন।
+       ============================================================ */
+    const API_BASE = "https://tonir-vault-api.tonirshaik.workers.dev";
+
+    const body = document.body;
+    const menuToggle = document.getElementById('menuToggle');
+    const overlay = document.getElementById('overlay');
+    const sidebar = document.getElementById('sidebar');
+
+    function setOpen(open){
+      body.classList.toggle('sidebar-open', open);
+      menuToggle.setAttribute('aria-expanded', open);
+    }
+
+    menuToggle.addEventListener('click', () => {
+      setOpen(!body.classList.contains('sidebar-open'));
+    });
+    overlay.addEventListener('click', () => setOpen(false));
+
+    sidebar.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    const views = document.querySelectorAll('.view');
+    function showView(name){
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+      sidebar.querySelectorAll('[data-view]').forEach(el => {
+        el.classList.toggle('active', el.dataset.view === name && el.tagName === 'A');
+      });
+    }
+    document.querySelectorAll('[data-view]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        if(el.dataset.view === 'totp'){ resetAuthLock(); }
+        if(el.dataset.view === 'security'){ secLogout(true); }
+        if(el.dataset.view === 'cv'){ cvResetLock(); }
+        if(el.dataset.view === 'diploma'){ diplomaResetLock(); }
+        if(el.dataset.view === 'school'){ schoolResetLock(); }
+        if(el.dataset.view === 'citizen'){ citizenResetLock(); }
+        if(el.dataset.view === 'vumi'){ vumiResetLock(); }
+        if(el.dataset.view === 'passport'){ passportResetLock(); }
+        if(el.dataset.view === 'nid'){ nidResetLock(); }
+        showView(el.dataset.view);
+        setOpen(false);
+      });
+    });
+
+    /* ---------------- সাধারণ helper: Worker-এ লগইন করা ---------------- */
+    async function apiLogin(category, password){
+      const res = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, password })
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'লগইন ব্যর্থ হয়েছে');
+      return data.token; // সাময়িক টোকেন
+    }
+
+    async function apiGetDocument(category, token){
+      const res = await fetch(`${API_BASE}/document?category=${encodeURIComponent(category)}&token=${encodeURIComponent(token)}`);
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'লিংক পাওয়া যায়নি');
+      return data.link;
+    }
+
+    /* ---------------- জেনেরিক single-document module ----------------
+       (CV, Diploma, School, Citizen, Vumi, Passport, NID — সবগুলোর
+       একই প্যাটার্ন, তাই একটাই ফাংশন সেট বানিয়ে reuse করছি) */
+    function makeDocModule(prefix, category){
+      const passId    = prefix + 'PasswordField';
+      const eyeId     = prefix + 'EyeIcon';
+      const btnId     = prefix + 'DownloadBtn';
+
+      let debounceTimer = null;
+
+      async function checkPassword(){
+        clearTimeout(debounceTimer);
+        const val = document.getElementById(passId).value;
+        const btn = document.getElementById(btnId);
+        if(!val){ btn.classList.remove('show'); return; }
+
+        // টাইপ করার সাথে সাথে বারবার কল না করে সামান্য অপেক্ষা করে একবার কল করি
+        debounceTimer = setTimeout(async () => {
+          try{
+            const token = await apiLogin(category, val);
+            const link = await apiGetDocument(category, token);
+            btn.href = link;
+            btn.classList.add('show');
+          }catch(err){
+            btn.classList.remove('show');
+          }
+        }, 400);
+      }
+
+      function toggleVisibility(){
+        const pf = document.getElementById(passId);
+        const icon = document.getElementById(eyeId);
+        if(pf.type === "password"){
+          pf.type = "text";
+          icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          pf.type = "password";
+          icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      }
+
+      function resetLock(){
+        const pf = document.getElementById(passId);
+        const icon = document.getElementById(eyeId);
+        const btn = document.getElementById(btnId);
+        if(pf){ pf.value = ''; pf.type = 'password'; }
+        if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
+        if(btn){ btn.classList.remove('show'); btn.removeAttribute('href'); }
+      }
+
+      return { checkPassword, toggleVisibility, resetLock };
+    }
+
+    const cvModule       = makeDocModule('cv', 'cv');
+    const diplomaModule  = makeDocModule('diploma', 'diploma');
+    const schoolModule   = makeDocModule('school', 'school');
+    const citizenModule  = makeDocModule('citizen', 'citizen');
+    const vumiModule     = makeDocModule('vumi', 'vumi');
+    const passportModule = makeDocModule('passport', 'passport');
+    const nidModule      = makeDocModule('nid', 'nid');
+
+    function cvCheckPassword(){ cvModule.checkPassword(); }
+    function cvToggleVisibility(){ cvModule.toggleVisibility(); }
+    function cvResetLock(){ cvModule.resetLock(); }
+
+    function diplomaCheckPassword(){ diplomaModule.checkPassword(); }
+    function diplomaToggleVisibility(){ diplomaModule.toggleVisibility(); }
+    function diplomaResetLock(){ diplomaModule.resetLock(); }
+
+    function schoolCheckPassword(){ schoolModule.checkPassword(); }
+    function schoolToggleVisibility(){ schoolModule.toggleVisibility(); }
+    function schoolResetLock(){ schoolModule.resetLock(); }
+
+    function citizenCheckPassword(){ citizenModule.checkPassword(); }
+    function citizenToggleVisibility(){ citizenModule.toggleVisibility(); }
+    function citizenResetLock(){ citizenModule.resetLock(); }
+
+    function vumiCheckPassword(){ vumiModule.checkPassword(); }
+    function vumiToggleVisibility(){ vumiModule.toggleVisibility(); }
+    function vumiResetLock(){ vumiModule.resetLock(); }
+
+    function passportCheckPassword(){ passportModule.checkPassword(); }
+    function passportToggleVisibility(){ passportModule.toggleVisibility(); }
+    function passportResetLock(){ passportModule.resetLock(); }
+
+    function nidCheckPassword(){ nidModule.checkPassword(); }
+    function nidToggleVisibility(){ nidModule.toggleVisibility(); }
+    function nidResetLock(){ nidModule.resetLock(); }
+
+    /* ---------------- 2FA / Authenticator module ---------------- */
+    let authToken = null;
+    let authActiveGroup = null;
+    let authTimerStarted = false;
+
+    function resetAuthLock(){
+      authToken = null;
+      authActiveGroup = null;
+      const passInput = document.getElementById('authMasterPass');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const errorEl = document.getElementById('authLockError');
+      if(passInput){ passInput.value = ''; passInput.type = 'password'; }
+      if(submitBtn){ submitBtn.style.display = 'none'; }
+      if(errorEl){ errorEl.textContent = ''; }
+      document.getElementById('authEyeIcon').innerHTML = '<i class="fa-solid fa-eye"></i>';
+      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authLockScreen').classList.add('active');
+      document.getElementById('authMainTitle').textContent = '🔒 Authenticator App';
+    }
+
+    function authTogglePass(){
+      const p = document.getElementById('authMasterPass');
+      const eye = document.getElementById('authEyeIcon');
+      if(p.type === "password"){
+        p.type = "text";
+        eye.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        p.type = "password";
+        eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
+    }
+
+    function authValidatePass(){
+      // পাসওয়ার্ড শুধু সার্ভারে যাচাই হবে, তাই এখানে শুধু বাটন দেখাই
+      const val = document.getElementById('authMasterPass').value;
+      const btn = document.getElementById('authSubmitBtn');
+      btn.style.display = val ? "block" : "none";
+      document.getElementById('authLockError').textContent = '';
+    }
+
+    async function authUnlock(){
+      const val = document.getElementById('authMasterPass').value;
+      const errorEl = document.getElementById('authLockError');
+      try{
+        authToken = await apiLogin('totp', val);
+        errorEl.textContent = '';
+        authShowMenu();
+      }catch(err){
+        errorEl.textContent = 'ভুল পাসওয়ার্ড';
+      }
+    }
+
+    function authCopyText(text){
+      navigator.clipboard?.writeText(text);
+      const notice = document.getElementById('authCopyNotice');
+      notice.style.display = 'block';
+      setTimeout(() => { notice.style.display = 'none'; }, 1300);
+    }
+
+    function authShowMenu(){
+      document.getElementById('authMainTitle').textContent = "🔒 Authenticator App";
+      document.querySelectorAll('.auth-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authMenuScreen').classList.add('active');
+    }
+
+    async function authOpenCategory(group){
+      if(!authToken) return;
+      authActiveGroup = group;
+      document.getElementById('authMainTitle').textContent = group + " Code";
+      const container = document.getElementById('authCodeContainer');
+      container.innerHTML = "<p style='text-align:center;color:var(--slate);'>লোড হচ্ছে...</p>";
+
+      document.getElementById('authMenuScreen').classList.remove('active');
+      document.getElementById('authListScreen').classList.add('active');
+
+      await authRefreshCodes();
+
+      if(!authTimerStarted){
+        authTimerStarted = true;
+        setInterval(authRefreshCodes, 1000);
+      }
+    }
+
+    let authLastFetch = 0;
+    async function authRefreshCodes(){
+      if(!authToken || !authActiveGroup) return;
+      // প্রতি সেকেন্ডে না, প্রতি ৩ সেকেন্ডে একবার সার্ভার থেকে নতুন কোড আনি
+      // (progress bar-এর জন্য বাকি সময় লোকালি হিসেব করি)
+      const now = Date.now();
+      if(now - authLastFetch < 3000 && authRefreshCodes._cache){
+        renderCodes(authRefreshCodes._cache, now);
+        return;
+      }
+      try{
+        const res = await fetch(`${API_BASE}/totp?group=${encodeURIComponent(authActiveGroup)}&token=${encodeURIComponent(authToken)}`);
+        const data = await res.json();
+        if(!res.ok) return;
+        authLastFetch = Date.now();
+        authRefreshCodes._cache = { data, fetchedAt: authLastFetch };
+        renderCodes(authRefreshCodes._cache, authLastFetch);
+      }catch(e){ /* network glitch, পরের টিকে আবার চেষ্টা হবে */ }
+    }
+
+    function renderCodes(cacheObj, now){
+      const container = document.getElementById('authCodeContainer');
+      const { data, fetchedAt } = cacheObj;
+      const elapsedSec = Math.floor((now - fetchedAt) / 1000);
+
+      container.innerHTML = "";
+      data.accounts.forEach((acc, i) => {
+        const remaining = Math.max(acc.secondsRemaining - elapsedSec, 0);
+        const pct = (remaining / 30) * 100;
+        container.innerHTML += `
+          <div class="auth-account-box" onclick="authCopyText('${acc.code}')">
+            <span class="auth-account-name">${acc.name}</span>
+            <div class="auth-otp-code">${acc.code}</div>
+            <div class="auth-progress-bar"><div class="auth-progress-fill" style="width:${pct}%"></div></div>
+          </div>`;
+      });
+    }
+
+    /* ---------------- All Security Key module ---------------- */
+    let secToken = null;
+    let secTimer;
+    let secTimeLeft = 30;
+
+    function secToggleVisibility(){
+      const pf = document.getElementById('secPasswordField');
+      const icon = document.getElementById('secEyeIcon');
+      if(pf.type === "password"){
+        pf.type = "text";
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pf.type = "password";
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function secCheckPassword(){
+      const btn = document.getElementById('secSubmitBtn');
+      btn.style.display = document.getElementById('secPasswordField').value ? "flex" : "none";
+      document.getElementById('secLockError').textContent = '';
+    }
+
+    async function secLoginAction(){
+      const val = document.getElementById('secPasswordField').value;
+      const errorEl = document.getElementById('secLockError');
+      try{
+        secToken = await apiLogin('security', val);
+        errorEl.textContent = '';
+        document.getElementById('secAuthScreen').classList.remove('active');
+        document.getElementById('secMainMenu').classList.add('active');
+        secStartTimer();
+      }catch(err){
+        errorEl.textContent = 'ভুল পাসওয়ার্ড';
+      }
+    }
+
+    let secLinksCache = null;
+    async function secOpenLink(key){
+      try{
+        if(!secLinksCache){
+          const res = await fetch(`${API_BASE}/security-links?token=${encodeURIComponent(secToken)}`);
+          const data = await res.json();
+          if(!res.ok) throw new Error(data.error);
+          secLinksCache = data.links;
+        }
+        const link = secLinksCache[key];
+        if(link) window.open(link, '_blank');
+      }catch(e){
+        alert('সেশনের মেয়াদ শেষ হয়ে গেছে, আবার লগইন করুন।');
+        secLogout(false);
+      }
+    }
+
+    function secStartTimer(){
+      secTimeLeft = 30;
+      const timerDisplay = document.getElementById('secTimerDisplay');
+      const secondsSpan = document.getElementById('secSeconds');
+      timerDisplay.style.display = "block";
+      clearInterval(secTimer);
+
+      secTimer = setInterval(() => {
+        secTimeLeft--;
+        secondsSpan.innerText = secTimeLeft;
+        timerDisplay.classList.toggle('time-low', secTimeLeft <= 5);
+        if(secTimeLeft <= 0){ secLogout(false); }
+      }, 1000);
+    }
+
+    function secLogout(silent){
+      clearInterval(secTimer);
+      secToken = null;
+      secLinksCache = null;
+      document.getElementById('secPasswordField').value = "";
+      document.getElementById('secPasswordField').type = "password";
+      document.getElementById('secEyeIcon').classList.replace('fa-eye-slash', 'fa-eye');
+      document.getElementById('secTimerDisplay').style.display = "none";
+      document.getElementById('secTimerDisplay').classList.remove('time-low');
+      document.getElementById('secMainMenu').classList.remove('active');
+      document.getElementById('secAuthScreen').classList.add('active');
+      document.getElementById('secSubmitBtn').style.display = "none";
+      document.getElementById('secLockError').textContent = '';
+      if(!silent){
+        alert("নিরাপত্তার স্বার্থে আপনার সেশন শেষ হয়েছে।");
+      }
+    }
+  </script>
+</body>
+</html>
