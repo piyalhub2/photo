@@ -282,34 +282,8 @@
   .embed-frame-wrap{
     flex:1; margin-top:18px; border-radius:var(--radius); overflow:hidden;
     border:1px solid var(--border); background:var(--surface-solid);
-    position:relative;
   }
   .embed-frame-wrap iframe{ width:100%; height:100%; border:0; display:block; }
-
-  .doc-viewer-openbtn{
-    margin-left:auto; font-size:0.78rem; font-weight:600; color:var(--gold);
-    border:1px solid var(--border-strong); padding:7px 14px; border-radius:8px;
-    white-space:nowrap; transition:background 0.15s ease, color 0.15s ease;
-  }
-  .doc-viewer-openbtn:hover{ background:var(--gold-soft); }
-
-  .doc-viewer-loading, .doc-viewer-blocked{
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:14px;
-    text-align:center; padding:24px; color:var(--text-dim);
-  }
-  .doc-viewer-blocked{ display:none; }
-  .doc-viewer-spinner{
-    width:34px; height:34px; border-radius:50%;
-    border:3px solid var(--border); border-top-color:var(--gold);
-    animation:docSpin 0.8s linear infinite;
-  }
-  @keyframes docSpin{ to{ transform:rotate(360deg); } }
-  .doc-viewer-blocked i{ font-size:1.8rem; color:var(--gold); }
-  .doc-viewer-blocked a{
-    font-size:0.85rem; font-weight:600; color:#0A0D13; background:var(--gold);
-    padding:9px 18px; border-radius:8px; margin-top:4px;
-  }
 
   /* ---------------- All Security Key view ---------------- */
   .sec-wrap{
@@ -327,12 +301,6 @@
     font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600;
     text-transform:uppercase; letter-spacing:0.04em; margin:0 0 22px; color:var(--text);
   }
-  .sec-timer{
-    display:none; color:var(--cyan); font-weight:600; font-size:0.82rem;
-    margin-bottom:14px; transition:color 0.3s ease; font-family:var(--mono);
-  }
-  .sec-timer.time-low{ color:var(--danger); }
-
   .sec-input-wrap{ position:relative; margin-bottom:18px; }
   .sec-input-wrap input{
     width:100%; padding:14px 44px 14px 16px; border:1px solid var(--border);
@@ -628,26 +596,6 @@
       </div>
     </div>
 
-    <div class="view view-embed" id="view-docviewer">
-      <div class="embed-header">
-        <span class="back-link" data-view="default">← Home</span>
-        <h2 id="docViewerTitle">Document</h2>
-        <a href="#" id="docViewerOpenBtn" class="doc-viewer-openbtn" target="_blank" rel="noopener noreferrer">Open in Drive ↗</a>
-      </div>
-      <div class="embed-frame-wrap">
-        <div class="doc-viewer-loading" id="docViewerLoading">
-          <div class="doc-viewer-spinner"></div>
-          <p>Loading document...</p>
-        </div>
-        <div class="doc-viewer-blocked" id="docViewerBlocked">
-          <i class="fa-solid fa-lock"></i>
-          <p>এই ডকুমেন্টটি এখানে প্রিভিউ করা যাচ্ছে না।</p>
-          <a href="#" id="docViewerBlockedBtn" target="_blank" rel="noopener noreferrer">Open in Google Drive ↗</a>
-        </div>
-        <iframe id="docViewerIframe" src="" title="Document Viewer" allow="autoplay" loading="lazy" style="display:none;"></iframe>
-      </div>
-    </div>
-
     <div class="view view-default" id="view-security">
       <div class="embed-header">
         <span class="back-link" data-view="default">← Home</span>
@@ -655,13 +603,11 @@
       </div>
 
       <div class="sec-wrap">
-        <div class="sec-timer" id="secTimerDisplay">Session ends in: <span id="secSeconds">30</span>s</div>
-
         <div id="secAuthScreen" class="sec-screen active">
           <div class="sec-icon">🔐</div>
           <h2 class="sec-title">Vault</h2>
           <div class="sec-input-wrap">
-            <input type="password" id="secPasswordField" placeholder="Enter password..." oninput="secClearError()" onkeydown="if(event.key==='Enter') secTryLogin()">
+            <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="secPasswordField" placeholder="Enter password..." oninput="secClearError()" onkeydown="if(event.key==='Enter') secTryLogin()">
             <i class="fas fa-eye sec-toggle-eye" id="secEyeIcon" onclick="secToggleVisibility()"></i>
           </div>
           <button id="secSubmitBtn" class="sec-btn sec-submit-btn" onclick="secTryLogin()">Submit</button>
@@ -698,7 +644,7 @@
 
         <div id="authLockScreen" class="auth-screen active">
           <div class="auth-pass-wrap">
-            <input type="password" id="authMasterPass" placeholder="Enter password..." oninput="authClearError()" onkeydown="if(event.key==='Enter') authTryUnlock()">
+            <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="authMasterPass" placeholder="Enter password..." oninput="authClearError()" onkeydown="if(event.key==='Enter') authTryUnlock()">
             <span class="auth-toggle-eye" id="authEyeIcon" onclick="authTogglePass()"><i class="fa-solid fa-eye"></i></span>
           </div>
           <button id="authSubmitBtn" class="auth-submit" onclick="authTryUnlock()">Submit</button>
@@ -736,7 +682,7 @@
         <h2 class="cv-title">CV TONIR SHAIK PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="cvPasswordField" placeholder="Enter password..." oninput="cvOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); cvSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="cvPasswordField" placeholder="Enter password..." oninput="cvOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); cvSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="cvEyeIcon" onclick="cvToggleVisibility()"></i>
         </div>
 
@@ -758,7 +704,7 @@
         <h2 class="cv-title">Diploma Certificate PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="diplomaPasswordField" placeholder="Enter password..." oninput="diplomaOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); diplomaSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="diplomaPasswordField" placeholder="Enter password..." oninput="diplomaOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); diplomaSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="diplomaEyeIcon" onclick="diplomaToggleVisibility()"></i>
         </div>
 
@@ -780,7 +726,7 @@
         <h2 class="cv-title">School certificate PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="schoolPasswordField" placeholder="Enter password..." oninput="schoolOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); schoolSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="schoolPasswordField" placeholder="Enter password..." oninput="schoolOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); schoolSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="schoolEyeIcon" onclick="schoolToggleVisibility()"></i>
         </div>
 
@@ -802,7 +748,7 @@
         <h2 class="cv-title">Citizen Certificate PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="citizenPasswordField" placeholder="Enter password..." oninput="citizenOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); citizenSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="citizenPasswordField" placeholder="Enter password..." oninput="citizenOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); citizenSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="citizenEyeIcon" onclick="citizenToggleVisibility()"></i>
         </div>
 
@@ -824,7 +770,7 @@
         <h2 class="cv-title">Passport PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="passportPasswordField" placeholder="Enter password..." oninput="passportOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); passportSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="passportPasswordField" placeholder="Enter password..." oninput="passportOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); passportSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="passportEyeIcon" onclick="passportToggleVisibility()"></i>
         </div>
 
@@ -846,7 +792,7 @@
         <h2 class="cv-title">ID Card PDF</h2>
 
         <div class="cv-input-wrap">
-          <input type="password" id="nidPasswordField" placeholder="Enter password..." oninput="nidOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); nidSubmit();}">
+          <input type="password" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" id="nidPasswordField" placeholder="Enter password..." oninput="nidOnInput()" onkeydown="if(event.key==='Enter'){event.preventDefault(); nidSubmit();}">
           <i class="fa-solid fa-eye cv-toggle-eye" id="nidEyeIcon" onclick="nidToggleVisibility()"></i>
         </div>
 
@@ -908,7 +854,7 @@
       el.addEventListener('click', (e) => {
         e.preventDefault();
         if(el.dataset.view === 'totp'){ resetAuthLock(); }
-        if(el.dataset.view === 'security'){ secLogout(true); }
+        if(el.dataset.view === 'security'){ secLogout(); }
         if(el.dataset.view === 'cv'){ cvResetLock(); }
         if(el.dataset.view === 'diploma'){ diplomaResetLock(); }
         if(el.dataset.view === 'school'){ schoolResetLock(); }
@@ -946,7 +892,12 @@
         throw e;
       }
       const data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Login failed');
+      if(!res.ok){
+        const e = new Error(data.error || 'Login failed');
+        e.status = res.status;
+        e.serverMessage = data.error;
+        throw e;
+      }
       return data.token; // temporary token
     }
 
@@ -960,74 +911,31 @@
         throw e;
       }
       const data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Link not found');
+      if(!res.ok){
+        const e = new Error(data.error || 'Link not found');
+        e.status = res.status;
+        e.serverMessage = data.error;
+        throw e;
+      }
       return data.link;
     }
 
-    /* ---------------- Inline document viewer (iframe instead of new tab) ---------------- */
-    const categoryTitles = {
-      cv: 'CV',
-      diploma: 'Diploma Certificate',
-      school: 'School Certificate',
-      citizen: 'Citizen Certificate',
-      passport: 'Passport',
-      nid: 'ID Card'
-    };
-
-    // Turns a normal Google Drive share/view link into the embeddable
-    // "/preview" form. Leaves non-Drive links untouched.
-    function driveEmbedUrl(url){
-      try{
-        let m = url.match(/\/file\/d\/([^\/]+)/);
-        if(m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-        m = url.match(/[?&]id=([^&]+)/);
-        if(m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-      }catch(_e){}
-      return url;
-    }
-
-    function showDocBlocked(){
-      document.getElementById('docViewerLoading').style.display = 'none';
-      document.getElementById('docViewerIframe').style.display = 'none';
-      document.getElementById('docViewerBlocked').style.display = 'flex';
-    }
-
-    function openDocViewer(url, title){
-      const embedUrl = driveEmbedUrl(url);
-      document.getElementById('docViewerTitle').textContent = title;
-      document.getElementById('docViewerOpenBtn').href = url;
-      document.getElementById('docViewerBlockedBtn').href = url;
-
-      const iframe  = document.getElementById('docViewerIframe');
-      const loading = document.getElementById('docViewerLoading');
-      const blocked = document.getElementById('docViewerBlocked');
-
-      loading.style.display = 'flex';
-      blocked.style.display = 'none';
-      iframe.style.display = 'none';
-      iframe.src = '';
-
-      showView('docviewer');
-
-      let loaded = false;
-      iframe.onload = function(){
-        loaded = true;
-        loading.style.display = 'none';
-        try{
-          const doc = iframe.contentDocument || iframe.contentWindow.document;
-          if(!doc || doc.body === null){ showDocBlocked(); }
-          else{ iframe.style.display = 'block'; }
-        }catch(_e){
-          // Cross-origin (normal for Drive) — page loaded fine, just can't be inspected.
-          iframe.style.display = 'block';
-        }
-      };
-      iframe.onerror = showDocBlocked;
-
-      // Fallback: nothing loaded after 6s → assume it's blocked.
-      setTimeout(function(){ if(!loaded) showDocBlocked(); }, 6000);
-
-      iframe.src = embedUrl;
+    /* Turns a failed apiLogin/apiGetDocument error into the right message
+       to show the user — network problem, rate-limited, wrong password,
+       or (for the document step) a missing/misconfigured link on the
+       server. "stage" tells us which call actually failed, since a 404
+       from /document is NOT a wrong password. */
+    function describeAuthError(err, stage){
+      if(err.isNetworkError){
+        return 'নেটওয়ার্ক সমস্যা — সার্ভারে পৌঁছানো যাচ্ছে না (WiFi/DNS চেক করুন)';
+      }
+      if(err.status === 429){
+        return err.serverMessage || 'অনেকবার চেষ্টা হয়েছে, একটু পর আবার চেষ্টা করুন।';
+      }
+      if(stage === 'document'){
+        return (err.serverMessage || 'লিংক পাওয়া যায়নি') + ' — Worker-এ এই ডকুমেন্টের LINK ভ্যারিয়েবল সেট করা আছে কিনা চেক করুন।';
+      }
+      return 'Incorrect password';
     }
 
     /* ---------------- Generic single-document module ----------------
@@ -1039,71 +947,45 @@
       const btnId  = prefix + 'DownloadBtn';
       const errId  = prefix + 'Error';
 
-      let debounceTimer = null;
-      let cachedPass = null;   // password the cachedLink was verified against
-      let cachedLink = null;   // resolved document link for cachedPass
-      let inFlight   = false;  // a background verification is running
+      let inFlight = false; // avoid double-submits while a check is running
 
-      // Button appears as soon as the user starts typing (matches the
-      // Vault / Authenticator Submit button, which is always visible).
-      // While typing, we also quietly verify in the background (debounced)
-      // so that by the time the user clicks, the link is often already
-      // ready and opens instantly instead of waiting on click.
+      // The Download button stays hidden while the user is typing.
+      // It only appears after the password has been checked (via the
+      // Enter key) and confirmed correct.
       function onInput(){
-        const val = document.getElementById(passId).value;
-        const btn = document.getElementById(btnId);
         const err = document.getElementById(errId);
         if(err) err.textContent = '';
-        if(val){ btn.classList.add('show'); }
-        else{ btn.classList.remove('show'); }
-
-        if(val !== cachedPass){ cachedLink = null; }
-
-        clearTimeout(debounceTimer);
-        if(!val) return;
-        debounceTimer = setTimeout(async () => {
-          try{
-            const token = await apiLogin(category, val);
-            const link = await apiGetDocument(category, token);
-            cachedPass = val;
-            cachedLink = link;
-          }catch(_e){
-            // Silent — the click handler will show the real error
-            // if the user actually submits with this password.
-          }
-        }, 400);
       }
 
       async function submit(e){
         if(e) e.preventDefault();
-        const val = document.getElementById(passId).value;
+        const val = document.getElementById(passId).value.trim();
         const err = document.getElementById(errId);
         const btn = document.getElementById(btnId);
-        if(!val) return;
+        if(!val || inFlight) return;
 
-        // Already verified in the background while typing — open instantly.
-        if(cachedLink && cachedPass === val){
-          if(err) err.textContent = '';
-          openDocViewer(cachedLink, categoryTitles[category] || category);
-          return;
-        }
-
-        if(inFlight) return; // avoid double-submits while a check is running
         inFlight = true;
+        btn.classList.remove('show');
         const originalLabel = btn.textContent;
         btn.textContent = 'Checking...';
+        let token;
         try{
-          const token = await apiLogin(category, val);
+          token = await apiLogin(category, val);
+        }catch(_err){
+          if(err) err.textContent = describeAuthError(_err, 'login');
+          btn.textContent = originalLabel;
+          inFlight = false;
+          return;
+        }
+        try{
           const link = await apiGetDocument(category, token);
-          cachedPass = val;
-          cachedLink = link;
           if(err) err.textContent = '';
-          openDocViewer(link, categoryTitles[category] || category);
+          btn.href = link;
+          btn.classList.add('show');
+          window.open(link, '_blank', 'noopener');
         }catch(_err){
           if(err){
-            err.textContent = _err.isNetworkError
-              ? 'নেটওয়ার্ক সমস্যা — সার্ভারে পৌঁছানো যাচ্ছে না (WiFi/DNS চেক করুন)'
-              : 'Incorrect password';
+            err.textContent = describeAuthError(_err, 'document');
           }
         }finally{
           btn.textContent = originalLabel;
@@ -1128,9 +1010,6 @@
         const icon = document.getElementById(eyeId);
         const btn = document.getElementById(btnId);
         const err = document.getElementById(errId);
-        cachedPass = null;
-        cachedLink = null;
-        clearTimeout(debounceTimer);
         if(pf){ pf.value = ''; pf.type = 'password'; }
         if(icon){ icon.classList.remove('fa-eye-slash'); icon.classList.add('fa-eye'); }
         if(btn){ btn.classList.remove('show'); btn.removeAttribute('href'); }
@@ -1214,11 +1093,13 @@
       document.getElementById('authLockError').textContent = '';
     }
 
+    let authInFlight = false;
     async function authTryUnlock(){
-      const val = document.getElementById('authMasterPass').value;
+      const val = document.getElementById('authMasterPass').value.trim();
       const errorEl = document.getElementById('authLockError');
       const btn = document.getElementById('authSubmitBtn');
-      if(!val) return;
+      if(!val || authInFlight) return;
+      authInFlight = true;
       const originalLabel = btn.textContent;
       btn.textContent = 'Checking...';
       btn.disabled = true;
@@ -1227,12 +1108,11 @@
         errorEl.textContent = '';
         authShowMenu();
       }catch(err){
-        errorEl.textContent = err.isNetworkError
-          ? 'নেটওয়ার্ক সমস্যা — সার্ভারে পৌঁছানো যাচ্ছে না (WiFi/DNS চেক করুন)'
-          : 'Incorrect password';
+        errorEl.textContent = describeAuthError(err, 'login');
       }finally{
         btn.textContent = originalLabel;
         btn.disabled = false;
+        authInFlight = false;
       }
     }
 
@@ -1307,8 +1187,6 @@
 
     /* ---------------- Vault module ---------------- */
     let secToken = null;
-    let secTimer;
-    let secTimeLeft = 30;
 
     function secToggleVisibility(){
       const pf = document.getElementById('secPasswordField');
@@ -1329,11 +1207,13 @@
       document.getElementById('secLockError').textContent = '';
     }
 
+    let secInFlight = false;
     async function secTryLogin(){
-      const val = document.getElementById('secPasswordField').value;
+      const val = document.getElementById('secPasswordField').value.trim();
       const errorEl = document.getElementById('secLockError');
       const btn = document.getElementById('secSubmitBtn');
-      if(!val) return;
+      if(!val || secInFlight) return;
+      secInFlight = true;
       const originalLabel = btn.textContent;
       btn.textContent = 'Checking...';
       btn.disabled = true;
@@ -1342,14 +1222,12 @@
         errorEl.textContent = '';
         document.getElementById('secAuthScreen').classList.remove('active');
         document.getElementById('secMainMenu').classList.add('active');
-        secStartTimer();
       }catch(err){
-        errorEl.textContent = err.isNetworkError
-          ? 'নেটওয়ার্ক সমস্যা — সার্ভারে পৌঁছানো যাচ্ছে না (WiFi/DNS চেক করুন)'
-          : 'Incorrect password';
+        errorEl.textContent = describeAuthError(err, 'login');
       }finally{
         btn.textContent = originalLabel;
         btn.disabled = false;
+        secInFlight = false;
       }
     }
 
@@ -1366,40 +1244,19 @@
         if(link) window.open(link, '_blank');
       }catch(e){
         alert('Your session has expired, please log in again.');
-        secLogout(false);
+        secLogout();
       }
     }
 
-    function secStartTimer(){
-      secTimeLeft = 30;
-      const timerDisplay = document.getElementById('secTimerDisplay');
-      const secondsSpan = document.getElementById('secSeconds');
-      timerDisplay.style.display = "block";
-      clearInterval(secTimer);
-
-      secTimer = setInterval(() => {
-        secTimeLeft--;
-        secondsSpan.innerText = secTimeLeft;
-        timerDisplay.classList.toggle('time-low', secTimeLeft <= 5);
-        if(secTimeLeft <= 0){ secLogout(false); }
-      }, 1000);
-    }
-
-    function secLogout(silent){
-      clearInterval(secTimer);
+    function secLogout(){
       secToken = null;
       secLinksCache = null;
       document.getElementById('secPasswordField').value = "";
       document.getElementById('secPasswordField').type = "password";
       document.getElementById('secEyeIcon').classList.replace('fa-eye-slash', 'fa-eye');
-      document.getElementById('secTimerDisplay').style.display = "none";
-      document.getElementById('secTimerDisplay').classList.remove('time-low');
       document.getElementById('secMainMenu').classList.remove('active');
       document.getElementById('secAuthScreen').classList.add('active');
       document.getElementById('secLockError').textContent = '';
-      if(!silent){
-        alert("Your session has ended for security reasons.");
-      }
     }
   </script>
 </body>
