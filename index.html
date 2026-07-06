@@ -53,7 +53,7 @@
     --mono:'JetBrains Mono', monospace;
     --ease:cubic-bezier(.16,.8,.24,1);
   }
-  @property --border-angle {
+  @property --snake-angle {
     syntax: '<angle>';
     inherits: false;
     initial-value: 0deg;
@@ -272,15 +272,19 @@
     position:absolute; inset:0;
     border-radius:inherit;
     padding:1px;
-    background:conic-gradient(from var(--border-angle), rgba(207,169,104,0.06), rgba(207,169,104,0.96) 16%, rgba(95,216,207,0.7) 48%, rgba(255,255,255,0.16) 64%, rgba(207,169,104,0.08) 100%);
+    background:
+      conic-gradient(from var(--snake-angle), transparent 0 70%, rgba(34,211,238,0.96) 70% 78%, transparent 78% 100%),
+      conic-gradient(from calc(var(--snake-angle) + 180deg), transparent 0 70%, rgba(255,74,142,0.96) 70% 78%, transparent 78% 100%);
+    background-size:100% 100%, 100% 100%;
     -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite:xor;
     mask-composite:exclude;
     opacity:0;
     transform:scale(0.96);
     transition:opacity 0.28s ease, transform 0.28s ease;
-    animation:borderTrace 2.6s linear infinite paused;
-    filter:drop-shadow(0 0 10px rgba(207,169,104,0.24));
+    animation:neonBorderSnake 1.2s linear infinite;
+    animation-play-state:paused;
+    filter:drop-shadow(0 0 12px rgba(34,211,238,0.2)) drop-shadow(0 0 16px rgba(255,74,142,0.16));
   }
   nav a::after{
     content:'';
@@ -310,8 +314,9 @@
     opacity:1;
   }
   nav a.active{ background:linear-gradient(135deg, rgba(207,169,104,0.14), rgba(95,216,207,0.08)); }
-  @keyframes borderTrace{
-    to{ --border-angle: 360deg; }
+  @keyframes neonBorderSnake{
+    from{ --snake-angle: 0deg; }
+    to{ --snake-angle: 360deg; }
   }
   .sidebar-footer{ margin-top:auto; display:flex; gap:14px; flex-wrap:wrap; }
   .sidebar-footer a{
@@ -2018,4 +2023,3 @@
   </script>
 </body>
 </html>
-
