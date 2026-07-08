@@ -2119,7 +2119,7 @@
     langToggleBtn.addEventListener('click', () => {
         if (isListening) stopListening();
         if (selectedLang === 'bn-BD') {
-            selectedLang = 'en-US';
+            selectedLang = 'en-IN';
             langToggleBtn.textContent = 'EN';
             langToggleBtn.classList.add('en');
             langToggleBtn.title = 'বাংলায় বদলাতে ক্লিক করো';
@@ -2131,15 +2131,35 @@
         }
     });
 
+    // ইংরেজি নাম প্রায়ই ভুল শোনে speech engine — বিশেষ করে বাংলা উচ্চারণে বলা
+    // ইংরেজি নাম। তাই একটামাত্র অনুমানের বদলে ইঞ্জিনকে কয়েকটা বিকল্প (alternatives)
+    // চাইতে হয়, এবং প্রতিটা বিকল্পকে গ্যালারির ছবিগুলোতে আগে থেকেই থাকা নাম/ট্যাগের
+    // সাথে মিলিয়ে দেখা হয় — যেই বিকল্পটা সবচেয়ে বেশি চেনা নামের সাথে মেলে, সেটাই
+    // ব্যবহার করা হয়, ইঞ্জিনের সবচেয়ে "confident" অনুমান নয়।
+    function pickBestTranscript(alternatives) {
+        const combinedIndex = allPhotos.map(p => p.searchIndex).join(' ');
+        let best = (alternatives[0] && alternatives[0].transcript || '').trim();
+        let bestScore = -1;
+        for (let i = 0; i < alternatives.length; i++) {
+            const t = (alternatives[i].transcript || '').trim();
+            if (!t) continue;
+            const words = t.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+            let score = 0;
+            words.forEach(w => { if (combinedIndex.indexOf(w) !== -1) score++; });
+            if (score > bestScore) { bestScore = score; best = t; }
+        }
+        return best;
+    }
+
     function runRecognition(lang) {
         const rec = new SpeechRecognition();
         rec.lang = lang;
         rec.interimResults = false;
-        rec.maxAlternatives = 1;
+        rec.maxAlternatives = 5;
         let gotResult = false;
 
         rec.onresult = (e) => {
-            const transcript = e.results[0][0].transcript.trim();
+            const transcript = pickBestTranscript(e.results[0]);
             if (!transcript) return;
             gotResult = true;
             searchInput.value = transcript;
