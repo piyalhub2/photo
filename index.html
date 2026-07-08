@@ -522,24 +522,16 @@
             0%, 100% { box-shadow: 0 0 0 0 rgba(63,168,255,0.5); }
             50% { box-shadow: 0 0 0 8px rgba(63,168,255,0); }
         }
-        .search-bar-pos { position: relative; width: 100%; max-width: 480px; }
-        .mic-wrap { position: relative; display: flex; flex-shrink: 0; }
-        .mic-lang-menu {
-            position: absolute; top: calc(100% + 10px); right: 16px;
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 8px; padding: 6px; min-width: 108px;
-            display: none; flex-direction: column; gap: 3px;
-            box-shadow: 0 14px 34px rgba(0,0,0,0.55);
-            backdrop-filter: blur(14px); z-index: 40;
+        .lang-toggle { display: flex; gap: 4px; flex-shrink: 0; }
+        .lang-chip {
+            font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 600;
+            letter-spacing: 0.03em; color: var(--muted);
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 7px; padding: 5px 8px; cursor: pointer; line-height: 1;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
-        .mic-lang-menu.open { display: flex; }
-        .mic-lang-opt {
-            background: transparent; border: none; text-align: left;
-            font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--muted);
-            padding: 8px 10px; border-radius: 5px; cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-        }
-        .mic-lang-opt:hover { background: var(--gold-dim); color: var(--gold); }
+        .lang-chip:hover { border-color: var(--gold); color: var(--gold-light); }
+        .lang-chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
         .search-status {
             margin-top: 10px; font-size: 11px; letter-spacing: 0.08em;
             color: var(--muted); min-height: 14px; text-align: center;
@@ -1148,7 +1140,6 @@
     </div>
 
     <div class="search-wrap reveal">
-        <div class="search-bar-pos">
         <div class="search-bar">
             <canvas class="search-bar-fx" id="searchBarFx"></canvas>
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1159,20 +1150,17 @@
                    placeholder="Search by name…"
                    autocomplete="off" spellcheck="false">
             <button class="search-clear" id="searchClear" title="Clear" style="display:none;">×</button>
-            <div class="mic-wrap">
-                <button class="mic-btn" id="micBtn" title="Voice search">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.6"/>
-                        <path d="M19 11a7 7 0 0 1-14 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                        <path d="M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                </button>
+            <div class="lang-toggle" id="langToggle">
+                <button class="lang-chip active" type="button" data-lang="bn-BD" title="বাংলা">বাং</button>
+                <button class="lang-chip" type="button" data-lang="en-US" title="English">EN</button>
             </div>
-        </div>
-        <div class="mic-lang-menu" id="micLangMenu">
-            <button class="mic-lang-opt" type="button" data-lang="bn-BD">বাংলা</button>
-            <button class="mic-lang-opt" type="button" data-lang="en-US">English</button>
-        </div>
+            <button class="mic-btn" id="micBtn" title="Voice search">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M19 11a7 7 0 0 1-14 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+            </button>
         </div>
         <p class="search-status" id="searchStatus"></p>
     </div>
@@ -2127,30 +2115,28 @@
     let recognizer = null;
     let isListening = false;
 
-    // The Web Speech API only accepts one recognition language per session,
-    // so true simultaneous bn+en listening isn't possible in one instance.
-    // Instead: try Bengali first (since it's the less common of the two and
-    // more likely to be misrecognized by an English-default engine), and if
-    // nothing usable comes back, automatically retry the same recording
-    // window in English. This covers a single voice search working for
-    // either language without asking the user to pick one upfront.
-    function runRecognition(lang, isRetry) {
+    // ভাষা এখন ছোট দুটো টগল চিপ (বাং / EN) দিয়ে আগে থেকেই বেছে রাখা হয়,
+    // মাইক বাটনে ক্লিক করলেই সরাসরি সেই ভাষায় শোনা শুরু হয় — আলাদা কোনো
+    // পপ-আপ মেনু আর দেখাতে হয় না।
+    let selectedLang = 'bn-BD';
+    const langChips = document.querySelectorAll('.lang-chip');
+    langChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            langChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedLang = chip.dataset.lang;
+            // ভাষা পাল্টানোর সময় যদি তখনও আগের ভাষায় শোনা চলছিল, সেটা বন্ধ করে দেওয়া হয়,
+            // যাতে মিশ্র-ভাষার রেজাল্ট না আসে।
+            if (isListening) stopListening();
+        });
+    });
+
+    function runRecognition(lang) {
         const rec = new SpeechRecognition();
         rec.lang = lang;
         rec.interimResults = false;
         rec.maxAlternatives = 1;
         let gotResult = false;
-        let retried = false;
-
-        function retryOrStop() {
-            if (retried) return;
-            retried = true;
-            if (!isRetry && !gotResult) {
-                runRecognition(lang === 'bn-BD' ? 'en-US' : 'bn-BD', true);
-            } else {
-                stopListening();
-            }
-        }
 
         rec.onresult = (e) => {
             const transcript = e.results[0][0].transcript.trim();
@@ -2162,8 +2148,8 @@
             applyFiltersAndSearch();
         };
 
-        rec.onerror = retryOrStop;
-        rec.onend = retryOrStop;
+        rec.onerror = () => stopListening();
+        rec.onend = () => stopListening();
 
         recognizer = rec;
         rec.start();
@@ -2178,13 +2164,7 @@
         }
     }
 
-    // মাইক বাটনে ক্লিক করলে এখন সরাসরি শোনা শুরু হয় না — আগে বাংলা/English
-    // বেছে নেওয়ার একটা ছোট মেনু দেখায়। যেটা বেছে নেওয়া হবে, ভয়েস ইনপুট
-    // ঠিক সেই ভাষাতেই লেখা হবে (isRetry=true পাঠানো হচ্ছে বলে
-    // runRecognition আর নিজে থেকে অন্য ভাষায় সুইচ করবে না)।
-    const micLangMenu = document.getElementById('micLangMenu');
-
-    function startListeningInLang(lang) {
+    function startListening() {
         if (!SpeechRecognition) {
             document.getElementById('searchStatus').textContent =
                 'Voice search isn\'t supported in this browser.';
@@ -2192,30 +2172,14 @@
         }
         isListening = true;
         micBtn.classList.add('listening');
-        runRecognition(lang, true);
+        runRecognition(selectedLang);
     }
 
-    micBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+    micBtn.addEventListener('click', () => {
         if (isListening) {
             stopListening();
-            micLangMenu.classList.remove('open');
         } else {
-            micLangMenu.classList.toggle('open');
-        }
-    });
-
-    document.querySelectorAll('.mic-lang-opt').forEach(opt => {
-        opt.addEventListener('click', (e) => {
-            e.stopPropagation();
-            micLangMenu.classList.remove('open');
-            startListeningInLang(opt.dataset.lang);
-        });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.mic-wrap') && !e.target.closest('.mic-lang-menu')) {
-            micLangMenu.classList.remove('open');
+            startListening();
         }
     });
 
