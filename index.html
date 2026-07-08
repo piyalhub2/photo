@@ -522,9 +522,10 @@
             0%, 100% { box-shadow: 0 0 0 0 rgba(63,168,255,0.5); }
             50% { box-shadow: 0 0 0 8px rgba(63,168,255,0); }
         }
+        .search-bar-pos { position: relative; width: 100%; max-width: 480px; }
         .mic-wrap { position: relative; display: flex; flex-shrink: 0; }
         .mic-lang-menu {
-            position: absolute; top: calc(100% + 10px); right: 0;
+            position: absolute; top: calc(100% + 10px); right: 16px;
             background: var(--card-bg); border: 1px solid var(--border);
             border-radius: 8px; padding: 6px; min-width: 108px;
             display: none; flex-direction: column; gap: 3px;
@@ -1147,6 +1148,7 @@
     </div>
 
     <div class="search-wrap reveal">
+        <div class="search-bar-pos">
         <div class="search-bar">
             <canvas class="search-bar-fx" id="searchBarFx"></canvas>
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1165,11 +1167,12 @@
                         <path d="M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
                     </svg>
                 </button>
-                <div class="mic-lang-menu" id="micLangMenu">
-                    <button class="mic-lang-opt" type="button" data-lang="bn-BD">বাংলা</button>
-                    <button class="mic-lang-opt" type="button" data-lang="en-US">English</button>
-                </div>
             </div>
+        </div>
+        <div class="mic-lang-menu" id="micLangMenu">
+            <button class="mic-lang-opt" type="button" data-lang="bn-BD">বাংলা</button>
+            <button class="mic-lang-opt" type="button" data-lang="en-US">English</button>
+        </div>
         </div>
         <p class="search-status" id="searchStatus"></p>
     </div>
@@ -2211,7 +2214,7 @@
     });
 
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.mic-wrap')) {
+        if (!e.target.closest('.mic-wrap') && !e.target.closest('.mic-lang-menu')) {
             micLangMenu.classList.remove('open');
         }
     });
