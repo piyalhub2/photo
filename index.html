@@ -522,16 +522,16 @@
             0%, 100% { box-shadow: 0 0 0 0 rgba(63,168,255,0.5); }
             50% { box-shadow: 0 0 0 8px rgba(63,168,255,0); }
         }
-        .lang-toggle { display: flex; gap: 4px; flex-shrink: 0; }
-        .lang-chip {
-            font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 600;
-            letter-spacing: 0.03em; color: var(--muted);
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            border-radius: 7px; padding: 5px 8px; cursor: pointer; line-height: 1;
+        .lang-toggle-btn {
+            font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700;
+            letter-spacing: 0.03em; color: var(--gold); flex-shrink: 0;
+            background: var(--gold-dim); border: 1px solid var(--border);
+            border-radius: 7px; padding: 5px 9px; cursor: pointer; line-height: 1;
+            min-width: 30px; text-align: center;
             transition: background 0.15s, color 0.15s, border-color 0.15s;
         }
-        .lang-chip:hover { border-color: var(--gold); color: var(--gold-light); }
-        .lang-chip.active { background: var(--gold); color: #000; border-color: var(--gold); }
+        .lang-toggle-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+        .lang-toggle-btn.en { background: var(--gold); color: #000; }
         .search-status {
             margin-top: 10px; font-size: 11px; letter-spacing: 0.08em;
             color: var(--muted); min-height: 14px; text-align: center;
@@ -1150,10 +1150,7 @@
                    placeholder="Search by name…"
                    autocomplete="off" spellcheck="false">
             <button class="search-clear" id="searchClear" title="Clear" style="display:none;">×</button>
-            <div class="lang-toggle" id="langToggle">
-                <button class="lang-chip active" type="button" data-lang="bn-BD" title="বাংলা">বাং</button>
-                <button class="lang-chip" type="button" data-lang="en-US" title="English">EN</button>
-            </div>
+            <button class="lang-toggle-btn" id="langToggleBtn" type="button" data-lang="bn-BD" title="ভাষা পরিবর্তন করতে ক্লিক করো">বাং</button>
             <button class="mic-btn" id="micBtn" title="Voice search">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.6"/>
@@ -2115,20 +2112,23 @@
     let recognizer = null;
     let isListening = false;
 
-    // ভাষা এখন ছোট দুটো টগল চিপ (বাং / EN) দিয়ে আগে থেকেই বেছে রাখা হয়,
-    // মাইক বাটনে ক্লিক করলেই সরাসরি সেই ভাষায় শোনা শুরু হয় — আলাদা কোনো
-    // পপ-আপ মেনু আর দেখাতে হয় না।
+    // একটাই বাটন — ক্লিক করলে বাং ⇄ EN এর মধ্যে সুইচ হয়। বাটনে যেই ভাষা
+    // লেখা/হাইলাইট থাকবে, মাইক বাটনে ক্লিক করলে ঠিক সেই ভাষাতেই শোনা শুরু হবে।
     let selectedLang = 'bn-BD';
-    const langChips = document.querySelectorAll('.lang-chip');
-    langChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            langChips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            selectedLang = chip.dataset.lang;
-            // ভাষা পাল্টানোর সময় যদি তখনও আগের ভাষায় শোনা চলছিল, সেটা বন্ধ করে দেওয়া হয়,
-            // যাতে মিশ্র-ভাষার রেজাল্ট না আসে।
-            if (isListening) stopListening();
-        });
+    const langToggleBtn = document.getElementById('langToggleBtn');
+    langToggleBtn.addEventListener('click', () => {
+        if (isListening) stopListening();
+        if (selectedLang === 'bn-BD') {
+            selectedLang = 'en-US';
+            langToggleBtn.textContent = 'EN';
+            langToggleBtn.classList.add('en');
+            langToggleBtn.title = 'বাংলায় বদলাতে ক্লিক করো';
+        } else {
+            selectedLang = 'bn-BD';
+            langToggleBtn.textContent = 'বাং';
+            langToggleBtn.classList.remove('en');
+            langToggleBtn.title = 'English-এ বদলাতে ক্লিক করো';
+        }
     });
 
     function runRecognition(lang) {
