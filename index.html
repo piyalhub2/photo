@@ -280,15 +280,6 @@
         }
         .nav-logo span { color: var(--gold); }
         .nav-links { display: flex; gap: 32px; list-style: none; }
-        .nav-fx {
-            flex: 1;
-            height: 34px;
-            margin: 0 28px;
-            position: relative;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        .nav-fx canvas { width: 100%; height: 100%; display: block; }
         .nav-links a {
             font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
             color: var(--muted); text-decoration: none;
@@ -443,14 +434,6 @@
             padding: 10px 16px;
             transition: border-color 0.2s, box-shadow 0.2s;
             animation: searchBarGlow 3.2s ease-in-out infinite;
-        }
-        .search-bar-fx {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            display: block;
-            pointer-events: none;
-            opacity: 0.6;
-            z-index: 0;
         }
         .search-icon, .search-input, .search-clear, .mic-btn {
             position: relative;
@@ -1064,7 +1047,6 @@
             nav { padding: 14px 16px; }
             .nav-links { gap: 12px; }
             .nav-links a { font-size: 9px; letter-spacing: 0.08em; }
-            .nav-fx { display: none; }
             footer { flex-direction: column; text-align: center; }
         }
 
@@ -1141,7 +1123,6 @@
 
 <nav>
     <a href="#" class="nav-logo">Tonir <span>Shaik</span></a>
-    <div class="nav-fx"><canvas id="navFxCanvas"></canvas></div>
     <ul class="nav-links">
         <li class="chase-wrap"><a href="#" id="navGalleryLink" class="nav-chase-btn nav-premium"><span class="pl">U</span><span class="pl">p</span><span class="pl">l</span><span class="pl">o</span><span class="pl">a</span><span class="pl">d</span></a>
             <svg class="chase-svg"><rect x="1" y="1" width="100%" height="100%" rx="4" class="chase-line chase-line-a"/><rect x="1" y="1" width="100%" height="100%" rx="4" class="chase-line chase-line-b"/></svg>
@@ -1174,7 +1155,6 @@
 
     <div class="search-wrap reveal">
         <div class="search-bar">
-            <canvas class="search-bar-fx" id="searchBarFx"></canvas>
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/>
                 <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -1599,180 +1579,6 @@
             }
         });
     })();
-
-    /* ── Nav-gap plexus particle network ───────────────────────── */
-    (function() {
-        const canvas = document.getElementById('navFxCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let W, H, nodes = [];
-        const LOW_POWER = window.matchMedia('(max-width: 768px)').matches ||
-                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        function resize() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            W = canvas.width = rect.width;
-            H = canvas.height = rect.height;
-            const count = Math.max(5, Math.min(14, Math.floor(W / 40)));
-            nodes = Array.from({ length: count }, () => ({
-                x: Math.random() * W,
-                y: Math.random() * H,
-                vx: (Math.random() - 0.5) * 0.22,
-                vy: (Math.random() - 0.5) * 0.22,
-                r: 1 + Math.random() * 1.4
-            }));
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        const LINK_DIST = 62;
-        let lastFrameTime = 0;
-        const FRAME_INTERVAL = 40; // ~25fps is plenty for slow-drifting dots
-
-        function draw(now) {
-            rafId = requestAnimationFrame(draw);
-            if (document.hidden || W === 0 || H === 0) return;
-            if (now - lastFrameTime < FRAME_INTERVAL) return;
-            lastFrameTime = now;
-
-            ctx.clearRect(0, 0, W, H);
-            nodes.forEach(n => {
-                n.x += n.vx;
-                n.y += n.vy;
-                if (n.x < 0 || n.x > W) n.vx *= -1;
-                if (n.y < 0 || n.y > H) n.vy *= -1;
-                n.x = Math.max(0, Math.min(W, n.x));
-                n.y = Math.max(0, Math.min(H, n.y));
-            });
-
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const a = nodes[i], b = nodes[j];
-                    const dist = Math.hypot(a.x - b.x, a.y - b.y);
-                    if (dist < LINK_DIST) {
-                        ctx.strokeStyle = `rgba(120,190,255,${(1 - dist / LINK_DIST) * 0.55})`;
-                        ctx.lineWidth = 0.6;
-                        ctx.beginPath();
-                        ctx.moveTo(a.x, a.y);
-                        ctx.lineTo(b.x, b.y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            // No shadowBlur — plain fill is much cheaper and barely
-            // different visually at this dot size.
-            ctx.fillStyle = 'rgba(160,215,255,0.95)';
-            nodes.forEach(n => {
-                ctx.beginPath();
-                ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-        let rafId = requestAnimationFrame(draw);
-    })();
-
-    /* ── Search-bar tiny wiggling "snake" light traces ─────────── */
-    (function() {
-        const canvas = document.getElementById('searchBarFx');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let W, H;
-        let traces = [];
-        const colors = ['#3FA8FF', '#FF5C5C', '#57E389', '#FFD54F', '#7FCBFF'];
-        const LOW_POWER = window.matchMedia('(max-width: 768px)').matches ||
-                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        function resize() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            W = canvas.width = rect.width;
-            H = canvas.height = rect.height;
-            generateTraces();
-        }
-
-        // Each "snake" is a short body of a few points; a travelling sine
-        // wave runs along the body (phase offset per point) so it looks
-        // like it's wriggling as it slowly drifts sideways.
-        function makeSnake(headX) {
-            return {
-                headX,
-                segCount: 8 + Math.floor(Math.random() * 4),
-                length: 16 + Math.random() * 18,
-                baseY: 6 + Math.random() * Math.max(H - 12, 8),
-                amp: 7 + Math.random() * 6,
-                waveLen: 2.6 + Math.random() * 1.8,
-                phase: Math.random() * Math.PI * 2,
-                wiggleSpeed: 0.16 + Math.random() * 0.14,
-                vx: 0.18 + Math.random() * 0.24,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                flickerPhase: Math.random() * Math.PI * 2,
-                flickerSpeed: 0.03 + Math.random() * 0.04,
-                baseAlpha: 0.25 + Math.random() * 0.15
-            };
-        }
-
-        function generateTraces() {
-            traces = [];
-            const count = LOW_POWER ? Math.max(3, Math.floor(W / 90)) : Math.max(5, Math.floor(W / 60));
-            for (let i = 0; i < count; i++) {
-                traces.push(makeSnake(Math.random() * W));
-            }
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-
-        let lastFrameTime = 0;
-        const FRAME_INTERVAL = LOW_POWER ? 66 : 33;
-
-        function draw(now) {
-            rafId = requestAnimationFrame(draw);
-            if (document.hidden || W === 0 || H === 0) return;
-            if (now - lastFrameTime < FRAME_INTERVAL) return;
-            lastFrameTime = now;
-
-            ctx.clearRect(0, 0, W, H);
-            traces.forEach((sn, idx) => {
-                sn.headX += sn.vx;
-                sn.phase += sn.wiggleSpeed;
-                sn.flickerPhase += sn.flickerSpeed;
-
-                if (sn.headX - sn.length > W + 10) {
-                    traces[idx] = makeSnake(-10 - Math.random() * 20);
-                    return;
-                }
-
-                const pts = [];
-                for (let i = 0; i < sn.segCount; i++) {
-                    const t = i / (sn.segCount - 1);
-                    const x = sn.headX - t * sn.length;
-                    const y = sn.baseY + Math.sin(sn.phase - t * sn.waveLen * Math.PI) * sn.amp * t;
-                    pts.push({ x, y: Math.max(2, Math.min(H - 2, y)) });
-                }
-
-                const flicker = (Math.sin(sn.flickerPhase) + 1) / 2;
-                const alpha = Math.min(sn.baseAlpha + flicker * 0.6, 0.85);
-
-                ctx.beginPath();
-                ctx.moveTo(pts[0].x, pts[0].y);
-                for (let i = 1; i < pts.length - 1; i++) {
-                    const midX = (pts[i].x + pts[i + 1].x) / 2;
-                    const midY = (pts[i].y + pts[i + 1].y) / 2;
-                    ctx.quadraticCurveTo(pts[i].x, pts[i].y, midX, midY);
-                }
-                ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
-                ctx.strokeStyle = sn.color;
-                ctx.lineWidth = 1.2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.globalAlpha = alpha;
-                ctx.stroke();
-            });
-            ctx.globalAlpha = 1;
-        }
-        let rafId = requestAnimationFrame(draw);
-    })();
-
 
 
     // Maps the section header found in the text file (e.g. "#SINGLE")
