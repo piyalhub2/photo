@@ -15,7 +15,8 @@
     <!-- ===== FAVICON ===== -->
     <link rel="icon" type="image/png" sizes="512x512" href="https://tonirshaik.github.io/tonirshaik/web-app-manifest-512x512.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://tonirshaik.github.io/tonirshaik/web-app-manifest-512x512.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
     <!-- ===== Open Graph (Facebook / WhatsApp preview) ===== -->
     <meta property="og:type" content="website">
@@ -44,6 +45,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://script.google.com">
     <link rel="preconnect" href="https://drive.google.com">
@@ -67,12 +69,6 @@
         }
 
         html { scroll-behavior: smooth; }
-
-        /* ── Aurora animated background canvas ─────────────────── */
-        #aurora-canvas {
-            position: fixed; inset: 0; z-index: -1;
-            width: 100%; height: 100%; pointer-events: none;
-        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -267,9 +263,9 @@
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             padding: 16px 40px;
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(5, 10, 22, 0.55);
-            backdrop-filter: blur(22px) saturate(1.6);
-            -webkit-backdrop-filter: blur(22px) saturate(1.6);
+            background: rgba(5, 10, 22, 0.72);
+            backdrop-filter: blur(10px) saturate(1.3);
+            -webkit-backdrop-filter: blur(10px) saturate(1.3);
             border-bottom: 1px solid rgba(63,168,255,0.18);
             box-shadow: 0 4px 30px rgba(63,168,255,0.08), 0 1px 0 rgba(63,168,255,0.15);
         }
@@ -296,37 +292,6 @@
             border: 1px solid rgba(63,168,255,0.3);
             border-radius: 4px;
         }
-        .chase-svg {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            overflow: visible;
-            pointer-events: none;
-        }
-        .chase-line {
-            fill: none;
-            stroke-width: 1.6;
-            vector-effect: non-scaling-stroke;
-            stroke-linecap: round;
-        }
-        .chase-line-a {
-            stroke: #7FCBFF;
-            stroke-dasharray: 22 300;
-            filter: drop-shadow(0 0 4px rgba(127,203,255,0.95));
-            animation: chaseDashFwd 5s linear infinite;
-        }
-        .chase-line-b {
-            stroke: #FFD54F;
-            stroke-dasharray: 22 300;
-            stroke-dashoffset: 161;
-            filter: drop-shadow(0 0 4px rgba(255,213,79,0.9));
-            animation: chaseDashRev 5s linear infinite;
-        }
-        @keyframes chaseDashFwd {
-            to { stroke-dashoffset: -644; }
-        }
-        @keyframes chaseDashRev {
-            to { stroke-dashoffset: 805; }
-        }
 
         .nav-shine-btn {
             position: relative;
@@ -337,28 +302,6 @@
             border-radius: 4px;
             overflow: hidden;
         }
-        .nav-shine-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            left: -60%;
-            width: 40%;
-            background: linear-gradient(
-                100deg,
-                transparent 0%,
-                rgba(140,225,255,0.05) 30%,
-                rgba(190,235,255,0.55) 50%,
-                rgba(140,225,255,0.05) 70%,
-                transparent 100%
-            );
-            transform: skewX(-20deg);
-            animation: navShineSweep 3.4s ease-in-out infinite;
-        }
-        @keyframes navShineSweep {
-            0%   { left: -60%; }
-            35%  { left: 130%; }
-            100% { left: 130%; }
-        }
 
         /* ── Premium treatment for the Upload button ───────────────── */
         .nav-premium {
@@ -366,36 +309,12 @@
             letter-spacing: 0.18em;
             backdrop-filter: blur(6px);
             background: linear-gradient(160deg, rgba(63,168,255,0.14), rgba(10,18,32,0.55) 60%);
-            animation: navPremiumGlow 2.6s ease-in-out infinite;
             overflow: hidden;
         }
         .nav-premium .pl {
             display: inline-block;
             color: #ffd76a;
             text-shadow: 0 0 8px rgba(255,215,110,0.6);
-            opacity: 0;
-            transform: translateY(-16px);
-            animation: letterDrop 2.8s ease-in-out infinite;
-        }
-        .nav-premium .pl:nth-child(1) { animation-delay: 0.00s; }
-        .nav-premium .pl:nth-child(2) { animation-delay: 0.09s; }
-        .nav-premium .pl:nth-child(3) { animation-delay: 0.18s; }
-        .nav-premium .pl:nth-child(4) { animation-delay: 0.27s; }
-        .nav-premium .pl:nth-child(5) { animation-delay: 0.36s; }
-        .nav-premium .pl:nth-child(6) { animation-delay: 0.45s; }
-        @keyframes letterDrop {
-            0%   { opacity: 0; transform: translateY(-16px); }
-            18%  { opacity: 1; transform: translateY(0); }
-            75%  { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(10px); }
-        }
-        @keyframes navPremiumGlow {
-            0%, 100% {
-                box-shadow: 0 0 0 1px rgba(63,168,255,0.18), 0 0 10px rgba(63,168,255,0.15), 0 4px 18px rgba(0,0,0,0.35);
-            }
-            50% {
-                box-shadow: 0 0 0 1px rgba(255,215,110,0.4), 0 0 22px rgba(255,215,110,0.35), 0 0 34px rgba(63,168,255,0.35), 0 4px 18px rgba(0,0,0,0.35);
-            }
         }
         .nav-premium:hover {
             transform: translateY(-2px) scale(1.03);
@@ -606,27 +525,6 @@
                 0 0 14px rgba(63,168,255,0.45),
                 0 0 34px rgba(63,168,255,0.22),
                 0 6px 20px rgba(0,0,0,0.35);
-            animation: activeGlow 2.6s ease-in-out infinite;
-        }
-        .filter-btn.active::before {
-            opacity: 1;
-            animation-play-state: running;
-        }
-        @keyframes activeGlow {
-            0%, 100% {
-                box-shadow:
-                    0 0 0 1px rgba(63,168,255,0.25) inset,
-                    0 0 14px rgba(63,168,255,0.45),
-                    0 0 34px rgba(63,168,255,0.22),
-                    0 6px 20px rgba(0,0,0,0.35);
-            }
-            50% {
-                box-shadow:
-                    0 0 0 1px rgba(127,203,255,0.4) inset,
-                    0 0 20px rgba(63,168,255,0.65),
-                    0 0 46px rgba(63,168,255,0.32),
-                    0 6px 20px rgba(0,0,0,0.35);
-            }
         }
         .filter-btn .ripple {
             position: absolute;
@@ -1119,13 +1017,10 @@
 </head>
 <body>
 
-<canvas id="aurora-canvas"></canvas>
-
 <nav>
     <a href="#" class="nav-logo">Tonir <span>Shaik</span></a>
     <ul class="nav-links">
         <li class="chase-wrap"><a href="#" id="navGalleryLink" class="nav-chase-btn nav-premium"><span class="pl">U</span><span class="pl">p</span><span class="pl">l</span><span class="pl">o</span><span class="pl">a</span><span class="pl">d</span></a>
-            <svg class="chase-svg"><rect x="1" y="1" width="100%" height="100%" rx="4" class="chase-line chase-line-a"/><rect x="1" y="1" width="100%" height="100%" rx="4" class="chase-line chase-line-b"/></svg>
         </li>
         <li><a href="https://tonirshaik.github.io/tonirshaik_web/" target="_blank" class="nav-shine-btn">Official Site</a></li>
     </ul>
@@ -1339,248 +1234,6 @@
 </div>
 
 <script>
-    /* ── Aurora background ─────────────────────────────────────── */
-    (function() {
-        const canvas = document.getElementById('aurora-canvas');
-        const ctx = canvas.getContext('2d');
-        let W, H;
-        // Phones and "reduced motion" users get a much cheaper (or static)
-        // version of this animation — this is the single biggest CPU cost
-        // on the page, and it's what was causing scroll to feel slow.
-        const LOW_POWER = window.matchMedia('(max-width: 768px)').matches ||
-                           window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        function resize() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-            generateCircuitPaths();
-        }
-
-        /* ── Circuit-board trace network with travelling light pulses ──
-           Generates PCB-style paths (right-angle bends) radiating across
-           the screen; bright pulses repeatedly travel along them, like
-           current flowing through a circuit board. */
-        let circuitPaths = [];
-        let pulses = [];
-
-        function generateCircuitPaths() {
-            circuitPaths = [];
-            const pathCount = LOW_POWER
-                ? Math.max(10, Math.floor((W * H) / 140000))
-                : Math.max(24, Math.floor((W * H) / 70000));
-            for (let i = 0; i < pathCount; i++) {
-                const points = [];
-                let x = Math.random() * W;
-                let y = Math.random() * H;
-                points.push({ x, y });
-                const segs = 5 + Math.floor(Math.random() * 5);
-                let horizontal = Math.random() < 0.5;
-                for (let s = 0; s < segs; s++) {
-                    const len = 18 + Math.random() * 70;
-                    const dir = Math.random() < 0.5 ? -1 : 1;
-                    if (horizontal) x += len * dir; else y += len * dir;
-                    x = Math.max(-20, Math.min(W + 20, x));
-                    y = Math.max(-20, Math.min(H + 20, y));
-                    points.push({ x, y });
-                    horizontal = !horizontal;
-                }
-                // precompute cumulative lengths
-                let total = 0;
-                const segLens = [];
-                for (let k = 0; k < points.length - 1; k++) {
-                    const d = Math.hypot(points[k+1].x - points[k].x, points[k+1].y - points[k].y);
-                    segLens.push(d);
-                    total += d;
-                }
-                circuitPaths.push({ points, segLens, total });
-            }
-
-            // (Re)spawn pulses — most paths carry an active travelling pulse
-            pulses = [];
-            circuitPaths.forEach((path, idx) => {
-                pulses.push(spawnPulse(idx));
-            });
-        }
-
-        function spawnPulse(pathIdx) {
-            return {
-                pathIdx,
-                t: Math.random() * 0.3,
-                speed: 0.004 + Math.random() * 0.006,
-                glowLen: 0.06 + Math.random() * 0.08,
-            };
-        }
-
-        function pointAtT(path, t) {
-            const targetDist = t * path.total;
-            let acc = 0;
-            for (let i = 0; i < path.segLens.length; i++) {
-                const segLen = path.segLens[i];
-                if (acc + segLen >= targetDist || i === path.segLens.length - 1) {
-                    const localT = segLen === 0 ? 0 : (targetDist - acc) / segLen;
-                    const p1 = path.points[i], p2 = path.points[i + 1];
-                    return { x: p1.x + (p2.x - p1.x) * localT, y: p1.y + (p2.y - p1.y) * localT };
-                }
-                acc += segLen;
-            }
-            return path.points[path.points.length - 1];
-        }
-
-        /* Returns the list of points (including any in-between bends) that
-           lie along the path from t0 to t1, so a trail can be drawn that
-           actually follows the polyline's corners instead of cutting a
-           straight diagonal line across a bend. */
-        function pointsBetween(path, t0, t1) {
-            const d0 = t0 * path.total, d1 = t1 * path.total;
-            const pts = [pointAtT(path, t0)];
-            let acc = 0;
-            for (let i = 0; i < path.segLens.length; i++) {
-                acc += path.segLens[i];
-                if (acc > d0 && acc < d1) pts.push(path.points[i + 1]);
-                if (acc >= d1) break;
-            }
-            pts.push(pointAtT(path, t1));
-            return pts;
-        }
-
-        function strokePolyline(ctx, pts) {
-            ctx.beginPath();
-            ctx.moveTo(pts[0].x, pts[0].y);
-            for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-            ctx.stroke();
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-
-        const blobs = [
-            { x: 0.25, y: 0.15, r: 0.55, vx: 0.00018, vy: 0.00012, color: 'rgba(25,90,220,0.22)' },
-            { x: 0.75, y: 0.80, r: 0.50, vx:-0.00015, vy:-0.00010, color: 'rgba(0,160,255,0.18)' },
-            { x: 0.55, y: 0.45, r: 0.40, vx: 0.00012, vy: 0.00018, color: 'rgba(0,80,200,0.14)' },
-            { x: 0.10, y: 0.70, r: 0.35, vx: 0.00020, vy:-0.00016, color: 'rgba(60,180,255,0.12)' },
-            { x: 0.90, y: 0.25, r: 0.38, vx:-0.00022, vy: 0.00014, color: 'rgba(0,40,140,0.16)' },
-        ];
-
-
-
-        let t = 0;
-        let lastFrameTime = 0;
-        const FRAME_INTERVAL = LOW_POWER ? 66 : 33; // ~15fps on phones, ~30fps elsewhere (was uncapped 60fps)
-        function draw(now) {
-            rafId = requestAnimationFrame(draw);
-            if (now - lastFrameTime < FRAME_INTERVAL) return;
-            lastFrameTime = now;
-
-            ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, W, H);
-
-            blobs.forEach(b => {
-                b.x += b.vx * (W / 1440);
-                b.y += b.vy * (H / 900);
-                if (b.x < -0.2) b.x = 1.2;
-                if (b.x > 1.2)  b.x = -0.2;
-                if (b.y < -0.2) b.y = 1.2;
-                if (b.y > 1.2)  b.y = -0.2;
-
-                const cx = b.x * W + Math.sin(t * 0.00055 + b.r * 10) * W * 0.05;
-                const cy = b.y * H + Math.cos(t * 0.00045 + b.r * 7) * H * 0.04;
-                const rx = b.r * Math.max(W, H);
-
-                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rx);
-                grad.addColorStop(0, b.color);
-                grad.addColorStop(1, 'transparent');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, W, H);
-            });
-
-            // ── Circuit-board traces with travelling light pulses ──────
-            ctx.save();
-
-            // Base traces — visible thin metallic-blue lines
-            ctx.strokeStyle = 'rgba(100,165,225,0.22)';
-            ctx.lineWidth = 1.1;
-            ctx.lineJoin = 'round';
-            circuitPaths.forEach(path => {
-                ctx.beginPath();
-                ctx.moveTo(path.points[0].x, path.points[0].y);
-                for (let k = 1; k < path.points.length; k++) ctx.lineTo(path.points[k].x, path.points[k].y);
-                ctx.stroke();
-            });
-
-            // Junction "via" nodes at every bend — like solder pads on a PCB
-            ctx.fillStyle = 'rgba(120,180,235,0.35)';
-            circuitPaths.forEach(path => {
-                for (let k = 1; k < path.points.length - 1; k++) {
-                    const p = path.points[k];
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            });
-
-            // Animate + draw pulses travelling along their paths.
-            // (No ctx.shadowBlur here anymore — shadowBlur is one of the
-            // most expensive canvas operations; the gradients below still
-            // give a soft glow look for a fraction of the CPU cost.)
-            ctx.lineCap = 'round';
-            for (let i = pulses.length - 1; i >= 0; i--) {
-                const pulse = pulses[i];
-                pulse.t += pulse.speed;
-                if (pulse.t > 1) {
-                    // respawn this pulse on a random path
-                    pulses[i] = spawnPulse(Math.floor(Math.random() * circuitPaths.length));
-                    continue;
-                }
-                const path = circuitPaths[pulse.pathIdx];
-                if (!path) continue;
-
-                const headT = pulse.t;
-                const tailT = Math.max(0, pulse.t - pulse.glowLen);
-                const head = pointAtT(path, headT);
-                const tail = pointAtT(path, tailT);
-                const trailPts = pointsBetween(path, tailT, headT);
-
-                // Wide outer glow trail
-                const outerGrad = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
-                outerGrad.addColorStop(0, 'rgba(80,170,255,0)');
-                outerGrad.addColorStop(1, 'rgba(110,195,255,0.55)');
-                ctx.strokeStyle = outerGrad;
-                ctx.lineWidth = 0.8;
-                strokePolyline(ctx, trailPts);
-
-                // Bright core trail
-                const coreGrad = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
-                coreGrad.addColorStop(0, 'rgba(160,220,255,0)');
-                coreGrad.addColorStop(1, 'rgba(190,230,255,0.95)');
-                ctx.strokeStyle = coreGrad;
-                ctx.lineWidth = 0.4;
-                strokePolyline(ctx, trailPts);
-
-                // Bright pulse head — glowing node
-                ctx.fillStyle = 'rgba(235,248,255,1)';
-                ctx.beginPath();
-                ctx.arc(head.x, head.y, 1.4, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            ctx.restore();
-            t++;
-        }
-        let rafId = requestAnimationFrame(draw);
-
-        // Stop wasting CPU/battery entirely while the tab isn't visible
-        // (switched app, minimized, different browser tab, screen off).
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                cancelAnimationFrame(rafId);
-            } else {
-                lastFrameTime = 0;
-                rafId = requestAnimationFrame(draw);
-            }
-        });
-    })();
-
-
     // Maps the section header found in the text file (e.g. "#SINGLE")
     // to the internal category key and the label shown in the gallery overlay.
     const CATEGORY_LABELS = { single: 'Single', dual: 'Dual', group: 'Group' };
@@ -1593,7 +1246,12 @@
     let activeFilter = 'all';   // which filter button is selected
     let searchQuery = '';       // current lowercased search text
 
-    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt?t=' + Date.now();
+    // আগে এখানে '?t=' + Date.now() যোগ করে প্রতিবার ক্যাশ জোর করে বন্ধ করে
+    // দেওয়া হতো — এতে browser কখনো এই ফাইলটা ক্যাশ থেকে instant লোড করতে
+    // পারত না। GitHub-এর raw সার্ভার এমনিতেই এই ফাইলকে অল্প সময়ের জন্য
+    // (কয়েক মিনিট) ক্যাশ করে/revalidate করে, তাই ক্যাশ-বাস্টিং ছাড়াই নতুন
+    // ছবি ঠিক সময়েই দেখা যাবে — শুধু বারবার ভিজিটে এটা এখন অনেক দ্রুত হবে।
+    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt';
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLRiJ9ueiqnc7kYc188HTg41wJNF3W1eighA2WA7xq9nUfMTJflzefxdXsrjIHOgXiLw/exec';
     const ADMIN_PASSWORD = 'T@$Fim2002T@niR';
 
