@@ -85,7 +85,6 @@
         /* Soft electric-blue glow on every clickable element,
            so the whole site feels lit from within. */
         button,
-        a.hero-cta,
         .nav-links a,
         .filter-btn,
         .load-more-btn,
@@ -98,13 +97,11 @@
         .mic-btn,
         .search-clear,
         .photo-action-btn,
-        .admin-trigger,
         .footer-site-link {
             box-shadow: 0 0 0 1px rgba(63,168,255,0.15), 0 0 14px rgba(63,168,255,0.18);
             transition: box-shadow 0.3s ease, transform 0.25s ease, border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
         }
         button:hover,
-        a.hero-cta:hover,
         .nav-links a:hover,
         .filter-btn:hover,
         .filter-btn.active,
@@ -117,13 +114,10 @@
         .lb-close:hover,
         .mic-btn:hover,
         .photo-action-btn:hover,
-        .admin-trigger:hover,
         .footer-site-link:hover {
             box-shadow: 0 0 0 1px rgba(63,168,255,0.55), 0 0 22px rgba(63,168,255,0.55), 0 0 46px rgba(63,168,255,0.30);
             transform: translateY(-2px);
         }
-        a.hero-cta:hover { transform: translateY(-2px) scale(1.02); }
-
         /* Photos glow blue around their edges, giving a
            floating, lit-from-behind "3D" look. */
         .photo-item {
@@ -149,68 +143,11 @@
         }
 
         /* Cards / panels get a faint blue rim-light too. */
-        .admin-box, .color-btn {
+        .admin-box {
             box-shadow: 0 0 0 1px rgba(63,168,255,0.15), 0 0 26px rgba(63,168,255,0.12) !important;
         }
 
 
-
-        .hero {
-            position: relative;
-            min-height: auto;
-            padding: 100px 20px 40px;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        .hero-bg {
-            position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(63,168,255,0.08) 0%, transparent 70%);
-        }
-        .hero-lines {
-            position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(63,168,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(63,168,255,0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-        .hero-content { position: relative; text-align: center; z-index: 2; }
-        .hero-eyebrow {
-            font-family: 'Inter', sans-serif;
-            font-size: 11px; font-weight: 500;
-            letter-spacing: 0.25em; text-transform: uppercase;
-            color: var(--gold); margin-bottom: 10px;
-            display: flex; align-items: center; gap: 12px; justify-content: center;
-        }
-        .hero-eyebrow::before, .hero-eyebrow::after {
-            content: ''; display: block;
-            width: 40px; height: 1px; background: var(--gold);
-            opacity: 0.4;
-        }
-        .hero-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(42px, 6vw, 72px);
-            font-weight: 300; line-height: 0.95;
-            letter-spacing: -0.02em;
-            color: #fff;
-        }
-        .hero-name em { font-style: italic; color: var(--gold-light); }
-        .hero-tagline {
-            margin-top: 10px;
-            font-size: 12px; font-weight: 300;
-            letter-spacing: 0.12em; color: var(--muted);
-        }
-        .hero-cta {
-            margin-top: 20px;
-            display: inline-flex; align-items: center; gap: 10px;
-            font-size: 12px; font-weight: 500;
-            letter-spacing: 0.15em; text-transform: uppercase;
-            color: var(--gold); text-decoration: none;
-            border: 1px solid var(--border);
-            padding: 14px 32px; border-radius: 2px;
-            transition: background 0.3s, color 0.3s;
-        }
-        .hero-cta:hover { background: var(--gold); color: #000; }
-        .hero-scroll { display: none; }
 
         /* ── Running neon border animation ──────────────────────── */
         @keyframes neon-border-run {
@@ -218,27 +155,6 @@
             50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        @keyframes neon-spin {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-        /* Applied to photo cards on hover via JS class */
-        .neon-border-wrap {
-            position: relative;
-        }
-        .neon-border-wrap::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 6px;
-            background: linear-gradient(135deg, #3FA8FF, #0040ff, #7FCBFF, #00c3ff, #3FA8FF);
-            background-size: 300% 300%;
-            animation: neon-border-run 2.5s linear infinite;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.35s;
-        }
-        .photo-item:hover .neon-border-wrap::before,
         .photo-item:hover::before {
             opacity: 1;
         }
@@ -584,11 +500,6 @@
         }
         .photo-title {
             font-size: 13px; font-weight: 400; color: #fff;
-            /* অনেকগুলো নাম কমা দিয়ে জোড়া লাগানো থাকলে (যেমন "নাম,Name,নাম২,Name2")
-               মাঝে কোনো স্পেস না থাকায় ব্রাউজার লাইন-ব্রেক করার জায়গা পায় না,
-               ফলে টেক্সট নিজের বক্সের বাইরে গিয়ে ডাউনলোড/শেয়ার বাটনের নিচে/উপরে
-               চলে যেত। overflow-wrap + word-break জোর করে যেকোনো জায়গায় ভাঙতে দেয়,
-               আর line-clamp খুব লম্বা ট্যাগ-লিস্টকে ২ লাইনে আটকে বাকিটা "..." করে দেয়। */
             overflow-wrap: anywhere; word-break: break-word;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
             overflow: hidden; line-height: 1.35;
@@ -604,8 +515,6 @@
         }
         .photo-action-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* মুছে ফেলার (×) বাটন — শুধু লাইভ-আপলোড করা ছবিতে থাকে, এবং
-           অ্যাডমিন পাসওয়ার্ড দিয়ে আনলক করার আগে অদৃশ্য থাকে */
         .delete-btn { display: none; }
         body.admin-mode .delete-btn { display: flex; }
         .delete-btn:hover { background: #c0392b !important; color: #fff !important; border-color: #c0392b !important; }
@@ -652,19 +561,6 @@
         .strip-item img { width: 100%; height: 100%; object-fit: cover; }
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* ===== গোপন অ্যাডমিন ট্রিগার (পেজের একদম নিচে, ছোট ও অস্পষ্ট) ===== */
-        .admin-trigger {
-            display: flex; align-items: center; justify-content: center;
-            width: 30px; height: 30px;
-            margin: 24px auto 16px; opacity: 0.35;
-            background: transparent; border: 1px solid var(--border);
-            border-radius: 50%; cursor: pointer;
-            color: var(--gold); font-size: 13px; line-height: 1;
-            transition: opacity 0.3s, background 0.3s;
-        }
-        .admin-trigger:hover { opacity: 1; background: var(--gold-dim); }
-
-        /* ===== আপলোড প্যানেল (পাসওয়ার্ড + আপলোড ফর্ম) ===== */
         .admin-overlay {
             display: none; position: fixed; inset: 0; z-index: 500;
             background: rgba(2,6,16,0.92); backdrop-filter: blur(6px);
@@ -689,12 +585,11 @@
             background: none; border: none; color: var(--muted);
             font-size: 20px; cursor: pointer;
         }
-        .admin-input, .admin-textarea {
+        .admin-input {
             width: 100%; background: var(--ink); border: 1px solid var(--border);
             color: #fff; padding: 10px 12px; border-radius: 6px;
             font-size: 13px; margin-bottom: 12px; font-family: inherit;
         }
-        .admin-textarea { resize: vertical; min-height: 50px; }
         .pw-field-wrap { position: relative; margin-bottom: 12px; }
         .pw-field-wrap .admin-input { margin-bottom: 0; padding-right: 40px; }
         .pw-eye-btn {
@@ -711,7 +606,6 @@
         }
         .admin-btn:hover { opacity: 0.85; }
         .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        /* সঠিক পাসওয়ার্ড না দেওয়া পর্যন্ত Unlock বাটন দেখা যাবে না */
         #adminUnlockBtn { display: none; }
         .admin-msg {
             text-align: center; font-size: 12px; margin-top: 10px;
@@ -893,12 +787,6 @@
         .footer-social-row a:hover {
             border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px);
         }
-        .footer-about {
-            font-family: 'Inter', sans-serif;
-            font-size: 12.5px; line-height: 1.85; color: var(--muted);
-            text-align: center; max-width: 620px; margin: 0 auto;
-        }
-        .footer-about strong { color: var(--gold-light); font-weight: 500; }
         .intro-about {
             font-family: 'Inter', sans-serif;
             font-size: 13px; line-height: 1.9; color: var(--muted);
@@ -1064,7 +952,6 @@
     </div>
 </footer>
 
-<!-- পাসওয়ার্ড লক স্ক্রিন -->
 <div class="admin-overlay" id="adminLockOverlay">
     <div class="admin-box">
         <button class="admin-close" id="adminLockClose">×</button>
@@ -1123,9 +1010,9 @@
     </div>
 </div>
 
-<!-- Edit Tags Panel — টেক্সট ফাইল ও লাইভ আপলোড দুই ধরনের ছবির ট্যাগই এখান থেকে
-     এডিট করা যায়। UI ঠিক আপলোডের ২য় ধাপের মতোই (Tagger Pro V3 style),
-     শুধু এখানে prev/next নেই কারণ একটাই ছবি এডিট হচ্ছে। -->
+<!-- Edit Tags Panel — lets you edit tags on both text-file and live-upload
+     photos. Same UI as the upload step 2 (Tagger Pro V3 style), just without
+     prev/next since only one photo is being edited here. -->
 <div class="admin-overlay" id="adminEditTagOverlay">
     <div class="admin-box admin-box-wide" id="adminEditTagBox">
         <button class="admin-close" id="adminEditTagClose">×</button>
@@ -1179,11 +1066,6 @@
     let activeFilter = 'all';   // which filter button is selected
     let searchQuery = '';       // current lowercased search text
 
-    // আগে এখানে '?t=' + Date.now() যোগ করে প্রতিবার ক্যাশ জোর করে বন্ধ করে
-    // দেওয়া হতো — এতে browser কখনো এই ফাইলটা ক্যাশ থেকে instant লোড করতে
-    // পারত না। GitHub-এর raw সার্ভার এমনিতেই এই ফাইলকে অল্প সময়ের জন্য
-    // (কয়েক মিনিট) ক্যাশ করে/revalidate করে, তাই ক্যাশ-বাস্টিং ছাড়াই নতুন
-    // ছবি ঠিক সময়েই দেখা যাবে — শুধু বারবার ভিজিটে এটা এখন অনেক দ্রুত হবে।
     const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt';
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLRiJ9ueiqnc7kYc188HTg41wJNF3W1eighA2WA7xq9nUfMTJflzefxdXsrjIHOgXiLw/exec';
     const ADMIN_PASSWORD = 'T@$Fim2002T@niR';
@@ -1247,7 +1129,6 @@
     //
     // Bengali-English search note: matching is done by direct substring
     // comparison against whatever scripts are present in the name field, so
-    // "rakib" only matches if an English form was provided and "রাকিব" only
     // matches if a Bengali form was provided. There's no automatic
     // transliteration between the two — to support both spellings for a
     // photo, include both in the name field for that line.
@@ -1285,7 +1166,7 @@
                     downloadUrl: toDownloadUrl(url),
                     idx: idx,
                     cat: currentCat,
-                    names: namesRaw,            // raw display string, e.g. "Rakib রাকিব"
+                    names: namesRaw,
                     searchIndex: searchIndex,   // lowercased, used for matching
                     title: namesRaw || ('Photo ' + (idx + 1))
                 });
@@ -1296,11 +1177,6 @@
         return photos;
     }
 
-    // Apps Script থেকে আসা একটা ছবিকে মূল গ্যালারির photo-object ফরম্যাটে রূপান্তর করে।
-    // caption Google Sheet থেকে আসে — caption শুধু সংখ্যা (যেমন "11") হলে Sheet
-    // সেটাকে নিজেই Number বানিয়ে ফেলে, string না। তাই এখানে String() দিয়ে
-    // টাইপ যা-ই হোক জোর করে লেখায় (string) রূপান্তর করে নেওয়া হচ্ছে, যাতে
-    // .trim() বা .toLowerCase() কখনো ক্র্যাশ না করে।
     function liveImageToPhoto(img, idx) {
         const caption = String(img.caption == null ? '' : img.caption).trim();
         return {
@@ -1312,7 +1188,7 @@
             names: caption,
             searchIndex: caption.toLowerCase(),
             title: caption || ('New Photo ' + (idx + 1)),
-            fileId: img.id || null // শুধু লাইভ-আপলোড ছবিতেই থাকে, ডিলিট বাটনের জন্য লাগবে
+            fileId: img.id || null
         };
     }
 
@@ -1320,53 +1196,25 @@
         return fetch(APPS_SCRIPT_URL)
             .then(r => r.json())
             .then(res => (res && res.success && Array.isArray(res.images)) ? res.images : [])
-            .catch(() => []); // ব্যাকএন্ডে সমস্যা হলেও মূল গ্যালারি ভাঙবে না
+            .catch(() => []);
     }
 
-    // আগে: একটা ছবির ডেটায় কোনো সমস্যা (যেমন caption-এর ভুল টাইপ) হলে .map()
-    // পুরো ব্যাচটাই ব্যর্থ করে দিত, ফলে সব নতুন ছবি একসাথে অদৃশ্য হয়ে যেত।
-    // এখন: প্রতিটা ছবি আলাদাভাবে try/catch করা হচ্ছে — একটাতে সমস্যা হলে
-    // শুধু সেটাই বাদ যাবে, বাকি সব ছবি ঠিকই দেখাবে।
     function buildMergedPhotoList(oldPhotos, liveImages) {
         const newPhotos = [];
         (liveImages || []).forEach(img => {
             try {
                 if (img && img.url) {
-                    // এখানে দেওয়া idx সাময়িক — নিচে পুরো লিস্ট জোড়া লাগানোর পর
-                    // প্রকৃত (ফাইনাল, দেখার-ক্রম অনুযায়ী) idx বসিয়ে দেওয়া হবে।
                     newPhotos.push(liveImageToPhoto(img, newPhotos.length));
                 }
             } catch (e) {
-                // এই একটা ছবি স্কিপ হবে, বাকি প্রসেসিং চলতেই থাকবে
             }
         });
-        // নতুন আপলোড করা ছবি সবার আগে দেখানোর জন্য শুরুতে রাখা হলো
         const merged = [...newPhotos, ...oldPhotos];
-        // আগে: টেক্সট ফাইলের ছবি আর লাইভ-আপলোড ছবি দুটো আলাদা উৎস থেকে আলাদাভাবে
-        // idx পেত (oldPhotos নিজেদের মধ্যে 0..N, newPhotos oldPhotos.length থেকে শুরু)।
-        // ফলে সার্চ বক্সে সংখ্যা লিখে "X থেকে শেষ পর্যন্ত" খুঁজলে সেটা আসল
-        // (স্ক্রিনে দেখা) ক্রম না মিলিয়ে idx অনুযায়ী মিলত — তাই নতুন আপলোড করা
-        // ছবিগুলো কখনো ঠিকমতো গোনায় আসত না, সবসময় শুরুতে/বাইরে থেকে যেত।
-        // এখন merge করার পর পুরো লিস্টের আসল, স্ক্রিনে-দেখা অবস্থান অনুযায়ী
-        // ১ম ছবি থেকে ক্রমিক idx (0, 1, 2, ...) বসিয়ে দেওয়া হচ্ছে — তাই
-        // নতুন আপলোড আর পুরনো টেক্সট-ফাইল ছবি উভয়ই একই ধারাবাহিক নাম্বারিং-এ
-        // থাকে এবং নাম্বার-সার্চ সবসময় সঠিকভাবে কাজ করে।
         merged.forEach((p, i) => { p.idx = i; });
         return merged;
     }
 
-    // আগে: দুটো সোর্স (টেক্সট ফাইল + Apps Script লাইভ আপলোড) একসাথে লোড করে,
-    // Promise.all দিয়ে দুটোই রেডি না হওয়া পর্যন্ত loading spinner দেখানো হতো।
-    // Apps Script (Google-এর সার্ভার) মাঝেমধ্যে কোল্ড-স্টার্টে কয়েক সেকেন্ড
-    // সময় নেয়, আর ততক্ষণ পুরো গ্যালারি ফাঁকা loading স্ক্রিনে আটকে থাকত —
-    // এটাই পেজ খোলার প্রথম "স্লো" অনুভূতির মূল কারণ ছিল।
     //
-    // এখন: দ্রুত সোর্স (GitHub raw text file) রেডি হওয়ামাত্রই গ্যালারি
-    // দেখিয়ে দেওয়া হয়। ধীর সোর্স (Apps Script) পরে এলে নতুন ছবিগুলো
-    // নিঃশব্দে (flash/reload ছাড়া) যোগ হয়ে যায়। এছাড়া শেষবারের সফল
-    // ফলাফল localStorage-এ ক্যাশ করা থাকে — পরের বার পেজ খুললে ছবি
-    // সাথে সাথেই (নেটওয়ার্কের অপেক্ষা ছাড়াই) দেখা যায়, তারপর ব্যাকগ্রাউন্ডে
-    // আপডেট হয়।
     const PHOTO_CACHE_KEY = 'tonir_gallery_cache_v1';
 
     function showGallery(photos) {
@@ -1401,7 +1249,7 @@
         .then(textData => textData ? parsePhotoFile(textData) : [])
         .catch(() => []);
 
-    const liveImagesPromise = fetchLiveUploads(); // ব্যর্থ হলে নিজেই [] রিটার্ন করে
+    const liveImagesPromise = fetchLiveUploads();
 
     // 2) As soon as the FAST source (old photos) is ready, show it right
     //    away instead of waiting on the slower Apps Script call too.
@@ -1439,10 +1287,6 @@
         });
     }, { rootMargin: '300px 0px' });
 
-    // Drive thumbnail URL লোড না হলে (rare, restricted-sharing হলে) আগে একবার
-    // uc?export=view endpoint ট্রাই করা হয়। সেটাও ব্যর্থ হলে — মানে ছবিটা
-    // আসলেই Drive থেকে ডিলিট/প্রাইভেট হয়ে গেছে — কালো বক্স না রেখে কার্ডটাই
-    // গ্যালারি থেকে সম্পূর্ণ সরিয়ে দেওয়া হয়।
     function attachImgFallback(imgEl, photo) {
         let triedFallback = false;
         imgEl.addEventListener('error', function onErr() {
@@ -1456,7 +1300,6 @@
                     }
                 }
             }
-            // উভয় চেষ্টাই ব্যর্থ — কার্ডটা সরিয়ে দেওয়া হচ্ছে
             const item = imgEl.closest('.photo-item, .strip-item');
             if (item) {
                 item.remove();
@@ -1548,10 +1391,6 @@
     // filter and the active search query, then re-renders the grid from
     // scratch. Called whenever either the filter buttons or the search box
     // change, so the two always combine rather than override each other.
-    // যদি সার্চ বক্সে শুধু একটা সংখ্যা (যেমন "20" বা "800") লেখা হয়, সেটাকে
-    // টেক্সট সার্চ হিসেবে না নিয়ে "এই নাম্বার থেকে শেষ পর্যন্ত" রেঞ্জ হিসেবে
-    // ধরা হয়। photo.idx সবসময় পুরো লিস্টে ধারাবাহিক (0-based) থাকে বলে
-    // idx + 1 = ছবির প্রকৃত ক্রম নাম্বার (1, 2, 3 ... মোট ছবি সংখ্যা)।
     let searchIsNumberRange = false;
 
     function applyFiltersAndSearch() {
@@ -1635,8 +1474,6 @@
     let recognizer = null;
     let isListening = false;
 
-    // একটাই বাটন — ক্লিক করলে বাং ⇄ EN এর মধ্যে সুইচ হয়। বাটনে যেই ভাষা
-    // লেখা/হাইলাইট থাকবে, মাইক বাটনে ক্লিক করলে ঠিক সেই ভাষাতেই শোনা শুরু হবে।
     let selectedLang = 'bn-BD';
     const langToggleBtn = document.getElementById('langToggleBtn');
     langToggleBtn.addEventListener('click', () => {
@@ -1654,11 +1491,6 @@
         }
     });
 
-    // ইংরেজি নাম প্রায়ই ভুল শোনে speech engine — বিশেষ করে বাংলা উচ্চারণে বলা
-    // ইংরেজি নাম। তাই একটামাত্র অনুমানের বদলে ইঞ্জিনকে কয়েকটা বিকল্প (alternatives)
-    // চাইতে হয়, এবং প্রতিটা বিকল্পকে গ্যালারির ছবিগুলোতে আগে থেকেই থাকা নাম/ট্যাগের
-    // সাথে মিলিয়ে দেখা হয় — যেই বিকল্পটা সবচেয়ে বেশি চেনা নামের সাথে মেলে, সেটাই
-    // ব্যবহার করা হয়, ইঞ্জিনের সবচেয়ে "confident" অনুমান নয়।
     function pickBestTranscript(alternatives) {
         const combinedIndex = allPhotos.map(p => p.searchIndex).join(' ');
         let best = (alternatives[0] && alternatives[0].transcript || '').trim();
@@ -1816,7 +1648,6 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // "Upload" নেভ-বাটনে ক্লিক করলে সরাসরি অ্যাডমিন পাসওয়ার্ড লক স্ক্রিন খুলবে
     document.getElementById('navGalleryLink').addEventListener('click', (e) => {
         e.preventDefault();
         adminLockOverlay.classList.add('open');
@@ -1829,7 +1660,7 @@
     });
 
     /* ===========================================================
-       Live Upload System (Google Drive + Apps Script ব্যাকএন্ড)
+       Live Upload System (Google Drive + Apps Script backend)
        =========================================================== */
     const adminLockOverlay  = document.getElementById('adminLockOverlay');
     const adminLockClose    = document.getElementById('adminLockClose');
@@ -1861,10 +1692,7 @@
     const uploadTotalCount  = document.getElementById('uploadTotalCount');
     const adminUploadMsg    = document.getElementById('adminUploadMsg');
 
-    // এই সেশনে যোগ করা মানুষের তালিকা — একটা ছবিতে ট্যাগ করলে পরের ছবিতেও
-    // তালিকায় থেকে যায়, যাতে একই মানুষকে আবার আবার টাইপ করতে না হয়
     let uploadPeople = [];
-    // প্রতিটা বাছাই করা ছবি: { base64, mime, name, tagIdxs: Set of uploadPeople-এর index }
     let selectedPhotos = [];
     let currentTagIdx = 0;
 
@@ -1892,7 +1720,6 @@
             adminLockOverlay.classList.remove('open');
             resetUploadFlow();
             adminUploadOverlay.classList.add('open');
-            // আনলক হলে গ্যালারির ছবিতে ডিলিট (×) বাটন দেখা যাবে
             document.body.classList.add('admin-mode');
         } else {
             adminLockMsg.textContent = 'Wrong password';
@@ -1901,7 +1728,6 @@
     adminUnlockBtn.addEventListener('click', tryUnlock);
     adminPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
 
-    // চোখ (👁) আইকনে ক্লিক করলে পাসওয়ার্ড লেখা দেখা/লুকানো টগল হবে
     pwEyeBtn.addEventListener('click', () => {
         const showing = adminPasswordInput.type === 'text';
         adminPasswordInput.type = showing ? 'password' : 'text';
@@ -1910,7 +1736,6 @@
         adminPasswordInput.focus();
     });
 
-    // টাইপ করার সাথে সাথেই চেক হবে — পাসওয়ার্ড পুরোপুরি ঠিক হলেই Unlock বাটন ভেসে উঠবে
     adminPasswordInput.addEventListener('input', () => {
         adminLockMsg.textContent = '';
         adminUnlockBtn.style.display = (adminPasswordInput.value === ADMIN_PASSWORD) ? 'block' : 'none';
@@ -1928,11 +1753,6 @@
     });
 
 
-    // ফোন থেকে সরাসরি তোলা ছবি (১০-৫০ মেগাবাইট) অনেক সময় বড় হওয়ার কারণে
-    // ব্রাউজার ধীর হয়ে যায় / ফ্রিজ হয়ে যায় বা আপলোড পেলোড অনেক বড় হয়ে যায়।
-    // তাই আপলোডের আগে ছবিটা ক্যানভাসে ছোট করে (লম্বা পাশ সর্বোচ্চ ১৬০০px) ও
-    // কমপ্রেস করে (JPEG, quality 0.82) নেওয়া হয় — এতে সাইজ অনেক কমে যায়
-    // এবং পেজ আটকে যাওয়ার / ক্র্যাশ করার সম্ভাবনা কমে।
     function compressImage(file, maxDim, quality) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1968,7 +1788,6 @@
         });
     }
 
-    // একটা ফাইল কমপ্রেস করে base64 বানায়; কমপ্রেস ব্যর্থ হলে মূল ফাইলটাই base64 করে রিটার্ন করে
     function prepareFile(file) {
         return compressImage(file, 1600, 0.82)
             .then(dataUrl => ({ base64: dataUrl, mime: 'image/jpeg' }))
@@ -1998,7 +1817,6 @@
         });
     }
 
-    // একসাথে একাধিক ছবি বাছাই করলে — প্রতিটা আলাদাভাবে কমপ্রেস করে থাম্বনেইল গ্রিডে দেখানো হয়
     adminFileInput.addEventListener('change', () => {
         const files = Array.from(adminFileInput.files || []);
         if (files.length === 0) return;
@@ -2010,7 +1828,7 @@
         Promise.all(files.map(file =>
             prepareFile(file)
                 .then(({ base64, mime }) => ({ base64, mime, name: file.name, tagIdxs: new Set() }))
-                .catch(() => null) // একটা ফাইল পড়তে না পারলে শুধু সেটাই বাদ যাবে, বাকিগুলো ঠিক থাকবে
+                .catch(() => null)
         )).then(results => {
             const ok = results.filter(Boolean);
             selectedPhotos = selectedPhotos.concat(ok);
@@ -2025,8 +1843,6 @@
         });
     });
 
-    // ===== ধাপ ২: ট্যাগিং (Tagger Pro V3 স্টাইল) =====
-    // নতুন মানুষ যোগ করে — uploadPeople-এর index রিটার্ন করে, খালি/ডুপ্লিকেট হলে null
     function addUploadPerson(rawName) {
         const name = (rawName || '').trim();
         if (!name) return null;
@@ -2041,15 +1857,13 @@
         return uploadPeople.length - 1;
     }
 
-    // একটা মানুষকে পুরো তালিকা থেকে বাদ দেয় (ভুল করে যোগ হয়ে গেলে) —
-    // এবং সব ছবির tagIdxs-এ ইনডেক্স ঠিকমতো শিফট করে দেয়
     function removeUploadPerson(idx) {
         uploadPeople.splice(idx, 1);
         selectedPhotos.forEach(photo => {
             const newSet = new Set();
             photo.tagIdxs.forEach(i => {
-                if (i === idx) return;          // এই মানুষটাই বাদ গেলো
-                newSet.add(i > idx ? i - 1 : i); // পরের সবার ইনডেক্স এক ঘর কমে গেলো
+                if (i === idx) return;
+                newSet.add(i > idx ? i - 1 : i);
             });
             photo.tagIdxs = newSet;
         });
@@ -2102,7 +1916,6 @@
         if (idx === null) return;
         selectedPhotos[currentTagIdx].tagIdxs.add(idx);
 
-        // ইংলিশে নাম টাইপ করলে সাথে সাথে বাংলা প্রতিবর্ণীকরণও (phonetic) যোগ হয়ে যায়
         if (!isBanglaText(rawName)) {
             const banglaName = banglaPhonetic(rawName);
             if (banglaName && banglaName.toLowerCase() !== rawName.toLowerCase()) {
@@ -2130,8 +1943,6 @@
         showTagStep(0);
     });
 
-    // অ্যাডমিন মোডে কার্ডের (×) বাটনে ক্লিক করলে এটা চলে — কনফার্ম করে,
-    // Apps Script-কে delete রিকোয়েস্ট পাঠায়, সফল হলে কার্ডটা সরিয়ে দেয়
     function deletePhotoConfirm(fileId, btnEl) {
         if (!confirm('Are you sure you want to permanently delete this photo?')) return;
 
@@ -2150,7 +1961,6 @@
         .then(r => r.json())
         .then(res => {
             if (res.success) {
-                // মূল লিস্ট থেকেও বাদ দেওয়া হলো, যাতে ফিল্টার/সার্চ করলে আর না আসে
                 allPhotos = allPhotos.filter(p => p.fileId !== fileId);
                 currentList = currentList.filter(p => p.fileId !== fileId);
                 if (item) item.remove();
@@ -2172,11 +1982,6 @@
         });
     }
 
-    // টেক্সট ফাইল (GitHub) থেকে আসা ছবি ডিলিট করার জন্য — fileId থাকে না,
-    // তাই fileId-এর বদলে rawUrl (আসল Drive/ImgBB লিংক) পাঠানো হয়। Apps Script
-    // ব্যাকএন্ডে এই action ('deleteText') হ্যান্ডেল করার কোড থাকা লাগবে —
-    // যেটা GitHub-এর raw text ফাইল থেকে ম্যাচিং লাইনটা বাদ দিয়ে GitHub API
-    // দিয়ে ফাইলটা আপডেট (commit) করে দেবে।
     function deleteTextPhotoConfirm(rawUrl, btnEl) {
         if (!confirm('Are you sure you want to permanently delete this photo? (removes it from the source file)')) return;
 
@@ -2216,11 +2021,6 @@
         });
     }
 
-    // ===== বাংলা ফোনেটিক কনভার্টার (Avro-স্টাইল, ছোট সংস্করণ) =====
-    // ইংলিশে টাইপ করা নাম (যেমন "tonir") থেকে কাছাকাছি বাংলা বানান
-    // ("তনির") বানানোর জন্য। পুরো Avro-এর মতো নিখুঁত না (conjunct/যুক্তাক্ষর,
-    // exception শব্দ ইত্যাদি কভার করে না), কিন্তু বেশিরভাগ নাম/সাধারণ শব্দের
-    // জন্য যথেষ্ট ভালো ফল দেয় — বেশিরভাগ ব্যঞ্জনবর্ণ + স্বরবর্ণের মাত্রা নিয়ম মেনে।
     const PHONETIC_CONSONANTS = [
         ['kkh','ক্ষ'], ['kh','খ'], ['k','ক'],
         ['gh','ঘ'], ['g','গ'], ['ng','ঙ'],
@@ -2239,7 +2039,6 @@
         ['y','য়'],
         ['w','ও']
     ];
-    // [pattern, standalone (শব্দের শুরুতে/অন্য স্বরের পরে), matra (ব্যঞ্জনবর্ণের পরে)]
     const PHONETIC_VOWELS = [
         ['oi','ঐ','ৈ'], ['ou','ঔ','ৌ'],
         ['ee','ঈ','ী'], ['ii','ঈ','ী'],
@@ -2288,21 +2087,14 @@
             }
             if (matched) continue;
 
-            out += ch; // অচেনা ক্যারেক্টার (সংখ্যা ইত্যাদি) যেমন আছে তেমনই থেকে যায়
+            out += ch;
             i++;
             lastWasConsonant = false;
         }
         return out;
     }
 
-    // ===== ট্যাগ এডিট (Edit Tags) — টেক্সট ফাইল ও লাইভ আপলোড দুই ধরনের ছবির
-    // জন্যই কাজ করে। টেক্সট ফাইলের names ফিল্ড স্পেস-দিয়ে-ভাগ, আর লাইভ আপলোডের
-    // caption কমা-দিয়ে-ভাগ (upload flow-এই এভাবে সেভ হয়) — তাই লোড/সেভ করার
-    // সময় সোর্স অনুযায়ী আলাদা সেপারেটর ব্যবহার করা হচ্ছে।
     //
-    // Prev/Next: গ্যালারির সব ছবির (allPhotos, idx অনুযায়ী সাজানো) মধ্য দিয়ে
-    // একের পর এক এডিট করা যায় — Next/Previous চাপলে আগে বর্তমান ছবির
-    // পরিবর্তন সেভ হয়ে যায়, তারপর পরের/আগের ছবিতে চলে যায়।
     const adminEditTagOverlay   = document.getElementById('adminEditTagOverlay');
     const adminEditTagClose     = document.getElementById('adminEditTagClose');
     const editTagPreviewImg     = document.getElementById('editTagPreviewImg');
@@ -2315,17 +2107,17 @@
     const editTagMsg            = document.getElementById('editTagMsg');
     const editTagProgressText   = document.getElementById('editTagProgressText');
 
-    let editTagPhoto = null;          // এখন যে ছবিটার ট্যাগ এডিট হচ্ছে
-    let editTagSelected = new Set();  // এই ছবিতে বর্তমানে বাছাই করা নামগুলো (lowercase)
-    let editTagList = [];             // Prev/Next-এর জন্য গ্যালারির সব ছবির ক্রম
-    let editTagListPos = -1;          // editTagList-এ বর্তমান পজিশন
+    let editTagPhoto = null;
+    let editTagSelected = new Set();
+    let editTagList = [];
+    let editTagListPos = -1;
 
     function parseExistingNames(photo) {
         const raw = (photo.names || '').trim();
         if (!raw) return [];
         return photo.fileId
-            ? raw.split(',').map(s => s.trim()).filter(Boolean)   // লাইভ আপলোড: কমা-দিয়ে-ভাগ
-            : raw.split(/\s+/).filter(Boolean);                    // টেক্সট ফাইল: স্পেস-দিয়ে-ভাগ
+            ? raw.split(',').map(s => s.trim()).filter(Boolean)
+            : raw.split(/\s+/).filter(Boolean);
     }
 
     function serializeNames(namesArr, photo) {
@@ -2366,9 +2158,6 @@
         });
     }
 
-    // একটা ট্যাগ-এন্ট্রি পুরোপুরি মুছে ফেলার জন্য (যেমন — ভুলভাবে জমে যাওয়া কমা-জোড়া-লাগানো
-    // স্ট্রিং, বা টাইপো/জাঙ্ক এন্ট্রি)। এটা শুধু এই ছবি থেকে আনচেক করে না — পুরো
-    // uploadPeople তালিকা থেকেই বাদ দিয়ে দেয়, যাতে ভবিষ্যতেও আর তালিকায় না দেখা যায়।
     function deleteTagEntry(name) {
         const idx = uploadPeople.findIndex(p => p.toLowerCase() === name.toLowerCase());
         if (idx !== -1) uploadPeople.splice(idx, 1);
@@ -2376,11 +2165,6 @@
         renderEditTagFaces();
     }
 
-    // একটা ট্যাগের নাম বদলানোর জন্য — রো-টাকে ইনপুট বক্সে পরিণত করে, Save/Cancel দেখায়।
-    // এই Cancel (✕) শুধু rename অবস্থা থেকে বেরিয়ে আসে — এটা এন্ট্রিটা ডিলিট করে না।
-    // এন্ট্রি সম্পূর্ণ মুছতে উপরের ট্র্যাশ (🗑) বাটন ব্যবহার করতে হবে।
-    // Save করলে uploadPeople তালিকায় নামটা replace হয়, আর এই ছবিতে সেটা আগে থেকে
-    // বাছাই করা থাকলে (checked) নতুন নামটাও বাছাই-করা অবস্থাতেই থাকে।
     function startRenameRow(row, oldName) {
         const wrap = document.createElement('div');
         wrap.className = 'tag-face-rename-row';
@@ -2398,7 +2182,6 @@
         const commit = () => {
             const newName = input.value.trim();
             if (!newName || newName === oldName) { renderEditTagFaces(); return; }
-            // নাম আগে থেকেই তালিকায় থাকলে (অন্য কারো নামের সাথে ডুপ্লিকেট), সেভ করা যাবে না
             const dupIdx = uploadPeople.findIndex(p => p.toLowerCase() === newName.toLowerCase() && p.toLowerCase() !== oldName.toLowerCase());
             if (dupIdx !== -1) {
                 editTagMsg.textContent = 'এই নামটি আগে থেকেই তালিকায় আছে।';
@@ -2425,8 +2208,6 @@
         input.addEventListener('click', (e) => e.stopPropagation());
     }
 
-    // uploadPeople-এ নাম case-insensitive-ভাবে থাকে কিনা খুঁজে, না থাকলে যোগ করে —
-    // যোগ করা নামের আসল (original-case) স্ট্রিং-টা রিটার্ন করে
     function ensureInPeopleList(name) {
         const idx = uploadPeople.findIndex(p => p.toLowerCase() === name.toLowerCase());
         if (idx !== -1) return uploadPeople[idx];
@@ -2434,9 +2215,6 @@
         return name;
     }
 
-    // একটা নাম যোগ করার সময় — ইংলিশে টাইপ করা হলে সাথে সাথে তার বাংলা
-    // প্রতিবর্ণীকরণ (phonetic) ভার্শনটাও তৈরি করে দুটোই নির্বাচিত-তালিকায় যোগ করে,
-    // যাতে ভবিষ্যতে দুই ভাষাতেই সার্চ করলে ছবিটা পাওয়া যায়।
     function addNameWithPhonetic(rawName) {
         const name = (rawName || '').trim();
         if (!name) return;
@@ -2473,7 +2251,6 @@
     }
 
     function openEditTagsByIdx(idx) {
-        // allPhotos-কে idx অনুযায়ী সাজিয়ে Prev/Next-এর ক্রম তৈরি করা হচ্ছে
         editTagList = allPhotos.slice().sort((a, b) => a.idx - b.idx);
         const pos = editTagList.findIndex(p => p.idx === idx);
         if (pos === -1) return;
@@ -2510,8 +2287,6 @@
     editTagQuickAddBtn.addEventListener('click', quickAddEditTagPerson);
     editTagQuickAddInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quickAddEditTagPerson(); });
 
-    // বর্তমান ছবির ট্যাগ সেভ করে — Promise<boolean> রিটার্ন করে (সফল হলে true)।
-    // Save বাটন এবং Prev/Next দুটোতেই এই একই ফাংশন ব্যবহার হয়।
     function saveCurrentEditTagPhoto() {
         if (!editTagPhoto) return Promise.resolve(false);
         const finalNames = uploadPeople.filter(n => editTagSelected.has(n.toLowerCase()));
@@ -2577,7 +2352,6 @@
         });
     });
 
-    // একটা ছবি Apps Script-এ পাঠায়; caption = সেই ছবিতে ট্যাগ করা নামগুলোর তালিকা
     function uploadOnePhoto(photo) {
         const caption = Array.from(photo.tagIdxs).map(i => uploadPeople[i]).join(', ');
         return fetch(APPS_SCRIPT_URL, {
@@ -2616,8 +2390,6 @@
                     : `✅ ${done} succeeded, ❌ ${failed} failed`;
                 adminUploadMsg.className = failed === 0 ? 'admin-msg ok' : 'admin-msg err';
                 isUploading = false;
-                // সাথে সাথে একবার রিফ্রেশ করার পর, Drive/Apps Script-এ ছবি
-                // তালিকায় আসতে কিছুটা দেরি হতে পারে — তাই আরও কয়েকবার চেক করা হবে
                 refreshGalleryWithLiveUploads(4);
                 setTimeout(() => {
                     adminUploadOverlay.classList.remove('open');
@@ -2643,9 +2415,6 @@
         }
     });
 
-    // নতুন আপলোড হওয়া ছবি মূল গ্যালারিতে নিয়ে আসার জন্য গ্যালারি আবার লোড করে।
-    // attemptsLeft > 0 হলে, ব্যাকএন্ডে নতুন ছবি তালিকায় আসতে দেরি হলেও
-    // কয়েক সেকেন্ড পর পর আবার চেক করা হবে (manual page reload না করেও নতুন ছবি দেখা যাবে)
     function refreshGalleryWithLiveUploads(attemptsLeft) {
         attemptsLeft = (typeof attemptsLeft === 'number') ? attemptsLeft : 0;
         try {
@@ -2658,19 +2427,16 @@
                         applyFiltersAndSearch();
                         buildStrip(allPhotos);
                     } catch (e) {
-                        // গ্যালারি রিফ্রেশে কোনো সমস্যা হলেও বিদ্যমান গ্যালারি ভাঙবে না
                     }
                 });
-            }).catch(() => { /* নিরবে ব্যর্থ হবে, বিদ্যমান গ্যালারি অপরিবর্তিত থাকবে */ });
-        } catch (e) { /* কোনো ক্রমেই মূল পেজ ভাঙতে দেওয়া হবে না */ }
+            }).catch(() => { /* fail silently, existing gallery stays unchanged */ });
+        } catch (e) { /* never let this break the main page */ }
 
         if (attemptsLeft > 0) {
             setTimeout(() => refreshGalleryWithLiveUploads(attemptsLeft - 1), 4000);
         }
     }
 
-    // প্রতি ৬০ সেকেন্ডে নতুন আপলোড আছে কিনা চেক করবে এবং থাকলে গ্যালারিতে যুক্ত করবে
-    // অটো-রিফ্রেশ বন্ধ — আপলোডের পরে এমনিতেই refresh হয়।
 
     /* ── 3D Mouse-tracked tilt on photo cards ───────────────────── */
     (function() {
