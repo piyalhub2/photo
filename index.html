@@ -1,1 +1,919 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>SwiftBox — Fast File & Photo Transfer</title>
+<style>
+  :root{
+    --bg: #0e1013;
+    --bg-elevated: #15181d;
+    --card: #1b1f26;
+    --card-hover: #212630;
+    --border: #2a2f38;
+    --text: #eef1f5;
+    --text-dim: #9aa3b2;
+    --text-faint: #5f6774;
+    --nearby: #2AABEE;      /* Telegram blue — used for P2P / Nearby mode */
+    --nearby-dark: #1c86bd;
+    --remote: #5865F2;      /* Discord blurple — used for Cloud / Remote mode */
+    --remote-dark: #454fd1;
+    --ok: #3ba55d;
+    --warn: #faa61a;
+    --danger: #ed4245;
+    --radius: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
 
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    background: radial-gradient(1200px 800px at 10% -10%, #161a22 0%, var(--bg) 45%) fixed;
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body{
+    padding: 18px;
+    padding-bottom: 48px;
+  }
+
+  .app{
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  header.hero{
+    text-align:center;
+    margin: 10px 0 22px;
+  }
+
+  header.hero h1{
+    margin:0;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--nearby), var(--remote));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+  }
+
+  header.hero p{
+    margin: 6px 0 0;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+
+  /* ---------- Mode tabs ---------- */
+  .mode-tabs{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .mode-tab{
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    text-align:center;
+    cursor: pointer;
+    transition: all .15s ease;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .mode-tab span.emoji{ font-size: 20px; }
+  .mode-tab.active[data-mode="nearby"]{
+    border-color: var(--nearby);
+    color: #fff;
+    background: linear-gradient(180deg, rgba(42,171,238,.18), rgba(42,171,238,.05));
+    box-shadow: 0 0 0 1px var(--nearby) inset;
+  }
+  .mode-tab.active[data-mode="remote"]{
+    border-color: var(--remote);
+    color: #fff;
+    background: linear-gradient(180deg, rgba(88,101,242,.18), rgba(88,101,242,.05));
+    box-shadow: 0 0 0 1px var(--remote) inset;
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform: translateY(4px)} to{opacity:1; transform:none} }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .card h2{
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .card .sub{
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height:1.5;
+  }
+
+  .badge{
+    display:inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: .02em;
+  }
+  .badge.nearby{ background: rgba(42,171,238,.15); color: var(--nearby); }
+  .badge.remote{ background: rgba(88,101,242,.15); color: var(--remote); }
+  .badge.ok{ background: rgba(59,165,93,.15); color: var(--ok); }
+  .badge.warn{ background: rgba(250,166,26,.15); color: var(--warn); }
+  .badge.danger{ background: rgba(237,66,69,.15); color: var(--danger); }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width: 100%;
+    padding: 15px 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #fff;
+    transition: transform .08s ease, filter .15s ease, opacity .15s ease;
+    -webkit-appearance:none;
+  }
+  .btn:active{ transform: scale(0.98); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+
+  .btn-nearby{ background: linear-gradient(135deg, var(--nearby), var(--nearby-dark)); }
+  .btn-remote{ background: linear-gradient(135deg, var(--remote), var(--remote-dark)); }
+  .btn-ghost{
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover{ background: var(--card-hover); }
+  .btn-sm{ padding: 10px 12px; font-size: 13px; border-radius: 10px; }
+
+  .btn-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ---------- File input ---------- */
+  .file-drop{
+    border: 1.5px dashed var(--border);
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .file-drop:hover{ border-color: var(--text-faint); background: var(--bg-elevated); }
+  .file-drop input{ display:none; }
+  .file-drop .big{ font-size: 26px; display:block; margin-bottom:6px; }
+
+  .file-list{
+    display:flex; flex-direction:column; gap:8px;
+    margin-bottom: 12px;
+    max-height: 180px;
+    overflow-y:auto;
+  }
+  .file-chip{
+    display:flex; align-items:center; justify-content:space-between;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12.5px;
+  }
+  .file-chip .name{
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    max-width: 70%;
+    color: var(--text);
+  }
+  .file-chip .size{ color: var(--text-faint); font-variant-numeric: tabular-nums; }
+
+  .field{
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-size: 14.5px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .field:focus{ border-color: var(--remote); }
+
+  /* ---------- Progress ---------- */
+  .progress-row{
+    margin-bottom: 12px;
+  }
+  .progress-row .meta-line{
+    display:flex; justify-content:space-between;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+  }
+  .progress-row .meta-line .name{
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width: 65%;
+  }
+  .bar-track{
+    height: 9px;
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    width:0%;
+    border-radius: 6px;
+    transition: width .15s ease;
+  }
+  .bar-fill.nearby{ background: linear-gradient(90deg, var(--nearby), #66d4ff); }
+  .bar-fill.remote{ background: linear-gradient(90deg, var(--remote), #9aa5ff); }
+  .bar-fill.done{ background: var(--ok); }
+  .bar-fill.error{ background: var(--danger); }
+
+  /* ---------- Status ---------- */
+  .status-box{
+    display:flex; align-items:center; gap:10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--text-faint);
+    flex-shrink:0;
+  }
+  .dot.online{ background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+  .dot.connecting{ background: var(--warn); box-shadow: 0 0 8px var(--warn); animation: pulse 1s infinite; }
+  .dot.error{ background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
+
+  .result-list{ display:flex; flex-direction:column; gap:8px; }
+  .result-item{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background: var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+  .result-item .info{ overflow:hidden; }
+  .result-item .fname{ color: var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
+  .result-item .fsize{ color: var(--text-faint); font-size: 11px; }
+  .result-item a.dl{
+    flex-shrink:0;
+    text-decoration:none;
+    background: var(--remote);
+    color:#fff;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-weight:700;
+    font-size: 12px;
+  }
+
+  .note{
+    font-size: 11.5px;
+    color: var(--text-faint);
+    line-height: 1.6;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+  .note b{ color: var(--text-dim); }
+
+  ::-webkit-scrollbar{ width:6px; height:6px; }
+  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 6px; }
+
+  @media (max-width: 380px){
+    header.hero h1{ font-size: 22px; }
+    .btn{ font-size: 14px; padding: 13px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hero">
+    <h1>📦 SwiftBox</h1>
+    <p>ওরিজিনাল কোয়ালিটিতে ফাইল ও ফটো পাঠান — কাছে থাকলে P2P, দূরে থাকলে Cloud</p>
+  </header>
+
+  <div class="mode-tabs">
+    <div class="mode-tab active" data-mode="nearby" onclick="switchMode('nearby')">
+      <span class="emoji">📶</span> Nearby (P2P)
+    </div>
+    <div class="mode-tab" data-mode="remote" onclick="switchMode('remote')">
+      <span class="emoji">☁️</span> Remote (Cloud)
+    </div>
+  </div>
+
+  <!-- =========================================================
+       NEARBY MODE — WebRTC P2P via PeerJS
+  ========================================================== -->
+  <section id="panel-nearby" class="panel active">
+
+    <div class="card">
+      <span class="badge nearby">RECEIVER</span>
+      <h2 style="margin-top:8px;">এই ডিভাইসে ফাইল রিসিভ করুন</h2>
+      <p class="sub">যে ডিভাইসে ফাইল জমা করতে চান (যেমন আপনার ল্যাপটপ), সেখানে এই বাটনে ক্লিক করুন। এটি একটি ফিক্সড আইডি দিয়ে অপেক্ষা করবে, তাই বারবার আইডি বসাতে হবে না।</p>
+      <button class="btn btn-nearby" id="btnStartReceiving" onclick="startReceiving()">🖥️ Start Receiving</button>
+
+      <div class="status-box" id="receiverStatus" style="margin-top:14px;">
+        <span class="dot" id="receiverDot"></span>
+        <span id="receiverStatusText">রিসিভার এখনও চালু হয়নি</span>
+      </div>
+
+      <div id="receiverSaveHint" class="note" style="display:none;"></div>
+
+      <div id="incomingList" class="file-list" style="max-height:none;"></div>
+    </div>
+
+    <div class="card">
+      <span class="badge nearby">SENDER</span>
+      <h2 style="margin-top:8px;">ফাইল সিলেক্ট করে সরাসরি পাঠান</h2>
+      <p class="sub">অন্য ডিভাইসে (রিসিভার) আগে থেকে <b>Start Receiving</b> চালু থাকতে হবে এবং দুই ডিভাইস একই ওয়াইফাই/হটস্পট বা কাছাকাছি নেটওয়ার্কে থাকতে হবে।</p>
+
+      <label class="file-drop">
+        <span class="big">📁</span>
+        একাধিক ফাইল/ফটো সিলেক্ট করতে ট্যাপ করুন
+        <input type="file" id="nearbyFileInput" multiple onchange="onNearbyFilesSelected(event)">
+      </label>
+
+      <div class="file-list" id="nearbyFileList"></div>
+
+      <button class="btn btn-nearby" id="btnDirectSend" onclick="startDirectSend()" disabled>🚀 Direct Send (P2P)</button>
+
+      <div class="status-box" id="senderStatus" style="margin-top:14px; display:none;">
+        <span class="dot" id="senderDot"></span>
+        <span id="senderStatusText">প্রস্তুত হচ্ছে...</span>
+      </div>
+
+      <div id="sendProgressList"></div>
+
+      <div class="note">
+        <b>টিপস:</b> ৫ জিবি পর্যন্ত ফাইল সাপোর্টেড। ফাইল একবারে মেমোরিতে লোড হয় না — ছোট ছোট চাংক আকারে (Stream) পাঠানো হয়, তাই ব্রাউজার ক্র্যাশ করবে না। ট্রান্সফার স্পিড নির্ভর করবে আপনার লোকাল Wi-Fi/হটস্পটের গতির উপর।
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       REMOTE MODE — Supabase Storage (Cloud)
+  ========================================================== -->
+  <section id="panel-remote" class="panel">
+
+    <div class="card">
+      <span class="badge remote">UPLOAD</span>
+      <h2 style="margin-top:8px;">Cloud-এ আপলোড করুন</h2>
+      <p class="sub">ভ্রমণে অচেনা ডিভাইস থেকে আপলোড করার সময় ব্যবহার করুন। একটি Box/Folder নাম দিন (মনে রাখুন — পরে এটি দিয়েই ফাইল খুঁজে পাবেন), তারপর ফাইল সিলেক্ট করুন।</p>
+
+      <input type="text" id="boxNameInput" class="field" placeholder="Box / Folder নাম লিখুন (যেমন: paris-trip-2026)">
+
+      <label class="file-drop">
+        <span class="big">🖼️</span>
+        ফটো/ফাইল সিলেক্ট করতে ট্যাপ করুন
+        <input type="file" id="cloudFileInput" multiple onchange="onCloudFilesSelected(event)">
+      </label>
+
+      <div class="file-list" id="cloudFileList"></div>
+
+      <button class="btn btn-remote" id="btnUploadCloud" onclick="uploadToCloud()" disabled>☁️ Upload to Cloud</button>
+
+      <div id="uploadProgressList" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="card">
+      <span class="badge remote">DOWNLOAD</span>
+      <h2 style="margin-top:8px;">Cloud থেকে ফাইল আনুন</h2>
+      <p class="sub">যেকোনো ডিভাইস থেকে (যেমন আপনার ল্যাপটপ) Box নামটি বসিয়ে ফেচ করুন — সরাসরি ডাউনলোড লিংক পেয়ে যাবেন, কোয়ালিটি অক্ষুণ্ণ থাকবে।</p>
+
+      <input type="text" id="fetchBoxNameInput" class="field" placeholder="যে Box নাম দিয়ে আপলোড করেছিলেন">
+      <button class="btn btn-ghost" id="btnFetchCloud" onclick="fetchFromCloud()">🔍 Fetch from Cloud</button>
+
+      <div id="fetchStatus" class="status-box" style="display:none; margin-top:14px;">
+        <span class="dot" id="fetchDot"></span>
+        <span id="fetchStatusText">খোঁজা হচ্ছে...</span>
+      </div>
+
+      <div id="fetchResultList" class="result-list" style="margin-top:12px;"></div>
+
+      <div class="note">
+        <b>সেটআপ প্রয়োজন:</b> Supabase Dashboard → Storage → আপনার Bucket-কে <b>Public</b> করে দিন (অথবা কোডে Signed URL ব্যবহার করুন), নয়তো ডাউনলোড লিংক কাজ করবে না।
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- PeerJS — handles WebRTC P2P signaling + data channel wrapper -->
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<!-- Supabase JS client — used for listing files / building URLs in Cloud mode -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+/* =========================================================================
+   ⚙️  CONFIGURATION — এখানে আপনার নিজের তথ্য বসান
+   ========================================================================= */
+
+// ---- Fixed PeerJS Receiver ID (Nearby / P2P mode) ----
+// এই আইডি পরিবর্তন করতে পারেন, কিন্তু ইউনিক এবং অনুমান করা কঠিন এমন কিছু রাখুন।
+const FIXED_PEER_ID = "tonir-secret-box-999"; // <-- আপনার ফিক্সড রিসিভার আইডি
+
+// ---- Supabase (Remote / Cloud mode) ----
+const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";   // <-- আপনার Supabase Project URL
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";     // <-- আপনার Supabase anon/public key
+const SUPABASE_BUCKET = "swiftbox-files";                      // <-- আপনার Storage bucket-এর নাম
+
+// ---- Transfer tuning ----
+const CHUNK_SIZE = 64 * 1024;               // 64KB per chunk over the WebRTC data channel
+const MAX_BUFFERED_AMOUNT = 16 * 1024 * 1024; // 16MB — pause sending until buffer drains below this
+
+/* =========================================================================
+   Mode switching
+   ========================================================================= */
+function switchMode(mode){
+  document.querySelectorAll(".mode-tab").forEach(el => el.classList.toggle("active", el.dataset.mode === mode));
+  document.getElementById("panel-nearby").classList.toggle("active", mode === "nearby");
+  document.getElementById("panel-remote").classList.toggle("active", mode === "remote");
+}
+
+function formatBytes(bytes){
+  if (bytes === 0) return "0 B";
+  const units = ["B","KB","MB","GB"];
+  const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+  return (bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1) + " " + units[i];
+}
+
+function formatSpeed(bytesPerSec){
+  return formatBytes(bytesPerSec) + "/s";
+}
+
+/* =========================================================================
+   NEARBY MODE — WebRTC P2P (PeerJS)
+   ========================================================================= */
+
+let receivePeer = null;
+let saveDirHandle = null;          // File System Access API directory handle (if supported)
+const incomingFiles = new Map();   // index -> { meta, writable/chunks, receivedBytes, rowEls }
+
+let sendPeer = null;
+let sendConn = null;
+let selectedNearbyFiles = [];
+
+function setDot(elId, state){
+  const dot = document.getElementById(elId);
+  dot.className = "dot " + state;
+}
+
+/* ---------------- Receiver side ---------------- */
+
+async function startReceiving(){
+  const btn = document.getElementById("btnStartReceiving");
+  btn.disabled = true;
+
+  // Optional but recommended: pick a folder once so incoming files are written
+  // directly to disk (streamed) instead of being held fully in browser memory.
+  // Works on Chrome/Edge desktop & Android. Falls back gracefully elsewhere.
+  if ("showDirectoryPicker" in window){
+    try{
+      saveDirHandle = await window.showDirectoryPicker();
+      document.getElementById("receiverSaveHint").style.display = "block";
+      document.getElementById("receiverSaveHint").innerHTML =
+        `<b>✅ সেভ ফোল্ডার সিলেক্ট করা হয়েছে</b> — ফাইলগুলো সরাসরি ডিস্কে স্ট্রিম হয়ে সেভ হবে, RAM-এ জমবে না।`;
+    }catch(e){
+      saveDirHandle = null; // user cancelled — fallback to in-memory mode
+    }
+  }
+
+  setDot("receiverDot", "connecting");
+  document.getElementById("receiverStatusText").textContent = "সিগনালিং সার্ভারে কানেক্ট হচ্ছে...";
+
+  receivePeer = new Peer(FIXED_PEER_ID, {
+    // Uses PeerJS's free public signaling broker by default.
+    // For heavier/more reliable use, host your own PeerServer and set `host`/`port`/`path` here.
+    debug: 1
+  });
+
+  receivePeer.on("open", (id) => {
+    setDot("receiverDot", "online");
+    document.getElementById("receiverStatusText").textContent =
+      `✅ রিসিভ করার জন্য প্রস্তুত (ID: ${id})`;
+  });
+
+  receivePeer.on("connection", (conn) => {
+    setDot("receiverDot", "online");
+    document.getElementById("receiverStatusText").textContent = `🔗 সংযুক্ত হয়েছে: ${conn.peer}`;
+    setupIncomingConnection(conn);
+  });
+
+  receivePeer.on("error", (err) => {
+    setDot("receiverDot", "error");
+    document.getElementById("receiverStatusText").textContent = "❌ এরর: " + err.type;
+    btn.disabled = false;
+  });
+
+  receivePeer.on("disconnected", () => {
+    setDot("receiverDot", "warn");
+    document.getElementById("receiverStatusText").textContent = "সংযোগ বিচ্ছিন্ন — পুনরায় চেষ্টা করা হচ্ছে...";
+    receivePeer.reconnect();
+  });
+}
+
+function setupIncomingConnection(conn){
+  conn.on("data", (data) => handleIncomingData(conn, data));
+  conn.on("close", () => {
+    document.getElementById("receiverStatusText").textContent = "রিসিভার প্রস্তুত (সংযোগ বন্ধ হয়েছে, নতুন সংযোগের অপেক্ষায়)";
+  });
+}
+
+async function handleIncomingData(conn, data){
+  // Control messages arrive as plain objects; file bytes arrive as ArrayBuffer.
+  if (data && typeof data === "object" && !(data instanceof ArrayBuffer) && data.type){
+
+    if (data.type === "meta"){
+      await beginIncomingFile(data);
+      return;
+    }
+
+    if (data.type === "eof"){
+      await finishIncomingFile(data.index);
+      return;
+    }
+
+    return;
+  }
+
+  // Otherwise: raw binary chunk for the "current" file (the most recently opened one).
+  const activeIndex = [...incomingFiles.keys()].pop();
+  if (activeIndex === undefined) return;
+  await writeIncomingChunk(activeIndex, data);
+}
+
+async function beginIncomingFile(meta){
+  const row = document.createElement("div");
+  row.className = "progress-row";
+  row.innerHTML = `
+    <div class="meta-line"><span class="name">📥 ${meta.name} (${meta.index + 1}/${meta.total})</span><span class="pct">0%</span></div>
+    <div class="bar-track"><div class="bar-fill nearby"></div></div>
+  `;
+  document.getElementById("incomingList").appendChild(row);
+
+  const state = {
+    meta,
+    receivedBytes: 0,
+    rowEls: { pct: row.querySelector(".pct"), fill: row.querySelector(".bar-fill") },
+    writable: null,
+    chunks: null,
+    startTime: performance.now()
+  };
+
+  if (saveDirHandle){
+    try{
+      const safeName = meta.name.replace(/[\\/:*?"<>|]/g, "_");
+      const fileHandle = await saveDirHandle.getFileHandle(safeName, { create: true });
+      state.writable = await fileHandle.createWritable();
+    }catch(e){
+      state.writable = null;
+      state.chunks = [];
+    }
+  } else {
+    state.chunks = []; // in-memory fallback (used to build a Blob at the end)
+  }
+
+  incomingFiles.set(meta.index, state);
+}
+
+async function writeIncomingChunk(index, buffer){
+  const state = incomingFiles.get(index);
+  if (!state) return;
+
+  if (state.writable){
+    await state.writable.write(buffer);
+  } else {
+    state.chunks.push(buffer);
+  }
+
+  state.receivedBytes += buffer.byteLength;
+  const pct = Math.min(100, (state.receivedBytes / state.meta.size) * 100);
+  state.rowEls.fill.style.width = pct.toFixed(1) + "%";
+  const elapsed = (performance.now() - state.startTime) / 1000;
+  const speed = elapsed > 0 ? state.receivedBytes / elapsed : 0;
+  state.rowEls.pct.textContent = `${pct.toFixed(0)}% · ${formatSpeed(speed)}`;
+}
+
+async function finishIncomingFile(index){
+  const state = incomingFiles.get(index);
+  if (!state) return;
+
+  state.rowEls.fill.classList.add("done");
+  state.rowEls.fill.style.width = "100%";
+
+  if (state.writable){
+    await state.writable.close();
+    state.rowEls.pct.textContent = "✅ ডিস্কে সেভ হয়েছে";
+  } else {
+    const blob = new Blob(state.chunks, { type: state.meta.mime || "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    state.rowEls.pct.innerHTML = `✅ সম্পন্ন — <a href="${url}" download="${state.meta.name}" style="color:var(--nearby); font-weight:700;">Save File</a>`;
+    state.chunks = null; // release references; Blob still holds the data until download
+  }
+
+  incomingFiles.delete(index);
+}
+
+/* ---------------- Sender side ---------------- */
+
+function onNearbyFilesSelected(e){
+  selectedNearbyFiles = Array.from(e.target.files);
+  const list = document.getElementById("nearbyFileList");
+  list.innerHTML = "";
+  selectedNearbyFiles.forEach(f => {
+    const chip = document.createElement("div");
+    chip.className = "file-chip";
+    chip.innerHTML = `<span class="name">📄 ${f.name}</span><span class="size">${formatBytes(f.size)}</span>`;
+    list.appendChild(chip);
+  });
+  document.getElementById("btnDirectSend").disabled = selectedNearbyFiles.length === 0;
+}
+
+function startDirectSend(){
+  if (!selectedNearbyFiles.length) return;
+
+  const statusBox = document.getElementById("senderStatus");
+  statusBox.style.display = "flex";
+  setDot("senderDot", "connecting");
+  document.getElementById("senderStatusText").textContent = `রিসিভার (${FIXED_PEER_ID})-এর সাথে সংযোগ করা হচ্ছে...`;
+  document.getElementById("btnDirectSend").disabled = true;
+
+  sendPeer = new Peer(undefined, { debug: 1 });
+
+  sendPeer.on("open", () => {
+    sendConn = sendPeer.connect(FIXED_PEER_ID, { reliable: true, serialization: "binary" });
+
+    sendConn.on("open", async () => {
+      setDot("senderDot", "online");
+      document.getElementById("senderStatusText").textContent = "✅ সংযুক্ত — পাঠানো শুরু হচ্ছে...";
+      await sendAllFiles();
+    });
+
+    sendConn.on("error", (err) => {
+      setDot("senderDot", "error");
+      document.getElementById("senderStatusText").textContent = "❌ কানেকশন এরর: " + err;
+      document.getElementById("btnDirectSend").disabled = false;
+    });
+  });
+
+  sendPeer.on("error", (err) => {
+    setDot("senderDot", "error");
+    document.getElementById("senderStatusText").textContent =
+      err.type === "peer-unavailable"
+        ? "❌ রিসিভার খুঁজে পাওয়া যায়নি। ঐ ডিভাইসে আগে 'Start Receiving' চালু করুন।"
+        : "❌ এরর: " + err.type;
+    document.getElementById("btnDirectSend").disabled = false;
+  });
+}
+
+async function sendAllFiles(){
+  const listEl = document.getElementById("sendProgressList");
+  listEl.innerHTML = "";
+
+  for (let i = 0; i < selectedNearbyFiles.length; i++){
+    const file = selectedNearbyFiles[i];
+
+    const row = document.createElement("div");
+    row.className = "progress-row";
+    row.innerHTML = `
+      <div class="meta-line"><span class="name">📤 ${file.name} (${i + 1}/${selectedNearbyFiles.length})</span><span class="pct">0%</span></div>
+      <div class="bar-track"><div class="bar-fill nearby"></div></div>
+    `;
+    listEl.appendChild(row);
+    const fill = row.querySelector(".bar-fill");
+    const pctEl = row.querySelector(".pct");
+
+    document.getElementById("senderStatusText").textContent = `পাঠানো হচ্ছে: ${file.name}`;
+    await sendOneFile(file, i, selectedNearbyFiles.length, fill, pctEl);
+  }
+
+  document.getElementById("senderStatusText").textContent = "🎉 সব ফাইল সফলভাবে পাঠানো হয়েছে!";
+  document.getElementById("btnDirectSend").disabled = false;
+}
+
+function waitForBufferedAmountLow(conn){
+  return new Promise(resolve => {
+    const dc = conn.dataChannel;
+    if (!dc || dc.bufferedAmount < MAX_BUFFERED_AMOUNT) return resolve();
+    const check = () => {
+      if (dc.bufferedAmount < MAX_BUFFERED_AMOUNT) resolve();
+      else setTimeout(check, 25);
+    };
+    check();
+  });
+}
+
+async function sendOneFile(file, index, total, fillEl, pctEl){
+  // Announce the file before streaming its bytes.
+  sendConn.send({ type: "meta", name: file.name, size: file.size, mime: file.type, index, total });
+
+  let offset = 0;
+  const startTime = performance.now();
+
+  // Read the file in fixed-size chunks using Blob.slice() + arrayBuffer():
+  // only ONE chunk is ever resident in memory at a time, regardless of file size (up to 5GB+).
+  while (offset < file.size){
+    const slice = file.slice(offset, offset + CHUNK_SIZE);
+    const buffer = await slice.arrayBuffer();
+
+    await waitForBufferedAmountLow(sendConn); // backpressure: don't outrun the data channel
+
+    sendConn.send(buffer);
+    offset += buffer.byteLength;
+
+    const pct = (offset / file.size) * 100;
+    fillEl.style.width = pct.toFixed(1) + "%";
+    const elapsed = (performance.now() - startTime) / 1000;
+    const speed = elapsed > 0 ? offset / elapsed : 0;
+    pctEl.textContent = `${pct.toFixed(0)}% · ${formatSpeed(speed)}`;
+  }
+
+  sendConn.send({ type: "eof", index });
+  fillEl.classList.add("done");
+  pctEl.textContent = "✅ পাঠানো সম্পন্ন";
+}
+
+/* =========================================================================
+   REMOTE MODE — Supabase Storage (Cloud)
+   ========================================================================= */
+
+const supabaseClient = window.supabase
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+let selectedCloudFiles = [];
+
+function onCloudFilesSelected(e){
+  selectedCloudFiles = Array.from(e.target.files);
+  const list = document.getElementById("cloudFileList");
+  list.innerHTML = "";
+  selectedCloudFiles.forEach(f => {
+    const chip = document.createElement("div");
+    chip.className = "file-chip";
+    chip.innerHTML = `<span class="name">🖼️ ${f.name}</span><span class="size">${formatBytes(f.size)}</span>`;
+    list.appendChild(chip);
+  });
+  document.getElementById("btnUploadCloud").disabled = selectedCloudFiles.length === 0;
+}
+
+async function uploadToCloud(){
+  const folder = document.getElementById("boxNameInput").value.trim();
+  if (!folder){
+    alert("প্রথমে একটি Box/Folder নাম লিখুন।");
+    return;
+  }
+  if (!selectedCloudFiles.length){
+    alert("প্রথমে ফাইল সিলেক্ট করুন।");
+    return;
+  }
+
+  const btn = document.getElementById("btnUploadCloud");
+  btn.disabled = true;
+
+  const listEl = document.getElementById("uploadProgressList");
+  listEl.innerHTML = "";
+
+  const rows = selectedCloudFiles.map((file, i) => {
+    const row = document.createElement("div");
+    row.className = "progress-row";
+    row.innerHTML = `
+      <div class="meta-line"><span class="name">☁️ ${file.name}</span><span class="pct">0%</span></div>
+      <div class="bar-track"><div class="bar-fill remote"></div></div>
+    `;
+    listEl.appendChild(row);
+    return { fill: row.querySelector(".bar-fill"), pct: row.querySelector(".pct") };
+  });
+
+  // Upload every file in parallel (Promise.all) for maximum aggregate throughput —
+  // each request runs on its own XHR so real byte-level progress is available.
+  try{
+    await Promise.all(selectedCloudFiles.map((file, i) =>
+      uploadFileWithProgress(file, `${folder}/${file.name}`, (loaded, total) => {
+        const pct = total ? (loaded / total) * 100 : 0;
+        rows[i].fill.style.width = pct.toFixed(1) + "%";
+        rows[i].pct.textContent = pct.toFixed(0) + "%";
+      }).then(() => {
+        rows[i].fill.classList.add("done");
+        rows[i].pct.textContent = "✅ সম্পন্ন";
+      }).catch((err) => {
+        rows[i].fill.classList.add("error");
+        rows[i].pct.textContent = "❌ ব্যর্থ";
+        console.error(err);
+      })
+    ));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function uploadFileWithProgress(file, path, onProgress){
+  return new Promise((resolve, reject) => {
+    const url = `${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Authorization", `Bearer ${SUPABASE_ANON_KEY}`);
+    xhr.setRequestHeader("apikey", SUPABASE_ANON_KEY);
+    xhr.setRequestHeader("x-upsert", "true"); // overwrite if same name already exists
+    xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress(e.loaded, e.total);
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) resolve();
+      else reject(new Error(`Upload failed (${xhr.status}): ${xhr.responseText}`));
+    };
+    xhr.onerror = () => reject(new Error("Network error during upload"));
+    xhr.send(file);
+  });
+}
+
+async function fetchFromCloud(){
+  const folder = document.getElementById("fetchBoxNameInput").value.trim();
+  if (!folder){
+    alert("Box/Folder নাম লিখুন।");
+    return;
+  }
+  if (!supabaseClient){
+    alert("Supabase client লোড হয়নি — ইন্টারনেট সংযোগ চেক করুন।");
+    return;
+  }
+
+  const statusBox = document.getElementById("fetchStatus");
+  statusBox.style.display = "flex";
+  setDot("fetchDot", "connecting");
+  document.getElementById("fetchStatusText").textContent = "ফাইল খোঁজা হচ্ছে...";
+  document.getElementById("fetchResultList").innerHTML = "";
+
+  const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list(folder, {
+    limit: 200,
+    sortBy: { column: "created_at", order: "desc" }
+  });
+
+  if (error){
+    setDot("fetchDot", "error");
+    document.getElementById("fetchStatusText").textContent = "❌ এরর: " + error.message;
+    return;
+  }
+
+  if (!data || !data.length){
+    setDot("fetchDot", "warn");
+    document.getElementById("fetchStatusText").textContent = "এই নামে কোনো ফাইল পাওয়া যায়নি।";
+    return;
+  }
+
+  setDot("fetchDot", "online");
+  document.getElementById("fetchStatusText").textContent = `✅ ${data.length}টি ফাইল পাওয়া গেছে`;
+
+  const listEl = document.getElementById("fetchResultList");
+  data.forEach(obj => {
+    const path = `${folder}/${obj.name}`;
+    // Bucket must be Public for this to work directly.
+    // For a private bucket, replace with: await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(path, 3600)
+    const { data: urlData } = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(path);
+    const size = obj.metadata && obj.metadata.size ? formatBytes(obj.metadata.size) : "";
+
+    const item = document.createElement("div");
+    item.className = "result-item";
+    item.innerHTML = `
+      <div class="info">
+        <span class="fname">${obj.name}</span>
+        <span class="fsize">${size}</span>
+      </div>
+      <a class="dl" href="${urlData.publicUrl}" download="${obj.name}" target="_blank" rel="noopener">Download</a>
+    `;
+    listEl.appendChild(item);
+  });
+}
+</script>
+</body>
+</html>
