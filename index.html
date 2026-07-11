@@ -2,917 +2,422 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<title>SwiftBox — Fast File & Photo Transfer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>তরঙ্গ — ল্যাপটপ থেকে ফোনে সরাসরি ফাইল পাঠান</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
   :root{
-    --bg: #0e1013;
-    --bg-elevated: #15181d;
-    --card: #1b1f26;
-    --card-hover: #212630;
-    --border: #2a2f38;
-    --text: #eef1f5;
-    --text-dim: #9aa3b2;
-    --text-faint: #5f6774;
-    --nearby: #2AABEE;      /* Telegram blue — used for P2P / Nearby mode */
-    --nearby-dark: #1c86bd;
-    --remote: #5865F2;      /* Discord blurple — used for Cloud / Remote mode */
-    --remote-dark: #454fd1;
-    --ok: #3ba55d;
-    --warn: #faa61a;
-    --danger: #ed4245;
-    --radius: 14px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bg: #0B1120;
+    --bg2: #111A2E;
+    --card: #131D33;
+    --line: #223050;
+    --cyan: #22D3EE;
+    --violet: #818CF8;
+    --text: #E7ECF5;
+    --muted: #8CA0C4;
+    --good: #34D399;
+    --bad: #FB7185;
   }
-
-  *{ box-sizing: border-box; }
-
-  html, body{
-    margin:0; padding:0;
-    background: radial-gradient(1200px 800px at 10% -10%, #161a22 0%, var(--bg) 45%) fixed;
-    color: var(--text);
-    min-height: 100vh;
-    -webkit-tap-highlight-color: transparent;
-  }
-
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
   body{
-    padding: 18px;
-    padding-bottom: 48px;
+    background:
+      radial-gradient(1100px 600px at 15% -10%, rgba(129,140,248,0.18), transparent 60%),
+      radial-gradient(900px 500px at 100% 10%, rgba(34,211,238,0.14), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Hind Siliguri', system-ui, sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
   }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{width:100%;max-width:460px;}
 
-  .app{
-    max-width: 640px;
-    margin: 0 auto;
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+  .brand .dot{
+    width:34px;height:34px;border-radius:50%;
+    background:conic-gradient(from 180deg, var(--cyan), var(--violet), var(--cyan));
+    flex:none;
   }
-
-  header.hero{
-    text-align:center;
-    margin: 10px 0 22px;
-  }
-
-  header.hero h1{
-    margin:0;
-    font-size: 26px;
-    letter-spacing: -0.02em;
-    background: linear-gradient(90deg, var(--nearby), var(--remote));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-weight: 800;
-  }
-
-  header.hero p{
-    margin: 6px 0 0;
-    color: var(--text-dim);
-    font-size: 13.5px;
-  }
-
-  /* ---------- Mode tabs ---------- */
-  .mode-tabs{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
-  .mode-tab{
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text-dim);
-    border-radius: var(--radius);
-    padding: 14px 10px;
-    font-size: 14.5px;
-    font-weight: 700;
-    text-align:center;
-    cursor: pointer;
-    transition: all .15s ease;
-    display:flex; flex-direction:column; align-items:center; gap:4px;
-  }
-  .mode-tab span.emoji{ font-size: 20px; }
-  .mode-tab.active[data-mode="nearby"]{
-    border-color: var(--nearby);
-    color: #fff;
-    background: linear-gradient(180deg, rgba(42,171,238,.18), rgba(42,171,238,.05));
-    box-shadow: 0 0 0 1px var(--nearby) inset;
-  }
-  .mode-tab.active[data-mode="remote"]{
-    border-color: var(--remote);
-    color: #fff;
-    background: linear-gradient(180deg, rgba(88,101,242,.18), rgba(88,101,242,.05));
-    box-shadow: 0 0 0 1px var(--remote) inset;
-  }
-
-  .panel{ display:none; }
-  .panel.active{ display:block; animation: fadeIn .2s ease; }
-  @keyframes fadeIn{ from{opacity:0; transform: translateY(4px)} to{opacity:1; transform:none} }
+  .brand h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px;}
+  .brand p{margin:0;color:var(--muted);font-size:12.5px;}
 
   .card{
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    margin-bottom: 14px;
+    background:linear-gradient(180deg, var(--card), var(--bg2));
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.6);
   }
 
-  .card h2{
-    margin: 0 0 4px;
-    font-size: 15px;
-    font-weight: 700;
+  .tabs{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:12px;margin-bottom:20px;border:1px solid var(--line);}
+  .tab{flex:1;text-align:center;padding:9px 0;border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;transition:.15s;}
+  .tab.active{background:linear-gradient(135deg, var(--violet), var(--cyan));color:#0B1120;}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .stage{
+    position:relative;
+    height:150px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
   }
-  .card .sub{
-    margin: 0 0 14px;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    line-height:1.5;
+  .core{
+    width:58px;height:58px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff2, transparent), linear-gradient(135deg, var(--violet), var(--cyan));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 1px rgba(255,255,255,.08);
+    z-index:2;
+  }
+  .core svg{width:26px;height:26px;}
+  .ring{
+    position:absolute;border-radius:50%;
+    border:1.5px solid var(--cyan);
+    opacity:0;
+  }
+  .ring.animate{animation:wave 2.2s ease-out infinite;}
+  .ring:nth-child(2).animate{animation-delay:.55s;}
+  .ring:nth-child(3).animate{animation-delay:1.1s;}
+  @keyframes wave{
+    0%{width:58px;height:58px;opacity:.55;}
+    100%{width:150px;height:150px;opacity:0;}
   }
 
-  .badge{
-    display:inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 20px;
-    letter-spacing: .02em;
+  .code-box{
+    text-align:center;
+    margin-bottom:16px;
   }
-  .badge.nearby{ background: rgba(42,171,238,.15); color: var(--nearby); }
-  .badge.remote{ background: rgba(88,101,242,.15); color: var(--remote); }
-  .badge.ok{ background: rgba(59,165,93,.15); color: var(--ok); }
-  .badge.warn{ background: rgba(250,166,26,.15); color: var(--warn); }
-  .badge.danger{ background: rgba(237,66,69,.15); color: var(--danger); }
+  .code-box .label{font-size:12px;color:var(--muted);margin-bottom:8px;}
+  .code-box .code{
+    font-size:30px;letter-spacing:6px;font-weight:600;
+    padding:12px 10px;border-radius:12px;
+    background:var(--bg);border:1px dashed var(--line);
+    color:var(--cyan);
+  }
+  #qrcode{display:flex;justify-content:center;margin:14px 0;}
+  #qrcode canvas{border-radius:12px;border:6px solid #fff;}
 
-  /* ---------- Buttons ---------- */
-  .btn{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    width: 100%;
-    padding: 15px 16px;
-    border-radius: 12px;
-    border: none;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    color: #fff;
-    transition: transform .08s ease, filter .15s ease, opacity .15s ease;
-    -webkit-appearance:none;
+  input[type=text]{
+    width:100%;background:var(--bg);border:1px solid var(--line);
+    color:var(--text);font-size:20px;letter-spacing:5px;text-align:center;
+    padding:12px;border-radius:12px;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
   }
-  .btn:active{ transform: scale(0.98); }
-  .btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  input[type=text]:focus{outline:2px solid var(--cyan);border-color:transparent;}
 
-  .btn-nearby{ background: linear-gradient(135deg, var(--nearby), var(--nearby-dark)); }
-  .btn-remote{ background: linear-gradient(135deg, var(--remote), var(--remote-dark)); }
-  .btn-ghost{
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    color: var(--text);
+  button{
+    width:100%;padding:13px;border-radius:12px;border:none;
+    font-size:15px;font-weight:600;cursor:pointer;
+    background:linear-gradient(135deg, var(--violet), var(--cyan));
+    color:#0B1120;
+    transition:transform .1s ease, opacity .15s;
   }
-  .btn-ghost:hover{ background: var(--card-hover); }
-  .btn-sm{ padding: 10px 12px; font-size: 13px; border-radius: 10px; }
-
-  .btn-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  /* ---------- File input ---------- */
-  .file-drop{
-    border: 1.5px dashed var(--border);
-    border-radius: 12px;
-    padding: 18px 14px;
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 13px;
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: border-color .15s ease, background .15s ease;
-  }
-  .file-drop:hover{ border-color: var(--text-faint); background: var(--bg-elevated); }
-  .file-drop input{ display:none; }
-  .file-drop .big{ font-size: 26px; display:block; margin-bottom:6px; }
-
-  .file-list{
-    display:flex; flex-direction:column; gap:8px;
-    margin-bottom: 12px;
-    max-height: 180px;
-    overflow-y:auto;
-  }
-  .file-chip{
-    display:flex; align-items:center; justify-content:space-between;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 12.5px;
-  }
-  .file-chip .name{
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-    max-width: 70%;
-    color: var(--text);
-  }
-  .file-chip .size{ color: var(--text-faint); font-variant-numeric: tabular-nums; }
-
-  .field{
-    width: 100%;
-    padding: 13px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--bg-elevated);
-    color: var(--text);
-    font-size: 14.5px;
-    margin-bottom: 12px;
-    outline: none;
-  }
-  .field:focus{ border-color: var(--remote); }
-
-  /* ---------- Progress ---------- */
-  .progress-row{
-    margin-bottom: 12px;
-  }
-  .progress-row .meta-line{
-    display:flex; justify-content:space-between;
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 5px;
-  }
-  .progress-row .meta-line .name{
-    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width: 65%;
-  }
-  .bar-track{
-    height: 9px;
-    border-radius: 6px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    overflow:hidden;
-  }
-  .bar-fill{
-    height:100%;
-    width:0%;
-    border-radius: 6px;
-    transition: width .15s ease;
-  }
-  .bar-fill.nearby{ background: linear-gradient(90deg, var(--nearby), #66d4ff); }
-  .bar-fill.remote{ background: linear-gradient(90deg, var(--remote), #9aa5ff); }
-  .bar-fill.done{ background: var(--ok); }
-  .bar-fill.error{ background: var(--danger); }
-
-  /* ---------- Status ---------- */
-  .status-box{
-    display:flex; align-items:center; gap:10px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 11px 13px;
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 14px;
-  }
-  .dot{
-    width:8px; height:8px; border-radius:50%;
-    background: var(--text-faint);
-    flex-shrink:0;
-  }
-  .dot.online{ background: var(--ok); box-shadow: 0 0 8px var(--ok); }
-  .dot.connecting{ background: var(--warn); box-shadow: 0 0 8px var(--warn); animation: pulse 1s infinite; }
-  .dot.error{ background: var(--danger); box-shadow: 0 0 8px var(--danger); }
-  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
-
-  .result-list{ display:flex; flex-direction:column; gap:8px; }
-  .result-item{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    background: var(--bg-elevated);
-    border:1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 12.5px;
-  }
-  .result-item .info{ overflow:hidden; }
-  .result-item .fname{ color: var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
-  .result-item .fsize{ color: var(--text-faint); font-size: 11px; }
-  .result-item a.dl{
-    flex-shrink:0;
-    text-decoration:none;
-    background: var(--remote);
-    color:#fff;
-    padding: 7px 12px;
-    border-radius: 8px;
-    font-weight:700;
-    font-size: 12px;
+  button:active{transform:scale(.98);}
+  button:disabled{opacity:.45;cursor:not-allowed;}
+  button.ghost{
+    background:transparent;border:1px solid var(--line);color:var(--text);
+    margin-top:10px;
   }
 
-  .note{
-    font-size: 11.5px;
-    color: var(--text-faint);
-    line-height: 1.6;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border);
+  .drop{
+    border:1.5px dashed var(--line);
+    border-radius:14px;
+    padding:26px 14px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13.5px;
+    cursor:pointer;
+    transition:.15s;
+    margin-bottom:14px;
   }
-  .note b{ color: var(--text-dim); }
+  .drop.hover{border-color:var(--cyan);color:var(--text);background:rgba(34,211,238,0.05);}
+  .drop strong{color:var(--text);}
 
-  ::-webkit-scrollbar{ width:6px; height:6px; }
-  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 6px; }
-
-  @media (max-width: 380px){
-    header.hero h1{ font-size: 22px; }
-    .btn{ font-size: 14px; padding: 13px 12px; }
+  .status{
+    text-align:center;font-size:13px;color:var(--muted);margin-bottom:12px;min-height:18px;
   }
+  .status.good{color:var(--good);}
+  .status.bad{color:var(--bad);}
+
+  .filerow{
+    display:flex;align-items:center;gap:10px;
+    background:var(--bg);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;margin-bottom:10px;
+  }
+  .filerow .name{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .filerow .size{font-size:11.5px;color:var(--muted);}
+
+  .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px;}
+  .bar > div{height:100%;width:0%;background:linear-gradient(90deg, var(--violet), var(--cyan));transition:width .1s linear;}
+
+  footer{margin-top:16px;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.6;}
+  footer b{color:var(--text);}
 </style>
 </head>
 <body>
-<div class="app">
 
-  <header class="hero">
-    <h1>📦 SwiftBox</h1>
-    <p>ওরিজিনাল কোয়ালিটিতে ফাইল ও ফটো পাঠান — কাছে থাকলে P2P, দূরে থাকলে Cloud</p>
-  </header>
-
-  <div class="mode-tabs">
-    <div class="mode-tab active" data-mode="nearby" onclick="switchMode('nearby')">
-      <span class="emoji">📶</span> Nearby (P2P)
-    </div>
-    <div class="mode-tab" data-mode="remote" onclick="switchMode('remote')">
-      <span class="emoji">☁️</span> Remote (Cloud)
+<div class="wrap">
+  <div class="brand">
+    <div class="dot"></div>
+    <div>
+      <h1>তরঙ্গ</h1>
+      <p>দুই ডিভাইসের মাঝে সরাসরি ফাইল পাঠান — কোনো সার্ভারে জমা হয় না</p>
     </div>
   </div>
 
-  <!-- =========================================================
-       NEARBY MODE — WebRTC P2P via PeerJS
-  ========================================================== -->
-  <section id="panel-nearby" class="panel active">
-
-    <div class="card">
-      <span class="badge nearby">RECEIVER</span>
-      <h2 style="margin-top:8px;">এই ডিভাইসে ফাইল রিসিভ করুন</h2>
-      <p class="sub">যে ডিভাইসে ফাইল জমা করতে চান (যেমন আপনার ল্যাপটপ), সেখানে এই বাটনে ক্লিক করুন। এটি একটি ফিক্সড আইডি দিয়ে অপেক্ষা করবে, তাই বারবার আইডি বসাতে হবে না।</p>
-      <button class="btn btn-nearby" id="btnStartReceiving" onclick="startReceiving()">🖥️ Start Receiving</button>
-
-      <div class="status-box" id="receiverStatus" style="margin-top:14px;">
-        <span class="dot" id="receiverDot"></span>
-        <span id="receiverStatusText">রিসিভার এখনও চালু হয়নি</span>
-      </div>
-
-      <div id="receiverSaveHint" class="note" style="display:none;"></div>
-
-      <div id="incomingList" class="file-list" style="max-height:none;"></div>
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" data-tab="send">পাঠাবো</div>
+      <div class="tab" data-tab="receive">গ্রহণ করবো</div>
     </div>
 
-    <div class="card">
-      <span class="badge nearby">SENDER</span>
-      <h2 style="margin-top:8px;">ফাইল সিলেক্ট করে সরাসরি পাঠান</h2>
-      <p class="sub">অন্য ডিভাইসে (রিসিভার) আগে থেকে <b>Start Receiving</b> চালু থাকতে হবে এবং দুই ডিভাইস একই ওয়াইফাই/হটস্পট বা কাছাকাছি নেটওয়ার্কে থাকতে হবে।</p>
-
-      <label class="file-drop">
-        <span class="big">📁</span>
-        একাধিক ফাইল/ফটো সিলেক্ট করতে ট্যাপ করুন
-        <input type="file" id="nearbyFileInput" multiple onchange="onNearbyFilesSelected(event)">
-      </label>
-
-      <div class="file-list" id="nearbyFileList"></div>
-
-      <button class="btn btn-nearby" id="btnDirectSend" onclick="startDirectSend()" disabled>🚀 Direct Send (P2P)</button>
-
-      <div class="status-box" id="senderStatus" style="margin-top:14px; display:none;">
-        <span class="dot" id="senderDot"></span>
-        <span id="senderStatusText">প্রস্তুত হচ্ছে...</span>
+    <!-- SEND PANEL -->
+    <div class="panel active" id="panel-send">
+      <div class="stage">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="core">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M14 6l6 6-6 6" stroke="#0B1120" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
       </div>
+      <div class="code-box">
+        <div class="label">অন্য ডিভাইসে এই কোডটি দিন</div>
+        <div class="code mono" id="myCode">------</div>
+      </div>
+      <div id="qrcode"></div>
+      <div class="status" id="sendStatus">সংযোগ তৈরি হচ্ছে…</div>
 
-      <div id="sendProgressList"></div>
-
-      <div class="note">
-        <b>টিপস:</b> ৫ জিবি পর্যন্ত ফাইল সাপোর্টেড। ফাইল একবারে মেমোরিতে লোড হয় না — ছোট ছোট চাংক আকারে (Stream) পাঠানো হয়, তাই ব্রাউজার ক্র্যাশ করবে না। ট্রান্সফার স্পিড নির্ভর করবে আপনার লোকাল Wi-Fi/হটস্পটের গতির উপর।
+      <div id="fileArea" style="display:none;">
+        <div class="drop" id="dropZone">
+          <input type="file" id="fileInput" style="display:none;" multiple>
+          <strong>ফাইল বেছে নিন</strong> অথবা এখানে টেনে আনুন
+        </div>
+        <div id="sendList"></div>
       </div>
     </div>
-  </section>
 
-  <!-- =========================================================
-       REMOTE MODE — Supabase Storage (Cloud)
-  ========================================================== -->
-  <section id="panel-remote" class="panel">
-
-    <div class="card">
-      <span class="badge remote">UPLOAD</span>
-      <h2 style="margin-top:8px;">Cloud-এ আপলোড করুন</h2>
-      <p class="sub">ভ্রমণে অচেনা ডিভাইস থেকে আপলোড করার সময় ব্যবহার করুন। একটি Box/Folder নাম দিন (মনে রাখুন — পরে এটি দিয়েই ফাইল খুঁজে পাবেন), তারপর ফাইল সিলেক্ট করুন।</p>
-
-      <input type="text" id="boxNameInput" class="field" placeholder="Box / Folder নাম লিখুন (যেমন: paris-trip-2026)">
-
-      <label class="file-drop">
-        <span class="big">🖼️</span>
-        ফটো/ফাইল সিলেক্ট করতে ট্যাপ করুন
-        <input type="file" id="cloudFileInput" multiple onchange="onCloudFilesSelected(event)">
-      </label>
-
-      <div class="file-list" id="cloudFileList"></div>
-
-      <button class="btn btn-remote" id="btnUploadCloud" onclick="uploadToCloud()" disabled>☁️ Upload to Cloud</button>
-
-      <div id="uploadProgressList" style="margin-top:14px;"></div>
+    <!-- RECEIVE PANEL -->
+    <div class="panel" id="panel-receive">
+      <div class="stage">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+        <div class="core">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v13M6 11l6 6 6-6" stroke="#0B1120" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <input type="text" id="joinCode" maxlength="6" placeholder="কোড লিখুন">
+      <button id="joinBtn">সংযুক্ত হোন</button>
+      <div class="status" id="recvStatus"></div>
+      <div id="recvList"></div>
     </div>
 
-    <div class="card">
-      <span class="badge remote">DOWNLOAD</span>
-      <h2 style="margin-top:8px;">Cloud থেকে ফাইল আনুন</h2>
-      <p class="sub">যেকোনো ডিভাইস থেকে (যেমন আপনার ল্যাপটপ) Box নামটি বসিয়ে ফেচ করুন — সরাসরি ডাউনলোড লিংক পেয়ে যাবেন, কোয়ালিটি অক্ষুণ্ণ থাকবে।</p>
-
-      <input type="text" id="fetchBoxNameInput" class="field" placeholder="যে Box নাম দিয়ে আপলোড করেছিলেন">
-      <button class="btn btn-ghost" id="btnFetchCloud" onclick="fetchFromCloud()">🔍 Fetch from Cloud</button>
-
-      <div id="fetchStatus" class="status-box" style="display:none; margin-top:14px;">
-        <span class="dot" id="fetchDot"></span>
-        <span id="fetchStatusText">খোঁজা হচ্ছে...</span>
-      </div>
-
-      <div id="fetchResultList" class="result-list" style="margin-top:12px;"></div>
-
-      <div class="note">
-        <b>সেটআপ প্রয়োজন:</b> Supabase Dashboard → Storage → আপনার Bucket-কে <b>Public</b> করে দিন (অথবা কোডে Signed URL ব্যবহার করুন), নয়তো ডাউনলোড লিংক কাজ করবে না।
-      </div>
-    </div>
-  </section>
-
+    <footer>
+      ফাইল সরাসরি (P2P) ব্রাউজার-টু-ব্রাউজার পাঠানো হয় — <b>কোনো আপলোড, কোনো স্টোরেজ নেই</b>।
+      দুই ডিভাইসকে একই পৃষ্ঠা খোলা রাখতে হবে যতক্ষণ ট্রান্সফার শেষ না হয়।
+    </footer>
+  </div>
 </div>
 
-<!-- PeerJS — handles WebRTC P2P signaling + data channel wrapper -->
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<!-- Supabase JS client — used for listing files / building URLs in Cloud mode -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
 <script>
-/* =========================================================================
-   ⚙️  CONFIGURATION — এখানে আপনার নিজের তথ্য বসান
-   ========================================================================= */
+const CHUNK = 64 * 1024;
 
-// ---- Fixed PeerJS Receiver ID (Nearby / P2P mode) ----
-// এই আইডি পরিবর্তন করতে পারেন, কিন্তু ইউনিক এবং অনুমান করা কঠিন এমন কিছু রাখুন।
-const FIXED_PEER_ID = "tonir-secret-box-999"; // <-- আপনার ফিক্সড রিসিভার আইডি
-
-// ---- Supabase (Remote / Cloud mode) ----
-const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";   // <-- আপনার Supabase Project URL
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";     // <-- আপনার Supabase anon/public key
-const SUPABASE_BUCKET = "swiftbox-files";                      // <-- আপনার Storage bucket-এর নাম
-
-// ---- Transfer tuning ----
-const CHUNK_SIZE = 64 * 1024;               // 64KB per chunk over the WebRTC data channel
-const MAX_BUFFERED_AMOUNT = 16 * 1024 * 1024; // 16MB — pause sending until buffer drains below this
-
-/* =========================================================================
-   Mode switching
-   ========================================================================= */
-function switchMode(mode){
-  document.querySelectorAll(".mode-tab").forEach(el => el.classList.toggle("active", el.dataset.mode === mode));
-  document.getElementById("panel-nearby").classList.toggle("active", mode === "nearby");
-  document.getElementById("panel-remote").classList.toggle("active", mode === "remote");
+function genCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for(let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
 }
 
-function formatBytes(bytes){
-  if (bytes === 0) return "0 B";
-  const units = ["B","KB","MB","GB"];
-  const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
-  return (bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1) + " " + units[i];
-}
+// tabs
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  });
+});
+document.querySelectorAll('.ring').forEach(r=>r.classList.add('animate'));
 
-function formatSpeed(bytesPerSec){
-  return formatBytes(bytesPerSec) + "/s";
-}
-
-/* =========================================================================
-   NEARBY MODE — WebRTC P2P (PeerJS)
-   ========================================================================= */
-
-let receivePeer = null;
-let saveDirHandle = null;          // File System Access API directory handle (if supported)
-const incomingFiles = new Map();   // index -> { meta, writable/chunks, receivedBytes, rowEls }
-
-let sendPeer = null;
+// ---------- SENDER ----------
+const myCode = genCode();
+document.getElementById('myCode').textContent = myCode;
+const peerId = 'torongo-' + myCode;
+const sendStatus = document.getElementById('sendStatus');
 let sendConn = null;
-let selectedNearbyFiles = [];
+let filesToSend = [];
 
-function setDot(elId, state){
-  const dot = document.getElementById(elId);
-  dot.className = "dot " + state;
-}
-
-/* ---------------- Receiver side ---------------- */
-
-async function startReceiving(){
-  const btn = document.getElementById("btnStartReceiving");
-  btn.disabled = true;
-
-  // Optional but recommended: pick a folder once so incoming files are written
-  // directly to disk (streamed) instead of being held fully in browser memory.
-  // Works on Chrome/Edge desktop & Android. Falls back gracefully elsewhere.
-  if ("showDirectoryPicker" in window){
-    try{
-      saveDirHandle = await window.showDirectoryPicker();
-      document.getElementById("receiverSaveHint").style.display = "block";
-      document.getElementById("receiverSaveHint").innerHTML =
-        `<b>✅ সেভ ফোল্ডার সিলেক্ট করা হয়েছে</b> — ফাইলগুলো সরাসরি ডিস্কে স্ট্রিম হয়ে সেভ হবে, RAM-এ জমবে না।`;
-    }catch(e){
-      saveDirHandle = null; // user cancelled — fallback to in-memory mode
+const hostPeer = new Peer(peerId);
+hostPeer.on('open', ()=>{
+  const url = location.href.split('?')[0] + '?join=' + myCode;
+  QRCode.toCanvas(document.createElement('canvas'), url, {width:170, margin:1, color:{dark:'#0B1120', light:'#FFFFFF'}}, (err, canvas)=>{
+    if(!err){
+      document.getElementById('qrcode').innerHTML = '';
+      document.getElementById('qrcode').appendChild(canvas);
     }
-  }
-
-  setDot("receiverDot", "connecting");
-  document.getElementById("receiverStatusText").textContent = "সিগনালিং সার্ভারে কানেক্ট হচ্ছে...";
-
-  receivePeer = new Peer(FIXED_PEER_ID, {
-    // Uses PeerJS's free public signaling broker by default.
-    // For heavier/more reliable use, host your own PeerServer and set `host`/`port`/`path` here.
-    debug: 1
   });
-
-  receivePeer.on("open", (id) => {
-    setDot("receiverDot", "online");
-    document.getElementById("receiverStatusText").textContent =
-      `✅ রিসিভ করার জন্য প্রস্তুত (ID: ${id})`;
+});
+hostPeer.on('error', (e)=>{
+  sendStatus.textContent = 'সংযোগে সমস্যা হয়েছে, পেজ রিলোড করুন';
+  sendStatus.className = 'status bad';
+});
+hostPeer.on('connection', (conn)=>{
+  sendConn = conn;
+  sendStatus.textContent = 'সংযুক্ত হয়েছে ✓ এখন ফাইল পাঠাতে পারেন';
+  sendStatus.className = 'status good';
+  document.getElementById('fileArea').style.display = 'block';
+  conn.on('close', ()=>{
+    sendStatus.textContent = 'অন্য ডিভাইস সংযোগ বিচ্ছিন্ন করেছে';
+    sendStatus.className = 'status bad';
   });
+});
 
-  receivePeer.on("connection", (conn) => {
-    setDot("receiverDot", "online");
-    document.getElementById("receiverStatusText").textContent = `🔗 সংযুক্ত হয়েছে: ${conn.peer}`;
-    setupIncomingConnection(conn);
-  });
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('click', ()=>fileInput.click());
+dropZone.addEventListener('dragover', e=>{e.preventDefault(); dropZone.classList.add('hover');});
+dropZone.addEventListener('dragleave', ()=>dropZone.classList.remove('hover'));
+dropZone.addEventListener('drop', e=>{
+  e.preventDefault(); dropZone.classList.remove('hover');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e=>handleFiles(e.target.files));
 
-  receivePeer.on("error", (err) => {
-    setDot("receiverDot", "error");
-    document.getElementById("receiverStatusText").textContent = "❌ এরর: " + err.type;
-    btn.disabled = false;
-  });
-
-  receivePeer.on("disconnected", () => {
-    setDot("receiverDot", "warn");
-    document.getElementById("receiverStatusText").textContent = "সংযোগ বিচ্ছিন্ন — পুনরায় চেষ্টা করা হচ্ছে...";
-    receivePeer.reconnect();
-  });
+function handleFiles(fileList){
+  if(!sendConn){ return; }
+  Array.from(fileList).forEach(file=>sendFile(file));
 }
 
-function setupIncomingConnection(conn){
-  conn.on("data", (data) => handleIncomingData(conn, data));
-  conn.on("close", () => {
-    document.getElementById("receiverStatusText").textContent = "রিসিভার প্রস্তুত (সংযোগ বন্ধ হয়েছে, নতুন সংযোগের অপেক্ষায়)";
-  });
-}
+function sendFile(file){
+  const id = 'f'+Date.now()+Math.random().toString(36).slice(2,6);
+  const row = document.createElement('div');
+  row.className = 'filerow';
+  row.innerHTML = `<div style="flex:1;min-width:0;">
+      <div class="name">${escapeHtml(file.name)}</div>
+      <div class="size">${humanSize(file.size)}</div>
+      <div class="bar"><div id="bar-${id}"></div></div>
+    </div>`;
+  document.getElementById('sendList').appendChild(row);
+  const barEl = document.getElementById('bar-'+id);
 
-async function handleIncomingData(conn, data){
-  // Control messages arrive as plain objects; file bytes arrive as ArrayBuffer.
-  if (data && typeof data === "object" && !(data instanceof ArrayBuffer) && data.type){
+  sendConn.send({ type:'meta', id, name:file.name, size:file.size, mime:file.type });
 
-    if (data.type === "meta"){
-      await beginIncomingFile(data);
-      return;
-    }
-
-    if (data.type === "eof"){
-      await finishIncomingFile(data.index);
-      return;
-    }
-
-    return;
-  }
-
-  // Otherwise: raw binary chunk for the "current" file (the most recently opened one).
-  const activeIndex = [...incomingFiles.keys()].pop();
-  if (activeIndex === undefined) return;
-  await writeIncomingChunk(activeIndex, data);
-}
-
-async function beginIncomingFile(meta){
-  const row = document.createElement("div");
-  row.className = "progress-row";
-  row.innerHTML = `
-    <div class="meta-line"><span class="name">📥 ${meta.name} (${meta.index + 1}/${meta.total})</span><span class="pct">0%</span></div>
-    <div class="bar-track"><div class="bar-fill nearby"></div></div>
-  `;
-  document.getElementById("incomingList").appendChild(row);
-
-  const state = {
-    meta,
-    receivedBytes: 0,
-    rowEls: { pct: row.querySelector(".pct"), fill: row.querySelector(".bar-fill") },
-    writable: null,
-    chunks: null,
-    startTime: performance.now()
-  };
-
-  if (saveDirHandle){
-    try{
-      const safeName = meta.name.replace(/[\\/:*?"<>|]/g, "_");
-      const fileHandle = await saveDirHandle.getFileHandle(safeName, { create: true });
-      state.writable = await fileHandle.createWritable();
-    }catch(e){
-      state.writable = null;
-      state.chunks = [];
-    }
-  } else {
-    state.chunks = []; // in-memory fallback (used to build a Blob at the end)
-  }
-
-  incomingFiles.set(meta.index, state);
-}
-
-async function writeIncomingChunk(index, buffer){
-  const state = incomingFiles.get(index);
-  if (!state) return;
-
-  if (state.writable){
-    await state.writable.write(buffer);
-  } else {
-    state.chunks.push(buffer);
-  }
-
-  state.receivedBytes += buffer.byteLength;
-  const pct = Math.min(100, (state.receivedBytes / state.meta.size) * 100);
-  state.rowEls.fill.style.width = pct.toFixed(1) + "%";
-  const elapsed = (performance.now() - state.startTime) / 1000;
-  const speed = elapsed > 0 ? state.receivedBytes / elapsed : 0;
-  state.rowEls.pct.textContent = `${pct.toFixed(0)}% · ${formatSpeed(speed)}`;
-}
-
-async function finishIncomingFile(index){
-  const state = incomingFiles.get(index);
-  if (!state) return;
-
-  state.rowEls.fill.classList.add("done");
-  state.rowEls.fill.style.width = "100%";
-
-  if (state.writable){
-    await state.writable.close();
-    state.rowEls.pct.textContent = "✅ ডিস্কে সেভ হয়েছে";
-  } else {
-    const blob = new Blob(state.chunks, { type: state.meta.mime || "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
-    state.rowEls.pct.innerHTML = `✅ সম্পন্ন — <a href="${url}" download="${state.meta.name}" style="color:var(--nearby); font-weight:700;">Save File</a>`;
-    state.chunks = null; // release references; Blob still holds the data until download
-  }
-
-  incomingFiles.delete(index);
-}
-
-/* ---------------- Sender side ---------------- */
-
-function onNearbyFilesSelected(e){
-  selectedNearbyFiles = Array.from(e.target.files);
-  const list = document.getElementById("nearbyFileList");
-  list.innerHTML = "";
-  selectedNearbyFiles.forEach(f => {
-    const chip = document.createElement("div");
-    chip.className = "file-chip";
-    chip.innerHTML = `<span class="name">📄 ${f.name}</span><span class="size">${formatBytes(f.size)}</span>`;
-    list.appendChild(chip);
-  });
-  document.getElementById("btnDirectSend").disabled = selectedNearbyFiles.length === 0;
-}
-
-function startDirectSend(){
-  if (!selectedNearbyFiles.length) return;
-
-  const statusBox = document.getElementById("senderStatus");
-  statusBox.style.display = "flex";
-  setDot("senderDot", "connecting");
-  document.getElementById("senderStatusText").textContent = `রিসিভার (${FIXED_PEER_ID})-এর সাথে সংযোগ করা হচ্ছে...`;
-  document.getElementById("btnDirectSend").disabled = true;
-
-  sendPeer = new Peer(undefined, { debug: 1 });
-
-  sendPeer.on("open", () => {
-    sendConn = sendPeer.connect(FIXED_PEER_ID, { reliable: true, serialization: "binary" });
-
-    sendConn.on("open", async () => {
-      setDot("senderDot", "online");
-      document.getElementById("senderStatusText").textContent = "✅ সংযুক্ত — পাঠানো শুরু হচ্ছে...";
-      await sendAllFiles();
-    });
-
-    sendConn.on("error", (err) => {
-      setDot("senderDot", "error");
-      document.getElementById("senderStatusText").textContent = "❌ কানেকশন এরর: " + err;
-      document.getElementById("btnDirectSend").disabled = false;
-    });
-  });
-
-  sendPeer.on("error", (err) => {
-    setDot("senderDot", "error");
-    document.getElementById("senderStatusText").textContent =
-      err.type === "peer-unavailable"
-        ? "❌ রিসিভার খুঁজে পাওয়া যায়নি। ঐ ডিভাইসে আগে 'Start Receiving' চালু করুন।"
-        : "❌ এরর: " + err.type;
-    document.getElementById("btnDirectSend").disabled = false;
-  });
-}
-
-async function sendAllFiles(){
-  const listEl = document.getElementById("sendProgressList");
-  listEl.innerHTML = "";
-
-  for (let i = 0; i < selectedNearbyFiles.length; i++){
-    const file = selectedNearbyFiles[i];
-
-    const row = document.createElement("div");
-    row.className = "progress-row";
-    row.innerHTML = `
-      <div class="meta-line"><span class="name">📤 ${file.name} (${i + 1}/${selectedNearbyFiles.length})</span><span class="pct">0%</span></div>
-      <div class="bar-track"><div class="bar-fill nearby"></div></div>
-    `;
-    listEl.appendChild(row);
-    const fill = row.querySelector(".bar-fill");
-    const pctEl = row.querySelector(".pct");
-
-    document.getElementById("senderStatusText").textContent = `পাঠানো হচ্ছে: ${file.name}`;
-    await sendOneFile(file, i, selectedNearbyFiles.length, fill, pctEl);
-  }
-
-  document.getElementById("senderStatusText").textContent = "🎉 সব ফাইল সফলভাবে পাঠানো হয়েছে!";
-  document.getElementById("btnDirectSend").disabled = false;
-}
-
-function waitForBufferedAmountLow(conn){
-  return new Promise(resolve => {
-    const dc = conn.dataChannel;
-    if (!dc || dc.bufferedAmount < MAX_BUFFERED_AMOUNT) return resolve();
-    const check = () => {
-      if (dc.bufferedAmount < MAX_BUFFERED_AMOUNT) resolve();
-      else setTimeout(check, 25);
-    };
-    check();
-  });
-}
-
-async function sendOneFile(file, index, total, fillEl, pctEl){
-  // Announce the file before streaming its bytes.
-  sendConn.send({ type: "meta", name: file.name, size: file.size, mime: file.type, index, total });
-
+  const reader = new FileReader();
   let offset = 0;
-  const startTime = performance.now();
 
-  // Read the file in fixed-size chunks using Blob.slice() + arrayBuffer():
-  // only ONE chunk is ever resident in memory at a time, regardless of file size (up to 5GB+).
-  while (offset < file.size){
-    const slice = file.slice(offset, offset + CHUNK_SIZE);
-    const buffer = await slice.arrayBuffer();
-
-    await waitForBufferedAmountLow(sendConn); // backpressure: don't outrun the data channel
-
-    sendConn.send(buffer);
-    offset += buffer.byteLength;
-
-    const pct = (offset / file.size) * 100;
-    fillEl.style.width = pct.toFixed(1) + "%";
-    const elapsed = (performance.now() - startTime) / 1000;
-    const speed = elapsed > 0 ? offset / elapsed : 0;
-    pctEl.textContent = `${pct.toFixed(0)}% · ${formatSpeed(speed)}`;
+  function readSlice(o){
+    const slice = file.slice(o, o + CHUNK);
+    reader.readAsArrayBuffer(slice);
   }
-
-  sendConn.send({ type: "eof", index });
-  fillEl.classList.add("done");
-  pctEl.textContent = "✅ পাঠানো সম্পন্ন";
+  reader.onload = (e)=>{
+    sendConn.send({ type:'chunk', id, data: e.target.result });
+    offset += e.target.result.byteLength;
+    const pct = Math.min(100, Math.round((offset/file.size)*100));
+    barEl.style.width = pct + '%';
+    if(offset < file.size){
+      readSlice(offset);
+    } else {
+      sendConn.send({ type:'done', id });
+    }
+  };
+  readSlice(0);
 }
 
-/* =========================================================================
-   REMOTE MODE — Supabase Storage (Cloud)
-   ========================================================================= */
+// ---------- RECEIVER ----------
+const recvStatus = document.getElementById('recvStatus');
+const joinInput = document.getElementById('joinCode');
+const joinBtn = document.getElementById('joinBtn');
+let clientPeer = null;
+let recvConn = null;
+let incoming = {};
 
-const supabaseClient = window.supabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
-
-let selectedCloudFiles = [];
-
-function onCloudFilesSelected(e){
-  selectedCloudFiles = Array.from(e.target.files);
-  const list = document.getElementById("cloudFileList");
-  list.innerHTML = "";
-  selectedCloudFiles.forEach(f => {
-    const chip = document.createElement("div");
-    chip.className = "file-chip";
-    chip.innerHTML = `<span class="name">🖼️ ${f.name}</span><span class="size">${formatBytes(f.size)}</span>`;
-    list.appendChild(chip);
-  });
-  document.getElementById("btnUploadCloud").disabled = selectedCloudFiles.length === 0;
+const params = new URLSearchParams(location.search);
+if(params.get('join')){
+  joinInput.value = params.get('join').toUpperCase();
+  document.querySelector('.tab[data-tab="receive"]').click();
 }
 
-async function uploadToCloud(){
-  const folder = document.getElementById("boxNameInput").value.trim();
-  if (!folder){
-    alert("প্রথমে একটি Box/Folder নাম লিখুন।");
-    return;
-  }
-  if (!selectedCloudFiles.length){
-    alert("প্রথমে ফাইল সিলেক্ট করুন।");
-    return;
-  }
+joinBtn.addEventListener('click', ()=>{
+  const code = joinInput.value.trim().toUpperCase();
+  if(code.length < 4){ return; }
+  joinBtn.disabled = true;
+  recvStatus.textContent = 'সংযুক্ত হচ্ছে…';
+  recvStatus.className = 'status';
 
-  const btn = document.getElementById("btnUploadCloud");
-  btn.disabled = true;
-
-  const listEl = document.getElementById("uploadProgressList");
-  listEl.innerHTML = "";
-
-  const rows = selectedCloudFiles.map((file, i) => {
-    const row = document.createElement("div");
-    row.className = "progress-row";
-    row.innerHTML = `
-      <div class="meta-line"><span class="name">☁️ ${file.name}</span><span class="pct">0%</span></div>
-      <div class="bar-track"><div class="bar-fill remote"></div></div>
-    `;
-    listEl.appendChild(row);
-    return { fill: row.querySelector(".bar-fill"), pct: row.querySelector(".pct") };
+  clientPeer = new Peer();
+  clientPeer.on('open', ()=>{
+    recvConn = clientPeer.connect('torongo-' + code, { reliable:true });
+    recvConn.on('open', ()=>{
+      recvStatus.textContent = 'সংযুক্ত হয়েছে ✓ ফাইলের জন্য অপেক্ষা করুন';
+      recvStatus.className = 'status good';
+    });
+    recvConn.on('data', handleData);
+    recvConn.on('close', ()=>{
+      recvStatus.textContent = 'সংযোগ বিচ্ছিন্ন হয়েছে';
+      recvStatus.className = 'status bad';
+    });
+    recvConn.on('error', ()=>{
+      recvStatus.textContent = 'কোড ভুল অথবা সংযোগ ব্যর্থ হয়েছে';
+      recvStatus.className = 'status bad';
+      joinBtn.disabled = false;
+    });
   });
+  clientPeer.on('error', ()=>{
+    recvStatus.textContent = 'সংযোগ ব্যর্থ হয়েছে, আবার চেষ্টা করুন';
+    recvStatus.className = 'status bad';
+    joinBtn.disabled = false;
+  });
+});
 
-  // Upload every file in parallel (Promise.all) for maximum aggregate throughput —
-  // each request runs on its own XHR so real byte-level progress is available.
-  try{
-    await Promise.all(selectedCloudFiles.map((file, i) =>
-      uploadFileWithProgress(file, `${folder}/${file.name}`, (loaded, total) => {
-        const pct = total ? (loaded / total) * 100 : 0;
-        rows[i].fill.style.width = pct.toFixed(1) + "%";
-        rows[i].pct.textContent = pct.toFixed(0) + "%";
-      }).then(() => {
-        rows[i].fill.classList.add("done");
-        rows[i].pct.textContent = "✅ সম্পন্ন";
-      }).catch((err) => {
-        rows[i].fill.classList.add("error");
-        rows[i].pct.textContent = "❌ ব্যর্থ";
-        console.error(err);
-      })
-    ));
-  } finally {
-    btn.disabled = false;
+function handleData(msg){
+  if(msg.type === 'meta'){
+    incoming[msg.id] = { name: msg.name, size: msg.size, mime: msg.mime, chunks: [], received: 0 };
+    const row = document.createElement('div');
+    row.className = 'filerow';
+    row.id = 'row-'+msg.id;
+    row.innerHTML = `<div style="flex:1;min-width:0;">
+        <div class="name">${escapeHtml(msg.name)}</div>
+        <div class="size">${humanSize(msg.size)}</div>
+        <div class="bar"><div id="rbar-${msg.id}"></div></div>
+      </div>`;
+    document.getElementById('recvList').appendChild(row);
+  }
+  else if(msg.type === 'chunk'){
+    const f = incoming[msg.id];
+    if(!f) return;
+    f.chunks.push(msg.data);
+    f.received += msg.data.byteLength;
+    const pct = Math.min(100, Math.round((f.received/f.size)*100));
+    const bar = document.getElementById('rbar-'+msg.id);
+    if(bar) bar.style.width = pct + '%';
+  }
+  else if(msg.type === 'done'){
+    const f = incoming[msg.id];
+    if(!f) return;
+    const blob = new Blob(f.chunks, { type: f.mime || 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = f.name; a.textContent = '⬇ ডাউনলোড করুন';
+    a.style.cssText = 'display:block;text-align:center;margin-top:6px;color:#22D3EE;font-size:13px;text-decoration:none;font-weight:600;';
+    document.getElementById('row-'+msg.id).appendChild(a);
+    a.click();
+    delete incoming[msg.id];
   }
 }
 
-function uploadFileWithProgress(file, path, onProgress){
-  return new Promise((resolve, reject) => {
-    const url = `${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Authorization", `Bearer ${SUPABASE_ANON_KEY}`);
-    xhr.setRequestHeader("apikey", SUPABASE_ANON_KEY);
-    xhr.setRequestHeader("x-upsert", "true"); // overwrite if same name already exists
-    xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) onProgress(e.loaded, e.total);
-    };
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) resolve();
-      else reject(new Error(`Upload failed (${xhr.status}): ${xhr.responseText}`));
-    };
-    xhr.onerror = () => reject(new Error("Network error during upload"));
-    xhr.send(file);
-  });
+function humanSize(bytes){
+  if(bytes < 1024) return bytes + ' B';
+  if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
 }
-
-async function fetchFromCloud(){
-  const folder = document.getElementById("fetchBoxNameInput").value.trim();
-  if (!folder){
-    alert("Box/Folder নাম লিখুন।");
-    return;
-  }
-  if (!supabaseClient){
-    alert("Supabase client লোড হয়নি — ইন্টারনেট সংযোগ চেক করুন।");
-    return;
-  }
-
-  const statusBox = document.getElementById("fetchStatus");
-  statusBox.style.display = "flex";
-  setDot("fetchDot", "connecting");
-  document.getElementById("fetchStatusText").textContent = "ফাইল খোঁজা হচ্ছে...";
-  document.getElementById("fetchResultList").innerHTML = "";
-
-  const { data, error } = await supabaseClient.storage.from(SUPABASE_BUCKET).list(folder, {
-    limit: 200,
-    sortBy: { column: "created_at", order: "desc" }
-  });
-
-  if (error){
-    setDot("fetchDot", "error");
-    document.getElementById("fetchStatusText").textContent = "❌ এরর: " + error.message;
-    return;
-  }
-
-  if (!data || !data.length){
-    setDot("fetchDot", "warn");
-    document.getElementById("fetchStatusText").textContent = "এই নামে কোনো ফাইল পাওয়া যায়নি।";
-    return;
-  }
-
-  setDot("fetchDot", "online");
-  document.getElementById("fetchStatusText").textContent = `✅ ${data.length}টি ফাইল পাওয়া গেছে`;
-
-  const listEl = document.getElementById("fetchResultList");
-  data.forEach(obj => {
-    const path = `${folder}/${obj.name}`;
-    // Bucket must be Public for this to work directly.
-    // For a private bucket, replace with: await supabaseClient.storage.from(SUPABASE_BUCKET).createSignedUrl(path, 3600)
-    const { data: urlData } = supabaseClient.storage.from(SUPABASE_BUCKET).getPublicUrl(path);
-    const size = obj.metadata && obj.metadata.size ? formatBytes(obj.metadata.size) : "";
-
-    const item = document.createElement("div");
-    item.className = "result-item";
-    item.innerHTML = `
-      <div class="info">
-        <span class="fname">${obj.name}</span>
-        <span class="fsize">${size}</span>
-      </div>
-      <a class="dl" href="${urlData.publicUrl}" download="${obj.name}" target="_blank" rel="noopener">Download</a>
-    `;
-    listEl.appendChild(item);
-  });
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 </script>
 </body>
