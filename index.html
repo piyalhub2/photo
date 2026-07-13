@@ -1972,6 +1972,16 @@
         tagProgressFill.style.width = ((idx + 1) / selectedPhotos.length * 100) + '%';
         tagPrevBtn.disabled = idx === 0;
         tagNextBtn.textContent = (idx === selectedPhotos.length - 1) ? 'Upload All ✓' : 'Next →';
+
+        // আগের ছবির face-detection ফলাফল (crop card গুলো) যেন এই নতুন ছবিতে
+        // দেখা না যায় — না হলে আগের ছবির ট্যাগ করা মুখগুলো নতুন ছবিতেও "রয়ে যায়"
+        const faceResultsEl = document.getElementById('faceDetectResults');
+        const faceStatusEl = document.getElementById('faceDetectStatus');
+        const faceBtn = document.getElementById('faceDetectTestBtn');
+        if (faceResultsEl) faceResultsEl.innerHTML = '';
+        if (faceStatusEl) faceStatusEl.textContent = '';
+        if (faceBtn) faceBtn.disabled = false;
+
         renderTagFaces();
     }
 
