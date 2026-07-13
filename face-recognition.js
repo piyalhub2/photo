@@ -1,27 +1,12 @@
-/********************************************************
- * TONIR GALLERY — FACE RECOGNITION
- * ধাপ ২: নাম মনে রাখা ও suggest করা
- *
- * এতদিন: শুধু মুখ খুঁজে বের করে ক্রপ দেখাতো (ধাপ ১)
- * এখন থেকে: প্রতিটা মুখের একটা "সংখ্যার প্যাটার্ন" (descriptor) বানায়,
- * আগে থেকে চেনা মানুষদের সাথে মিলিয়ে নাম suggest করে, আর admin
- * কনফার্ম করলে সেটা মনে রাখার জন্য Google Sheet-এ সেভ করে রাখে —
- * পরের বার আরও ভালো চিনবে।
- *
- * এটা সম্পূর্ণ ব্রাউজারেই চলে (কোনো পেইড API লাগে না), শুধু নাম +
- * সংখ্যার প্যাটার্ন (আসল ছবি না) Sheet-এ সেভ থাকে।
- ********************************************************/
-
 (function () {
     const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
-    const MATCH_THRESHOLD = 0.5; // এর চেয়ে কম distance মানে "সম্ভবত এই মানুষ" — কম রাখলে বেশি strict
+    const MATCH_THRESHOLD = 0.5;
 
     let modelsLoaded = false;
     let modelsLoading = false;
-    let knownFaces = [];        // [{ name, descriptor: Float32Array }]
+    let knownFaces = [];
     let knownFacesLoaded = false;
 
-    // ===== ধাপ ১: মডেল লোড (এখন descriptor বানানোর মডেলও যোগ হলো) =====
     async function ensureModelsLoaded(statusEl) {
         if (modelsLoaded) return true;
         if (modelsLoading) return false;
@@ -45,10 +30,9 @@
         }
     }
 
-    // ===== পরিচিত মুখদের তালিকা backend থেকে আনা (একবারই, পেজ লোড হলে) =====
     async function loadKnownFaces() {
         if (knownFacesLoaded) return;
-        knownFacesLoaded = true; // ব্যর্থ হলেও বারবার চেষ্টা করবে না, নাহলে GET spam হতে পারে
+        knownFacesLoaded = true;
         try {
             const res = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
             const data = await res.json();
@@ -62,7 +46,6 @@
         }
     }
 
-    // ===== নতুন descriptor-কে পরিচিত সবার সাথে মিলিয়ে সবচেয়ে কাছের নাম খোঁজা =====
     function findBestMatch(descriptor) {
         let best = null;
         let bestDist = Infinity;
@@ -79,7 +62,6 @@
         return null;
     }
 
-    // ===== একটা মুখের box থেকে ছোট crop canvas বানানো (আগের মতোই) =====
     function cropFaceToCanvas(imgEl, box) {
         const pad = 0.15;
         const w = box.width;
@@ -98,11 +80,8 @@
         return canvas;
     }
 
-    // ===== একটা ছবিতে থাকা সব মুখ ডিটেক্ট করে + descriptor বানায় =====
     async function detectFacesWithDescriptors(imgEl) {
-        // গ্রুপ ফটোতে অনেকগুলো ছোট/পাশ-ফিরানো মুখ থাকে — inputSize বড় (608) আর
-        // scoreThreshold কম (0.3) রাখলে সেগুলো মিস হওয়ার সম্ভাবনা কমে। একটু স্লো হবে,
-        // কিন্তু গ্রুপ ছবিতে সব মুখ ধরার জন্য এটা জরুরি।
+
         const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.3 });
         return faceapi
             .detectAllFaces(imgEl, options)
@@ -110,21 +89,17 @@
             .withFaceDescriptors();
     }
 
-    // ===== একটা মুখকে নাম দিয়ে কনফার্ম করা হলে: ট্যাগে যোগ + শেখার জন্য মনে রাখা =====
     function confirmFaceWithName(name, descriptor) {
         const idx = addUploadPerson(name);
         if (idx === null) return;
         selectedPhotos[currentTagIdx].tagIdxs.add(idx);
         renderTagFaces();
 
-        // এই ছবিটা যখন সত্যিকারে আপলোড হয়ে যাবে, তখনই descriptor সেভ হবে
-        // (আপলোডের আগেই সেভ করলে, ছবি বাদ দিলেও ভুল ডেটা জমে যেত)
         const photo = selectedPhotos[currentTagIdx];
         photo.pendingFaceLearning = photo.pendingFaceLearning || [];
         photo.pendingFaceLearning.push({ name: name, descriptor: Array.from(descriptor) });
     }
 
-    // ===== একটা মুখের জন্য UI card বানানো (crop + suggestion/manual input) =====
     function buildFaceCard(imgEl, detection) {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:6px; width:110px;';
@@ -138,7 +113,7 @@
         let confirmed = false;
 
         if (match) {
-            const pct = Math.round((1 - match.distance / MATCH_THRESHOLD) * 40 + 60); // মোটামুটি একটা %, শুধু বোঝানোর জন্য
+            const pct = Math.round((1 - match.distance / MATCH_THRESHOLD) * 40 + 60);
             const suggestBox = document.createElement('div');
             suggestBox.style.cssText = 'font-size:11px; text-align:center; color: var(--muted);';
             suggestBox.innerHTML = `সম্ভবত: <b style="color:#3FA8FF;">${match.name}</b> (${pct}%)`;
@@ -180,7 +155,6 @@
         return wrap;
     }
 
-    // ===== যখন কোনো মিল পাওয়া যায়নি, বা admin "না" বলেছে — নিজে নাম টাইপ করার ছোট ইনপুট =====
     function buildManualNameInput(detection) {
         const row = document.createElement('div');
         row.style.cssText = 'display:flex; gap:4px; width:100%;';
@@ -214,7 +188,6 @@
         return row;
     }
 
-    // ===== মূল বাটনে ক্লিক করলে যা হয় =====
     async function runFaceDetectTest() {
         const btn = document.getElementById('faceDetectTestBtn');
         const statusEl = document.getElementById('faceDetectStatus');
@@ -258,7 +231,6 @@
         btn.disabled = false;
     }
 
-    // ===== ছবি সত্যিকারে আপলোড হয়ে গেলে (index.html থেকে ডাকা হয়) — শেখার ডেটা backend-এ পাঠানো =====
     async function onPhotoUploadedForFaceLearning(photo) {
         if (!photo.pendingFaceLearning || photo.pendingFaceLearning.length === 0) return;
         for (const entry of photo.pendingFaceLearning) {
@@ -273,9 +245,7 @@
                     })
                 });
                 const data = await res.json();
-                // সেভ সফল হলে সাথে সাথে মেমোরির knownFaces-এও যোগ করে দেওয়া হচ্ছে,
-                // নাহলে পরের ছবি ট্যাগ করার সময় (একই সেশনে, পেজ রিলোড ছাড়া) এই নতুন মুখটা
-                // suggest হতো না — কারণ loadKnownFaces() শুধু একবারই চলে (knownFacesLoaded flag)
+
                 if (data && data.success) {
                     knownFaces.push({
                         name: entry.name,
@@ -287,7 +257,7 @@
             }
         }
     }
-    // index.html থেকে ডাকার জন্য গ্লোবালি অ্যাক্সেসযোগ্য করে রাখা হলো
+
     window.onPhotoUploadedForFaceLearning = onPhotoUploadedForFaceLearning;
 
     document.addEventListener('DOMContentLoaded', function () {
