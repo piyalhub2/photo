@@ -2463,7 +2463,12 @@
                 return;
             }
             uploadOnePhoto(selectedPhotos[i]).then(res => {
-                if (res && res.success) done++; else failed++;
+                if (res && res.success) {
+                    done++;
+                    if (typeof onPhotoUploadedForFaceLearning === 'function') {
+                        onPhotoUploadedForFaceLearning(selectedPhotos[i]);
+                    }
+                } else failed++;
                 uploadDoneCount.textContent = done + failed;
                 uploadProgressFill.style.width = ((done + failed) / selectedPhotos.length * 100) + '%';
                 next(i + 1);
