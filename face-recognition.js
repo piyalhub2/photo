@@ -259,7 +259,7 @@
         if (!photo.pendingFaceLearning || photo.pendingFaceLearning.length === 0) return;
         for (const entry of photo.pendingFaceLearning) {
             try {
-                await fetch(APPS_SCRIPT_URL, {
+                const res = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
                         password: ADMIN_PASSWORD,
@@ -268,6 +268,16 @@
                         descriptor: entry.descriptor
                     })
                 });
+                const data = await res.json();
+                // সেভ সফল হলে সাথে সাথে মেমোরির knownFaces-এও যোগ করে দেওয়া হচ্ছে,
+                // নাহলে পরের ছবি ট্যাগ করার সময় (একই সেশনে, পেজ রিলোড ছাড়া) এই নতুন মুখটা
+                // suggest হতো না — কারণ loadKnownFaces() শুধু একবারই চলে (knownFacesLoaded flag)
+                if (data && data.success) {
+                    knownFaces.push({
+                        name: entry.name,
+                        descriptor: new Float32Array(entry.descriptor)
+                    });
+                }
             } catch (err) {
                 console.error('Face descriptor save failed:', err);
             }
