@@ -100,7 +100,10 @@
 
     // ===== একটা ছবিতে থাকা সব মুখ ডিটেক্ট করে + descriptor বানায় =====
     async function detectFacesWithDescriptors(imgEl) {
-        const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.5 });
+        // গ্রুপ ফটোতে অনেকগুলো ছোট/পাশ-ফিরানো মুখ থাকে — inputSize বড় (608) আর
+        // scoreThreshold কম (0.3) রাখলে সেগুলো মিস হওয়ার সম্ভাবনা কমে। একটু স্লো হবে,
+        // কিন্তু গ্রুপ ছবিতে সব মুখ ধরার জন্য এটা জরুরি।
+        const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 608, scoreThreshold: 0.3 });
         return faceapi
             .detectAllFaces(imgEl, options)
             .withFaceLandmarks()
