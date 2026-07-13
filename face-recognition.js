@@ -230,14 +230,15 @@
 
         btn.disabled = true;
         resultsEl.innerHTML = '';
-        statusEl.textContent = '';
+        statusEl.textContent = '⏳ প্রসেসিং শুরু হচ্ছে...';
 
         const ok = await ensureModelsLoaded(statusEl);
         if (!ok) { btn.disabled = false; return; }
 
+        statusEl.textContent = '⏳ চেনা মুখগুলো লোড হচ্ছে...';
         await loadKnownFaces();
 
-        statusEl.textContent = 'মুখ খোঁজা হচ্ছে...';
+        statusEl.textContent = '⏳ মুখ খোঁজা হচ্ছে... (গ্রুপ ফটোতে কয়েক সেকেন্ড লাগতে পারে)';
         try {
             const detections = await detectFacesWithDescriptors(imgEl);
 
