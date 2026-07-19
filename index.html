@@ -660,6 +660,7 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
         .wp-action-btn:hover { background: var(--gold); color: #000; }
+        .wp-action-btn.wp-delete:hover { background: #e0453a; color: #fff; }
         .tag-progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .tag-progress-track {
             flex: 1; height: 5px; border-radius: 4px;
@@ -2767,6 +2768,42 @@
             });
         }
 
+        function deleteWorkpicPhoto(fileId, name, itemEl) {
+            const ok = window.confirm('এই ছবিটা ডিলেট করতে চান? (' + (name || '') + ')');
+            if (!ok) return;
+
+            itemEl.style.opacity = '0.4';
+            itemEl.style.pointerEvents = 'none';
+
+            fetch(WORKPIC_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    password: WORKPIC_PASSWORD,
+                    action: 'delete',
+                    fileId: fileId
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res && res.success) {
+                    itemEl.remove();
+                    workpicImages = workpicImages.filter(im => im.id !== fileId);
+                    if (workpicImages.length === 0) {
+                        workpicGallery.innerHTML = '<p class="workpic-gallery-empty">এখনো কোনো ছবি আপলোড হয়নি</p>';
+                    }
+                } else {
+                    itemEl.style.opacity = '1';
+                    itemEl.style.pointerEvents = 'auto';
+                    alert('ডিলেট করা যায়নি: ' + ((res && res.error) || 'Unknown error'));
+                }
+            })
+            .catch(() => {
+                itemEl.style.opacity = '1';
+                itemEl.style.pointerEvents = 'auto';
+                alert('নেটওয়ার্ক সমস্যা, আবার চেষ্টা করুন');
+            });
+        }
+
         function loadWorkpicGallery() {
             workpicGalleryLoading.style.display = 'block';
             workpicGalleryLoading.textContent = 'Loading uploaded photos...';
@@ -2805,6 +2842,7 @@
                             <div class="wp-actions">
                                 <button type="button" class="wp-action-btn wp-dl" title="Download">⬇</button>
                                 <button type="button" class="wp-action-btn wp-share" title="Share">↗</button>
+                                <button type="button" class="wp-action-btn wp-delete" title="Delete">✕</button>
                             </div>
                         `;
                         item.querySelector('a').addEventListener('click', (e) => {
@@ -2820,6 +2858,11 @@
                             e.preventDefault();
                             e.stopPropagation();
                             shareImg(downloadUrl, img.name || 'work-pic.jpg', img.name || 'Work Pic');
+                        });
+                        item.querySelector('.wp-delete').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            deleteWorkpicPhoto(img.id, img.name, item);
                         });
                         workpicGallery.appendChild(item);
                     });
