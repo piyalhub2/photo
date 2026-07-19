@@ -1,1 +1,2702 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tonir Shaik | Official Gallery</title>
 
+    
+    <meta name="description" content="Tonir Shaik's official photo gallery — all photos, albums, and updates in one place. Tonir Shaik | Official Gallery.">
+    <meta name="keywords" content="Tonir Shaik, Tonir Shaik official, Tonir Shaik gallery, Tonir Shaik photos, tonirshaik">
+    <meta name="author" content="Tonir Shaik">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tonirshaik.github.io/tonirshaik/">
+
+    
+    <link rel="icon" type="image/png" sizes="512x512" href="https://tonirshaik.github.io/tonirshaik/web-app-manifest-512x512.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="https://tonirshaik.github.io/tonirshaik/web-app-manifest-512x512.png">
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tonir Shaik | Official Gallery">
+    <meta property="og:description" content="Tonir Shaik's official photo gallery — all photos, albums, and updates in one place.">
+    <meta property="og:url" content="https://tonirshaik.github.io/tonirshaik/">
+    <meta property="og:locale" content="bn_BD">
+    <meta property="og:site_name" content="Tonir Shaik Official Gallery">
+
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Tonir Shaik | Official Gallery">
+    <meta name="twitter:description" content="Tonir Shaik's official photo gallery — all photos, albums, and updates in one place.">
+
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tonir Shaik",
+      "url": "https://tonirshaik.github.io/tonirshaik/",
+      "description": "Tonir Shaik's official photo gallery website.",
+      "mainEntityOfPage": "https://tonirshaik.github.io/tonirshaik/"
+    }
+</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://raw.githubusercontent.com">
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://drive.google.com">
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://script.google.com">
+    <link rel="dns-prefetch" href="https://drive.google.com">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --gold: #3FA8FF;
+            --gold-light: #7FCBFF;
+            --gold-dim: rgba(63,168,255,0.15);
+            --ink: #000000;
+            --surface: #060B14;
+            --card-bg: #0A1220;
+            --muted: rgba(255,255,255,0.38);
+            --border: rgba(63,168,255,0.18);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        button,
+        .nav-links a,
+        .filter-btn,
+        .load-more-btn,
+        .admin-btn,
+        .admin-btn-secondary,
+        .lb-dl,
+        .lb-share,
+        .lb-nav,
+        .lb-close,
+        .mic-btn,
+        .search-clear,
+        .photo-action-btn,
+        .footer-site-link {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.15), 0 0 14px rgba(63,168,255,0.18);
+            transition: box-shadow 0.3s ease, transform 0.25s ease, border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+        }
+        button:hover,
+        .nav-links a:hover,
+        .filter-btn:hover,
+        .filter-btn.active,
+        .load-more-btn:hover,
+        .admin-btn:hover,
+        .admin-btn-secondary:hover,
+        .lb-dl:hover,
+        .lb-share:hover,
+        .lb-nav:hover,
+        .lb-close:hover,
+        .mic-btn:hover,
+        .photo-action-btn:hover,
+        .footer-site-link:hover {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.55), 0 0 22px rgba(63,168,255,0.55), 0 0 46px rgba(63,168,255,0.30);
+            transform: translateY(-2px);
+        }
+
+        .photo-item {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.12), 0 14px 34px rgba(63,168,255,0.10);
+            transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.45s ease;
+        }
+        .photo-item:hover {
+            box-shadow:
+                0 0 0 1px rgba(63,168,255,0.65),
+                0 0 30px 6px rgba(63,168,255,0.55),
+                0 0 70px 14px rgba(63,168,255,0.30),
+                0 22px 40px rgba(0,0,0,0.55);
+            transform: translateY(-8px) scale(1.035);
+            z-index: 2;
+        }
+        .strip-item {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.15), 0 0 24px rgba(63,168,255,0.18);
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+        }
+        .strip-item:hover {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.6), 0 0 34px 8px rgba(63,168,255,0.45);
+            transform: translateY(-6px);
+        }
+
+        .admin-box {
+            box-shadow: 0 0 0 1px rgba(63,168,255,0.15), 0 0 26px rgba(63,168,255,0.12) !important;
+        }
+
+        @keyframes neon-border-run {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .photo-item:hover::before {
+            opacity: 1;
+        }
+        .photo-item::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #3FA8FF, #0040ff, #7FCBFF, #00c3ff, #3FA8FF);
+            background-size: 300% 300%;
+            animation: neon-border-run 2.5s linear infinite;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .photo-item:hover::before { opacity: 1; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 10, 22, 0.72);
+            backdrop-filter: blur(10px) saturate(1.3);
+            -webkit-backdrop-filter: blur(10px) saturate(1.3);
+            border-bottom: 1px solid rgba(63,168,255,0.18);
+            box-shadow: 0 4px 30px rgba(63,168,255,0.08), 0 1px 0 rgba(63,168,255,0.15);
+        }
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px; font-weight: 600; color: #fff;
+            text-decoration: none;
+        }
+        .nav-logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a {
+            font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--muted); text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--gold); }
+
+        .chase-wrap { position: relative; display: inline-block; }
+        .nav-chase-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border: 1px solid rgba(63,168,255,0.3);
+            border-radius: 4px;
+        }
+
+        .nav-shine-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 18px;
+            border: 1px solid rgba(63,168,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .nav-premium {
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            backdrop-filter: blur(6px);
+            background: linear-gradient(160deg, rgba(63,168,255,0.14), rgba(10,18,32,0.55) 60%);
+            overflow: hidden;
+        }
+        .nav-premium .pl {
+            display: inline-block;
+            color: #ffd76a;
+            text-shadow: 0 0 8px rgba(255,215,110,0.6);
+        }
+        .nav-premium:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .section-header { text-align: center; padding: 40px 20px 28px; }
+        .section-eyebrow {
+            font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 5vw, 56px); font-weight: 300;
+            color: #fff; line-height: 1.1;
+        }
+        .section-title em { font-style: italic; color: var(--gold-light); }
+        .section-rule {
+            width: 48px; height: 1px;
+            background: var(--gold); opacity: 0.4;
+            margin: 20px auto 0;
+        }
+
+        .search-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 0 20px 32px;
+        }
+        .search-bar {
+            position: relative;
+            overflow: hidden;
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; max-width: 480px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 10px 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            animation: searchBarGlow 3.2s ease-in-out infinite;
+        }
+        .search-icon, .search-input, .search-clear, .mic-btn {
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes searchBarGlow {
+            0%, 100% {
+                border-color: rgba(63,168,255,0.18);
+                box-shadow: 0 0 0 1px rgba(63,168,255,0.10), 0 0 8px rgba(63,168,255,0.08);
+            }
+            50% {
+                border-color: rgba(63,168,255,0.75);
+                box-shadow:
+                    0 0 0 1px rgba(63,168,255,0.65),
+                    0 0 24px 4px rgba(63,168,255,0.5),
+                    0 0 55px 10px rgba(63,168,255,0.28);
+            }
+        }
+        .search-bar:focus-within {
+            animation-play-state: paused;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-dim);
+        }
+        .search-icon { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+        .search-input {
+            flex: 1; background: none; border: none; outline: none;
+            color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 14px; letter-spacing: 0.01em;
+            min-width: 0;
+        }
+        .search-input::placeholder { color: var(--muted); }
+        .search-clear {
+            background: none; border: none; color: var(--muted);
+            font-size: 18px; cursor: pointer; line-height: 1;
+            padding: 0 2px; flex-shrink: 0; transition: color 0.2s;
+        }
+        .search-clear:hover { color: var(--gold); }
+        .mic-btn {
+            position: relative;
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--gold-dim); border: 1px solid var(--border);
+            color: var(--gold); cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .mic-btn::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 260deg,
+                rgba(140,225,255,0.95) 300deg,
+                var(--gold) 330deg,
+                transparent 360deg
+            );
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 2px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 2px));
+            filter: blur(1.5px) drop-shadow(0 0 6px rgba(63,168,255,0.65));
+            animation: micRingSpin 2.4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes micRingSpin {
+            to { transform: rotate(360deg); }
+        }
+        .mic-btn svg { width: 15px; height: 15px; position: relative; z-index: 1; }
+        .mic-btn:hover { border-color: var(--gold); }
+        .mic-btn.listening {
+            background: var(--gold); color: #000;
+            animation: micPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(63,168,255,0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(63,168,255,0); }
+        }
+        .lang-toggle-btn {
+            font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700;
+            letter-spacing: 0.03em; color: var(--gold); flex-shrink: 0;
+            background: var(--gold-dim); border: 1px solid var(--border);
+            border-radius: 7px; padding: 5px 9px; cursor: pointer; line-height: 1;
+            min-width: 30px; text-align: center;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .lang-toggle-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+        .lang-toggle-btn.en { background: var(--gold); color: #000; }
+        .search-status {
+            margin-top: 10px; font-size: 11px; letter-spacing: 0.08em;
+            color: var(--muted); min-height: 14px; text-align: center;
+        }
+        .search-status.active { color: var(--gold); }
+
+        .filters {
+            display: flex; justify-content: center; flex-wrap: wrap;
+            gap: 14px; padding: 0 20px 48px;
+        }
+        .filter-btn {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+            padding: 11px 26px; border-radius: 8px;
+            border: 1px solid rgba(63,168,255,0.35);
+            background: rgba(10,18,32,0.55);
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: color 0.35s ease, border-color 0.35s ease,
+                        transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                        box-shadow 0.35s ease, background 0.35s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            -webkit-tap-highlight-color: transparent;
+        }
+        @property --sweep-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            padding: 1px;
+            border-radius: inherit;
+            background: conic-gradient(from var(--sweep-angle, 0deg),
+                transparent 0%, rgba(127,203,255,0.9) 8%, transparent 20%);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: 1;
+            pointer-events: none;
+            animation: sweepAngle 3.2s linear infinite paused;
+        }
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: -60%;
+            width: 40%;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.22), transparent);
+            transform: skewX(-18deg);
+            transition: left 0.7s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .filter-btn span { position: relative; z-index: 2; }
+        @keyframes sweepAngle {
+            to { --sweep-angle: 360deg; }
+        }
+        .filter-btn:hover {
+            background: rgba(63,168,255,0.14);
+            border-color: rgba(127,203,255,0.7);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35), 0 0 16px rgba(63,168,255,0.25);
+        }
+        .filter-btn:hover::after { left: 130%; }
+        .filter-btn:hover::before { opacity: 1; animation-play-state: running; }
+        .filter-btn:active {
+            transform: translateY(-1px) scale(0.97);
+        }
+        .filter-btn.active {
+            background: rgba(63,168,255,0.16);
+            border-color: var(--gold);
+            color: var(--gold-light);
+            box-shadow:
+                0 0 0 1px rgba(63,168,255,0.25) inset,
+                0 0 14px rgba(63,168,255,0.45),
+                0 0 34px rgba(63,168,255,0.22),
+                0 6px 20px rgba(0,0,0,0.35);
+        }
+        .filter-btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(127,203,255,0.25) 55%, transparent 75%);
+            transform: scale(0);
+            animation: rippleOut 0.6s ease-out forwards;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes rippleOut {
+            to { transform: scale(1); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .filter-btn, .filter-btn::before, .filter-btn::after, .filter-btn.active {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        .gallery-section { padding: 0 24px 80px; max-width: 1400px; margin: 0 auto; }
+
+        .masonry {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 1100px) { .masonry { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 700px) { .masonry { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 400px) { .masonry { grid-template-columns: 1fr; } }
+
+        .photo-item {
+            position: relative; border-radius: 4px; overflow: hidden;
+            cursor: pointer;
+
+            aspect-ratio: 3 / 4;
+        }
+        .photo-item img {
+            width: 100%; height: 100%; display: block;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        .photo-item:hover img { transform: scale(1.04); }
+        .photo-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+            opacity: 0; transition: opacity 0.3s;
+            display: flex; align-items: flex-end; padding: 16px;
+        }
+        .photo-item:hover .photo-overlay { opacity: 1; }
+        .photo-meta { flex: 1; min-width: 0; margin-right: 10px; }
+        .photo-tag {
+            font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 4px;
+        }
+        .photo-title {
+            font-size: 13px; font-weight: 400; color: #fff;
+            overflow-wrap: anywhere; word-break: break-word;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden; line-height: 1.35;
+        }
+        .photo-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .photo-action-btn {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer; font-size: 14px;
+            transition: all 0.2s;
+        }
+        .photo-action-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        .delete-btn { display: none; }
+        body.admin-mode .delete-btn { display: flex; }
+        .delete-btn:hover { background: #c0392b !important; color: #fff !important; border-color: #c0392b !important; }
+        .edit-tag-btn { display: none; }
+        body.admin-mode .edit-tag-btn { display: flex; }
+        .edit-tag-btn:hover { background: #3FA8FF !important; color: #fff !important; border-color: #3FA8FF !important; }
+
+        .load-more-wrap {
+            display: flex; justify-content: center;
+            margin-top: 40px;
+        }
+        .load-more-btn {
+            font-size: 12px; font-weight: 500;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold); background: transparent;
+            border: 1px solid var(--border);
+            padding: 14px 40px; border-radius: 2px;
+            cursor: pointer; transition: background 0.3s, color 0.3s;
+        }
+        .load-more-btn:hover { background: var(--gold); color: #000; }
+        .load-more-count {
+            display: block; margin-top: 10px;
+            text-align: center;
+            font-size: 11px; color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .featured-strip {
+            padding: 80px 0; overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 80px;
+        }
+        .strip-track {
+            display: flex; gap: 24px;
+            animation: marquee 30s linear infinite;
+            width: max-content;
+        }
+        .strip-track:hover { animation-play-state: paused; }
+        .strip-item {
+            width: 280px; height: 380px; flex-shrink: 0;
+            border-radius: 4px; overflow: hidden; position: relative;
+        }
+        .strip-item img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .admin-overlay {
+            display: none; position: fixed; inset: 0; z-index: 500;
+            background: rgba(2,6,16,0.92); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .admin-overlay.open { display: flex; }
+        .admin-box {
+            background: rgba(8, 16, 32, 0.75);
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            border: 1px solid rgba(63,168,255,0.25);
+            border-radius: 16px; padding: 28px; width: 100%; max-width: 360px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(63,168,255,0.15), 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .admin-box h4 {
+            font-family: 'Cormorant Garamond', serif; color: #fff;
+            font-size: 20px; margin-bottom: 16px; text-align: center;
+        }
+        .admin-close {
+            position: absolute; top: 12px; right: 14px;
+            background: none; border: none; color: var(--muted);
+            font-size: 20px; cursor: pointer;
+        }
+        .admin-input {
+            width: 100%; background: var(--ink); border: 1px solid var(--border);
+            color: #fff; padding: 10px 12px; border-radius: 6px;
+            font-size: 13px; margin-bottom: 12px; font-family: inherit;
+        }
+        .pw-field-wrap { position: relative; margin-bottom: 12px; overflow: hidden; border-radius: 6px; height: 40px; }
+        .pw-field-wrap .admin-input {
+            margin-bottom: 0; padding-right: 40px; height: 100%;
+            box-sizing: border-box; display: block;
+        }
+        .pw-eye-btn {
+            position: absolute; right: 4px; top: 0; bottom: 0; margin: auto 0;
+            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+            background: none; border: none; outline: none; box-shadow: none;
+            cursor: pointer; font-size: 16px;
+            color: var(--muted); padding: 0; line-height: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pw-eye-btn:hover { color: var(--gold); }
+        .pw-eye-btn:focus,
+        .pw-eye-btn:focus-visible,
+        .pw-eye-btn:active { outline: none; box-shadow: none; border: none; }
+        .admin-btn {
+            width: 100%; background: linear-gradient(to right, var(--gold), var(--gold-light));
+            color: #000; font-weight: 600; border: none; border-radius: 6px;
+            padding: 11px; font-size: 13px; cursor: pointer; letter-spacing: 0.04em;
+            transition: opacity 0.2s;
+        }
+        .admin-btn:hover { opacity: 0.85; }
+        .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        #adminUnlockBtn { display: none; }
+        .admin-msg {
+            text-align: center; font-size: 12px; margin-top: 10px;
+            min-height: 16px; letter-spacing: 0.03em;
+        }
+        .admin-msg.err { color: #e07a6b; }
+        .admin-msg.ok { color: var(--gold-light); }
+        .admin-preview {
+            width: 100%; max-height: 140px; object-fit: contain;
+            border-radius: 6px; margin-bottom: 12px; display: none;
+        }
+
+        .admin-box-wide { max-width: 440px; }
+        .upload-thumbs {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+            margin-bottom: 14px; max-height: 220px; overflow-y: auto;
+        }
+        .upload-thumb { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; }
+        .upload-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .upload-thumb .thumb-remove {
+            position: absolute; top: 2px; right: 2px;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: rgba(0,0,0,0.7); color: #fff; border: none;
+            font-size: 11px; line-height: 1; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .upload-thumb .thumb-remove:hover { background: #c0392b; }
+        .tag-progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .tag-progress-track {
+            flex: 1; height: 5px; border-radius: 4px;
+            background: rgba(255,255,255,0.08); overflow: hidden;
+        }
+        .tag-progress-fill {
+            height: 100%; background: linear-gradient(to right, var(--gold), var(--gold-light));
+            transition: width 0.25s; width: 0%;
+        }
+        .tag-progress-text { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+        .tag-faces-list {
+            display: flex; flex-direction: column; gap: 8px;
+            max-height: 170px; overflow-y: auto; margin-bottom: 12px;
+        }
+        .tag-face-check {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 9px 12px; border-radius: 6px;
+            border: 1px solid var(--border); background: var(--ink);
+            font-size: 13px; color: #fff;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .tag-face-check input { accent-color: #3FA8FF; width: 15px; height: 15px; flex-shrink: 0; }
+        .tag-face-check.checked { border-color: var(--gold); background: var(--gold-dim); }
+        .tag-faces-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 10px 0; }
+        .tag-face-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tag-face-edit-btn {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            font-size: 13px; padding: 4px 6px; flex-shrink: 0; line-height: 1;
+            transition: color 0.2s;
+        }
+        .tag-face-edit-btn:hover { color: var(--gold); }
+        .tag-face-delete-btn {
+            background: none; border: none; color: var(--muted); cursor: pointer;
+            font-size: 13px; padding: 4px 6px; flex-shrink: 0; line-height: 1;
+            transition: color 0.2s;
+        }
+        .tag-face-delete-btn:hover { color: #e07a6b; }
+        .tag-face-rename-row { display: flex; align-items: center; gap: 6px; flex: 1; }
+        .tag-face-rename-input {
+            flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--gold);
+            border-radius: 4px; color: #fff; font-size: 13px; padding: 5px 8px; outline: none;
+            min-width: 0;
+        }
+        .tag-face-rename-save, .tag-face-rename-cancel {
+            background: none; border: none; cursor: pointer; font-size: 14px;
+            padding: 4px 6px; flex-shrink: 0;
+        }
+        .tag-face-rename-save { color: #3FA8FF; }
+        .tag-face-rename-cancel { color: var(--muted); }
+        .tag-face-rename-save:hover { color: var(--gold); }
+        .tag-face-rename-cancel:hover { color: #fff; }
+        .tag-quickadd-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .tag-quickadd-row .admin-input { margin-bottom: 0; flex: 1; }
+        .tag-nav-row { display: flex; gap: 10px; }
+        .admin-btn-secondary {
+            background: transparent; color: var(--gold);
+            border: 1px solid var(--border);
+        }
+        .admin-btn-secondary:hover { background: var(--gold-dim); opacity: 1; }
+        .admin-btn-sm { width: auto; padding: 10px 16px; white-space: nowrap; }
+
+        .stats-row {
+            display: flex; justify-content: center; gap: 40px;
+            padding: 8px 20px 24px; flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px; font-weight: 300; color: var(--gold-light);
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--muted); margin-top: 4px;
+        }
+
+        .lightbox {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.95);
+            align-items: center; justify-content: center;
+        }
+        .lightbox.open { display: flex; }
+        .lb-inner {
+            position: relative; max-width: 90vw; max-height: 90vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .lb-inner img {
+            max-width: 100%; max-height: 80vh;
+            border-radius: 4px; box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+        }
+        .lb-meta {
+            margin-top: 16px; display: flex; align-items: center; gap: 20px;
+        }
+        .lb-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #fff; }
+        .lb-close {
+            position: fixed; top: 24px; right: 32px;
+            font-size: 28px; color: var(--muted); cursor: pointer;
+            line-height: 1; transition: color 0.2s; background: none; border: none;
+        }
+        .lb-close:hover { color: var(--gold); }
+        .lb-nav {
+            position: fixed; top: 50%; transform: translateY(-50%);
+            font-size: 32px; color: var(--muted); cursor: pointer;
+            background: none; border: none; transition: color 0.2s;
+            padding: 16px;
+        }
+        .lb-nav:hover { color: var(--gold); }
+        .lb-prev { left: 20px; }
+        .lb-next { right: 20px; }
+        .lb-counter {
+            font-size: 11px; letter-spacing: 0.15em; color: var(--muted);
+        }
+        .lb-dl {
+            font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border: 1px solid var(--border); padding: 8px 18px; border-radius: 3px;
+            background: none; cursor: pointer; transition: background 0.2s, color 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .lb-dl:hover { background: var(--gold); color: #000; }
+        .lb-share {
+            font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border: 1px solid var(--border); padding: 8px 18px; border-radius: 3px;
+            background: none; cursor: pointer; transition: background 0.2s, color 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .lb-share:hover { background: var(--gold); color: #000; }
+
+        footer {
+            padding: 48px 40px;
+            border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 22px;
+        }
+        .footer-bottom-row {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 20px;
+        }
+        .footer-social-row {
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
+        }
+        .footer-social-row a {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; text-decoration: none;
+            transition: border-color 0.2s, color 0.2s, transform 0.2s;
+        }
+        .footer-social-row a:hover {
+            border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px);
+        }
+        .intro-about {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; line-height: 1.9; color: var(--muted);
+            text-align: center; max-width: 640px; margin: 48px auto 60px;
+            padding: 0 24px; position: relative; z-index: 2;
+        }
+        .intro-about strong { color: var(--gold-light); font-weight: 500; }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px; font-weight: 300; color: #fff;
+        }
+        .footer-logo span { color: var(--gold); }
+        .footer-copy { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+        .footer-site-link {
+            font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--gold); text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2px; transition: border-color 0.2s;
+        }
+        .footer-site-link:hover { border-color: var(--gold); }
+
+        .loading-state {
+            text-align: center; padding: 80px 20px;
+            color: var(--muted); font-size: 12px; letter-spacing: 0.15em;
+        }
+        .loading-spinner {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 1px solid var(--border);
+            border-top-color: var(--gold);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible { opacity: 1; transform: none; }
+
+        @media (max-width: 600px) {
+            nav { padding: 14px 16px; }
+            .nav-links { gap: 12px; }
+            .nav-links a { font-size: 9px; letter-spacing: 0.08em; }
+            footer { flex-direction: column; text-align: center; }
+        }
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="#" class="nav-logo">Tonir <span>Shaik</span></a>
+    <ul class="nav-links">
+        <li class="chase-wrap"><a href="#" id="navGalleryLink" class="nav-chase-btn nav-premium"><span class="pl">U</span><span class="pl">p</span><span class="pl">l</span><span class="pl">o</span><span class="pl">a</span><span class="pl">d</span></a>
+        </li>
+        <li><a href="#" id="navWorkPicLink" class="nav-shine-btn">Work Pic</a></li>
+        <li><a href="https://tonirshaik.github.io/tonirshaik_web/" target="_blank" class="nav-shine-btn">Official Site</a></li>
+    </ul>
+</nav>
+
+<section id="gallery">
+    <div class="section-header reveal">
+        <p class="section-eyebrow">Portfolio</p>
+        <h2 class="section-title">Photo <em>Gallery</em></h2>
+        <div class="section-rule"></div>
+    </div>
+
+    <div class="stats-row reveal">
+        <div class="stat">
+            <div class="stat-num" id="photoCount">—</div>
+            <div class="stat-label">Photos</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">Collection</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Memories</div>
+        </div>
+    </div>
+
+    <div class="search-wrap reveal">
+        <div class="search-bar">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="Search by name…"
+                   autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="searchClear" title="Clear" style="display:none;">×</button>
+            <button class="lang-toggle-btn" id="langToggleBtn" type="button" data-lang="bn-BD" title="ভাষা পরিবর্তন করতে ক্লিক করো">বাং</button>
+            <button class="mic-btn" id="micBtn" title="Voice search">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M19 11a7 7 0 0 1-14 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M12 18v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <p class="search-status" id="searchStatus"></p>
+    </div>
+
+    <div class="filters reveal">
+        <button class="filter-btn active" data-filter="all"><span>All</span></button>
+        <button class="filter-btn" data-filter="single"><span>Single</span></button>
+        <button class="filter-btn" data-filter="dual"><span>Dual</span></button>
+        <button class="filter-btn" data-filter="group"><span>Group</span></button>
+    </div>
+
+    <div class="gallery-section">
+        <div class="loading-state" id="loadingState">
+            <div class="loading-spinner"></div>
+            Loading gallery…
+        </div>
+        <div class="masonry" id="masonry" style="display:none;"></div>
+
+        <div class="load-more-wrap reveal" id="loadMoreWrap" style="display:none;">
+            <div style="text-align:center;">
+                <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+                <span class="load-more-count" id="loadMoreCount"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="featured-strip" id="stripSection" style="display:none;">
+    <div class="strip-track" id="stripTrack"></div>
+</div>
+
+<p class="intro-about">
+    This gallery is curated and maintained by <strong>Tonir Shaik</strong>, who captures and preserves every
+    moment featured here with care and precision. Behind every photo you see is
+    <strong>Tonir Shaik</strong>'s eye for detail, ensuring the collection stays organized, authentic, and
+    easy to explore. From casual snapshots to carefully chosen favorites, <strong>Tonir Shaik</strong> continues
+    to build this space as a lasting, professional archive of memories.
+</p>
+
+<footer>
+    <div class="footer-social-row">
+        <a href="https://www.facebook.com/tonirshaik/" title="Facebook" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/tonirshaik/" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/tonirshaik/" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://github.com/tonirshaik" title="GitHub" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
+        <a href="https://api.whatsapp.com/send?phone=8801887185251&text=" title="WhatsApp" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="http://t.me/tonirshaik" title="Telegram" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://www.tiktok.com/@tonirshaik" title="TikTok" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://maps.app.goo.gl/xoBB5bubmN75boUv7" title="Google Maps" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-location-dot"></i></a>
+        <a href="https://profile.imo.im/profileshare/shr.AAAAAAAAAAAAAAAAAAAAAMtJ6xMJsaUoPavNx19yv99HoE-vnyCFNdplyDa5qYK7" title="imo" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-comment-dots"></i></a>
+        <a href="https://www.youtube.com/@tonirshaik" title="YouTube" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://www.pinterest.com/tonirshaik/_profile/" title="Pinterest" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-pinterest-p"></i></a>
+        <a href="https://x.com/tonirshaik" title="X" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
+    </div>
+    <div class="footer-bottom-row">
+        <div>
+            <div class="footer-logo">Tonir <span>Shaik</span></div>
+            <div class="footer-copy" style="margin-top:8px;">© 2026 Tonir Shaik. All Rights Reserved.</div>
+        </div>
+        <a href="https://tonirshaik.github.io/tonirshaik_web/" target="_blank" class="footer-site-link">
+            Visit Official Site →
+        </a>
+    </div>
+</footer>
+
+<div class="admin-overlay" id="adminLockOverlay">
+    <div class="admin-box">
+        <button class="admin-close" id="adminLockClose">×</button>
+        <h4>🔒 Admin Access</h4>
+        <div class="pw-field-wrap">
+            <input type="password" class="admin-input" id="adminPasswordInput" placeholder="Enter password" autocomplete="off">
+            <button type="button" class="pw-eye-btn" id="pwEyeBtn" aria-label="Show password" tabindex="-1">
+                <svg id="pwEyeIconOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg id="pwEyeIconClosed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 4.22-5.94M9.9 4.24A9.6 9.6 0 0 1 12 4c7 0 11 8 11 8a20.4 20.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+        </div>
+        <button class="admin-btn" id="adminUnlockBtn">Unlock</button>
+        <p class="admin-msg err" id="adminLockMsg"></p>
+    </div>
+</div>
+
+
+<div class="admin-overlay" id="adminUploadOverlay">
+    <div class="admin-box admin-box-wide" id="adminUploadBox">
+        <button class="admin-close" id="adminUploadClose">×</button>
+
+        
+        <div id="uploadStepPick">
+            <h4>📤 Upload New Photos</h4>
+            <input type="file" class="admin-input" id="adminFileInput" accept="image/*" multiple>
+            <div class="upload-thumbs" id="uploadThumbs"></div>
+            <button class="admin-btn" id="adminStartTagBtn" disabled>Start Tagging →</button>
+            <p class="admin-msg" id="adminPickMsg"></p>
+        </div>
+
+        
+        <div id="uploadStepTag" style="display:none;">
+            <div class="tag-progress-wrap">
+                <div class="tag-progress-track"><div class="tag-progress-fill" id="tagProgressFill"></div></div>
+                <div class="tag-progress-text"><span id="tagPhotoNum">1</span>/<span id="tagPhotoTotal">1</span></div>
+            </div>
+            <img class="admin-preview" id="tagPreviewImg" alt="preview" style="display:block;">
+            <div style="display:flex; align-items:center; gap:10px; margin: 10px 0;">
+                <button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" id="faceDetectTestBtn" style="flex-shrink:0;">🔎 মুখ খুঁজে দেখাও (টেস্ট)</button>
+                <span id="faceDetectStatus" style="font-size:12px; color: var(--muted);"></span>
+            </div>
+            <div id="faceDetectResults" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 10px;"></div>
+            <div class="tag-faces-list" id="tagFacesList"></div>
+            <div class="tag-quickadd-row">
+                <input type="text" class="admin-input" id="tagQuickAddInput" placeholder="Who's in this photo? Type a name...">
+                <button class="admin-btn admin-btn-sm" id="tagQuickAddBtn">+ Add</button>
+            </div>
+            <div class="tag-nav-row">
+                <button class="admin-btn admin-btn-secondary" id="tagPrevBtn">← Previous</button>
+                <button class="admin-btn" id="tagNextBtn">Next →</button>
+            </div>
+        </div>
+
+        
+        <div id="uploadStepUploading" style="display:none;">
+            <h4>📤 Uploading...</h4>
+            <div class="tag-progress-wrap">
+                <div class="tag-progress-track"><div class="tag-progress-fill" id="uploadProgressFill"></div></div>
+                <div class="tag-progress-text"><span id="uploadDoneCount">0</span>/<span id="uploadTotalCount">0</span></div>
+            </div>
+            <p class="admin-msg" id="adminUploadMsg"></p>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="admin-overlay" id="adminEditTagOverlay">
+    <div class="admin-box admin-box-wide" id="adminEditTagBox">
+        <button class="admin-close" id="adminEditTagClose">×</button>
+        <h4>✎ Edit Tags <span id="editTagProgressText" style="font-size:12px; color:var(--muted); font-weight:normal;"></span></h4>
+        <img class="admin-preview" id="editTagPreviewImg" alt="preview" style="display:block;">
+        <div class="tag-faces-list" id="editTagFacesList"></div>
+        <div class="tag-quickadd-row">
+            <input type="text" class="admin-input" id="editTagQuickAddInput" placeholder="Who's in this photo? Type a name...">
+            <button class="admin-btn admin-btn-sm" id="editTagQuickAddBtn">+ Add</button>
+        </div>
+        <div class="tag-nav-row">
+            <button class="admin-btn admin-btn-secondary" id="editTagPrevBtn">← Previous</button>
+            <button class="admin-btn admin-btn-secondary" id="editTagNextBtn">Next →</button>
+        </div>
+        <button class="admin-btn" id="editTagSaveBtn" style="margin-top:10px; width:100%;">Save ✓</button>
+        <p class="admin-msg" id="editTagMsg"></p>
+    </div>
+</div>
+
+<div class="admin-overlay" id="workpicLockOverlay">
+    <div class="admin-box">
+        <button class="admin-close" id="workpicLockClose">×</button>
+        <h4>🔒 Work Pic Access</h4>
+        <div class="pw-field-wrap">
+            <input type="password" class="admin-input" id="workpicPasswordInput" placeholder="Enter password" autocomplete="off">
+            <button type="button" class="pw-eye-btn" id="workpicPwEyeBtn" aria-label="Show password" tabindex="-1">
+                <svg id="workpicPwEyeIconOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg id="workpicPwEyeIconClosed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 4.22-5.94M9.9 4.24A9.6 9.6 0 0 1 12 4c7 0 11 8 11 8a20.4 20.4 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+        </div>
+        <button class="admin-btn" id="workpicUnlockBtn">Unlock</button>
+        <p class="admin-msg err" id="workpicLockMsg"></p>
+    </div>
+</div>
+
+<div class="admin-overlay" id="workpicUploadOverlay">
+    <div class="admin-box admin-box-wide" id="workpicUploadBox">
+        <button class="admin-close" id="workpicUploadClose">×</button>
+        <h4>📤 Upload Work Pic</h4>
+        <input type="file" class="admin-input" id="workpicFileInput" accept="image/*" multiple>
+        <div class="upload-thumbs" id="workpicThumbs"></div>
+        <button class="admin-btn" id="workpicSendBtn" disabled>Upload →</button>
+        <div class="tag-progress-wrap" id="workpicProgressWrap" style="display:none; margin-top:14px;">
+            <div class="tag-progress-track"><div class="tag-progress-fill" id="workpicProgressFill"></div></div>
+            <div class="tag-progress-text"><span id="workpicDoneCount">0</span>/<span id="workpicTotalCount">0</span></div>
+        </div>
+        <p class="admin-msg" id="workpicMsg"></p>
+    </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+    <button class="lb-nav lb-next" id="lbNext">›</button>
+    <div class="lb-inner">
+        <img id="lbImg" src="" alt="">
+        <div class="lb-meta">
+            <span class="lb-title" id="lbTitle"></span>
+            <span class="lb-counter" id="lbCounter"></span>
+            <button class="lb-dl" id="lbDl">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M5 20h14"/></svg>
+                <span>Download</span>
+            </button>
+            <button class="lb-share" id="lbShare">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="18.5" r="2.4"/><path d="M8.2 10.6l7.5-4.1"/><path d="M8.2 13.4l7.5 4.1"/></svg>
+                <span>Share</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CATEGORY_LABELS = { single: 'Single', dual: 'Dual', group: 'Group' };
+    const PAGE_SIZE = 16;
+
+    let allPhotos = [];
+    let currentList = [];
+    let visibleCount = 0;
+    let currentIdx = 0;
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    const csvUrl = 'https://raw.githubusercontent.com/tonirshaik/tonirshaik/refs/heads/main/Tonir%20photo%20Link.txt';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLRiJ9ueiqnc7kYc188HTg41wJNF3W1eighA2WA7xq9nUfMTJflzefxdXsrjIHOgXiLw/exec';
+    const ADMIN_PASSWORD = 'uplo@d2002';
+
+    
+    const WORKPIC_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyaP3hpU471aMaRTHaJo5yG5MqG4EyaR8U4Yo1pyrmU-YleGRXfwOMpac8QXyNx5u1Mlw/exec';
+    const WORKPIC_PASSWORD = 'work2002';
+
+    function getDriveFileId(url) {
+        let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (m) return m[1];
+        m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (m) return m[1];
+        return null;
+    }
+
+    function isGoogleDriveUrl(url) {
+        return /drive\.google\.com/.test(url);
+    }
+
+    function toRenderableUrl(url, size) {
+        if (isGoogleDriveUrl(url)) {
+            const id = getDriveFileId(url);
+            if (id) {
+                return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w' + (size || 1000);
+            }
+        }
+        return url;
+    }
+
+    function toDownloadUrl(url) {
+        if (isGoogleDriveUrl(url)) {
+            const id = getDriveFileId(url);
+            if (id) {
+                return 'https://drive.google.com/uc?export=download&id=' + id;
+            }
+        }
+        return url;
+    }
+
+    const SECTION_SEARCH_WORDS = {
+        single: ['single', 'একজন'],
+        dual: ['dual', 'couple', 'দুইজন', 'কাপল'],
+        group: ['group', 'দলগত', 'গ্রুপ']
+    };
+
+    function parsePhotoFile(text) {
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const photos = [];
+        let currentCat = 'uncategorized';
+
+        lines.forEach(line => {
+            const headerMatch = line.match(/^#\s*(single|dual|group)\b/i);
+            if (headerMatch) {
+                currentCat = headerMatch[1].toLowerCase();
+                return;
+            }
+            if (line.startsWith('http')) {
+                const commaIdx = line.indexOf(',');
+                const url = (commaIdx === -1 ? line : line.slice(0, commaIdx)).trim();
+                const namesRaw = commaIdx === -1 ? '' : line.slice(commaIdx + 1).trim();
+
+                const idx = photos.length;
+                const sectionWords = SECTION_SEARCH_WORDS[currentCat] || [];
+                const searchIndex = [namesRaw, ...sectionWords]
+                    .join(' ')
+                    .toLowerCase();
+
+                photos.push({
+                    url: toRenderableUrl(url, 1000),
+                    rawUrl: url,
+                    downloadUrl: toDownloadUrl(url),
+                    idx: idx,
+                    cat: currentCat,
+                    names: namesRaw,
+                    searchIndex: searchIndex,
+                    title: namesRaw || ('Photo ' + (idx + 1))
+                });
+            }
+
+        });
+
+        return photos;
+    }
+
+    function liveImageToPhoto(img, idx) {
+        const caption = String(img.caption == null ? '' : img.caption).trim();
+        return {
+            url: img.url,
+            rawUrl: img.url,
+            downloadUrl: img.url,
+            idx: idx,
+            cat: 'uncategorized',
+            names: caption,
+            searchIndex: caption.toLowerCase(),
+            title: caption || ('New Photo ' + (idx + 1)),
+            fileId: img.id || null
+        };
+    }
+
+    function fetchLiveUploads() {
+        return fetch(APPS_SCRIPT_URL)
+            .then(r => r.json())
+            .then(res => (res && res.success && Array.isArray(res.images)) ? res.images : [])
+            .catch(() => []);
+    }
+
+    function buildMergedPhotoList(oldPhotos, liveImages) {
+        const newPhotos = [];
+        (liveImages || []).forEach(img => {
+            try {
+                if (img && img.url) {
+                    newPhotos.push(liveImageToPhoto(img, newPhotos.length));
+                }
+            } catch (e) {
+            }
+        });
+        const merged = [...newPhotos, ...oldPhotos];
+        merged.forEach((p, i) => { p.idx = i; });
+        return merged;
+    }
+
+    const PHOTO_CACHE_KEY = 'tonir_gallery_cache_v1';
+
+    function showGallery(photos) {
+        allPhotos = photos;
+        document.getElementById('photoCount').textContent = allPhotos.length;
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('masonry').style.display = '';
+        currentList = allPhotos;
+        renderGallery(currentList, true);
+        buildStrip(allPhotos);
+    }
+
+    let paintedFromCache = false;
+    Promise.resolve().then(() => {
+        try {
+            const cached = localStorage.getItem(PHOTO_CACHE_KEY);
+            if (cached) {
+                const cachedPhotos = JSON.parse(cached);
+                if (Array.isArray(cachedPhotos) && cachedPhotos.length && !paintedFromCache) {
+                    showGallery(cachedPhotos);
+                    paintedFromCache = true;
+                }
+            }
+        } catch (e) {  }
+    });
+
+    const oldPhotosPromise = fetch(csvUrl)
+        .then(r => r.text())
+        .then(textData => textData ? parsePhotoFile(textData) : [])
+        .catch(() => []);
+
+    const liveImagesPromise = fetchLiveUploads();
+
+    oldPhotosPromise.then(oldPhotos => {
+        if (!paintedFromCache) {
+            showGallery(oldPhotos);
+        }
+
+        liveImagesPromise.then(liveImages => {
+            const merged = buildMergedPhotoList(oldPhotos, liveImages);
+            showGallery(merged);
+            try { localStorage.setItem(PHOTO_CACHE_KEY, JSON.stringify(merged)); } catch (e) {}
+        });
+    }).catch(() => {
+        if (!paintedFromCache) {
+            document.getElementById('loadingState').innerHTML =
+                '<p style="color:var(--muted)">Could not load photos. Check your connection.</p>';
+        }
+    });
+
+    const imgObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+                imgObserver.unobserve(img);
+            }
+        });
+    }, { rootMargin: '300px 0px' });
+
+    function attachImgFallback(imgEl, photo) {
+        let triedFallback = false;
+        imgEl.addEventListener('error', function onErr() {
+            if (!triedFallback) {
+                triedFallback = true;
+                if (isGoogleDriveUrl(photo.rawUrl)) {
+                    const id = getDriveFileId(photo.rawUrl);
+                    if (id) {
+                        imgEl.src = 'https://drive.google.com/uc?export=view&id=' + id;
+                        return;
+                    }
+                }
+            }
+            const item = imgEl.closest('.photo-item, .strip-item');
+            if (item) {
+                item.remove();
+                if (item.classList.contains('photo-item')) {
+                    const countEl = document.getElementById('photoCount');
+                    if (countEl) {
+                        const n = parseInt(countEl.textContent, 10);
+                        if (!isNaN(n) && n > 0) countEl.textContent = n - 1;
+                    }
+                }
+            }
+        });
+    }
+
+    function renderGallery(photos, reset) {
+        const masonry = document.getElementById('masonry');
+        if (reset) { masonry.innerHTML = ''; visibleCount = 0; }
+        const start = visibleCount;
+        const end = Math.min(visibleCount + PAGE_SIZE, photos.length);
+        const slice = photos.slice(start, end);
+        slice.forEach((p, i) => {
+            const item = document.createElement('div');
+            item.className = 'photo-item reveal';
+            item.dataset.cat = p.cat;
+            const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 4'%3E%3Crect width='3' height='4' fill='%230A1220'/%3E%3C/svg%3E";
+            item.innerHTML = `
+                <img data-src="${p.url}" src="${placeholder}" alt="${p.title}" style="background:#0A1220;">
+                <div class="photo-overlay">
+                    <div class="photo-meta">
+                        <div class="photo-tag">${CATEGORY_LABELS[p.cat] || ''}</div>
+                        <div class="photo-title">${p.title}</div>
+                    </div>
+                    <div class="photo-actions">
+                        <button class="photo-action-btn" title="Download" onclick="dlImg('${p.downloadUrl}','Tonir-${p.idx + 1}.jpg');event.stopPropagation()">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M5 20h14"/></svg>
+                        </button>
+                        <button class="photo-action-btn" title="Share" onclick="shareImg('${p.downloadUrl}','Tonir-${p.idx + 1}.jpg','${(p.title || 'Tonir Shaik').replace(/'/g, "\\'")}');event.stopPropagation()">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5.5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="18.5" r="2.4"/><path d="M8.2 10.6l7.5-4.1"/><path d="M8.2 13.4l7.5 4.1"/></svg>
+                        </button>
+                        <button class="photo-action-btn edit-tag-btn" title="Edit tags" onclick="event.stopPropagation();openEditTagsByIdx(${p.idx})">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        </button>
+                        ${p.fileId
+                            ? `<button class="photo-action-btn delete-btn" title="Delete" onclick="event.stopPropagation();deletePhotoConfirm('${p.fileId}', this)">×</button>`
+                            : `<button class="photo-action-btn delete-btn" title="Delete" onclick="event.stopPropagation();deleteTextPhotoConfirm('${p.rawUrl.replace(/'/g, "\\'")}', this)">×</button>`}
+                    </div>
+                </div>`;
+            item.addEventListener('click', () => openLightbox(p.idx));
+            masonry.appendChild(item);
+            const imgEl = item.querySelector('img');
+            attachImgFallback(imgEl, p);
+            imgObserver.observe(imgEl);
+            setTimeout(() => item.classList.add('visible'), i * 40);
+        });
+        visibleCount = end;
+        updateLoadMoreUI(photos);
+    }
+
+    function updateLoadMoreUI(photos) {
+        const wrap = document.getElementById('loadMoreWrap');
+        const countLabel = document.getElementById('loadMoreCount');
+        if (visibleCount >= photos.length) {
+            wrap.style.display = 'none';
+        } else {
+            wrap.style.display = 'flex';
+            wrap.classList.add('visible');
+            countLabel.textContent = visibleCount + ' / ' + photos.length + ' shown';
+        }
+    }
+
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        renderGallery(currentList, false);
+    });
+
+    function buildStrip(photos) {
+        const track = document.getElementById('stripTrack');
+        const stripSource = photos.length > 40 ? photos.slice(0, 40) : photos;
+        const doubled = [...stripSource, ...stripSource];
+        track.innerHTML = doubled.map(p =>
+            `<div class="strip-item"><img src="${p.url}" alt="" loading="lazy" onerror="this.onerror=null;${isGoogleDriveUrl(p.rawUrl) ? '' : ''}"></div>`
+        ).join('');
+        // Attach fallback handlers for the strip images too.
+        const stripImgs = track.querySelectorAll('img');
+        doubled.forEach((p, i) => attachImgFallback(stripImgs[i], p));
+        document.getElementById('stripSection').style.display = 'block';
+    }
+
+    // Recomputes currentList from allPhotos using both the active category
+    // filter and the active search query, then re-renders the grid from
+    // scratch. Called whenever either the filter buttons or the search box
+    // change, so the two always combine rather than override each other.
+    let searchIsNumberRange = false;
+
+    function applyFiltersAndSearch() {
+        let list = activeFilter === 'all' ? allPhotos : allPhotos.filter(p => p.cat === activeFilter);
+        searchIsNumberRange = false;
+        if (searchQuery) {
+            const isNumberOnly = /^\d+$/.test(searchQuery);
+            if (isNumberOnly) {
+                searchIsNumberRange = true;
+                const startNum = parseInt(searchQuery, 10);
+                list = list.filter(p => (p.idx + 1) >= startNum);
+            } else {
+                list = list.filter(p => p.searchIndex.indexOf(searchQuery) !== -1);
+            }
+        }
+        currentList = list;
+        renderGallery(currentList, true);
+        updateSearchStatus(list.length);
+    }
+
+    function updateSearchStatus(count) {
+        const status = document.getElementById('searchStatus');
+        if (!searchQuery) {
+            status.textContent = '';
+            status.classList.remove('active');
+            return;
+        }
+        status.classList.add('active');
+        if (searchIsNumberRange) {
+            status.textContent = count + (count === 1 ? ' photo' : ' photos') + ' from #' + searchQuery + ' to the end';
+        } else {
+            status.textContent = count + (count === 1 ? ' result' : ' results') + ' for "' + searchQuery + '"';
+        }
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            applyFiltersAndSearch();
+
+            // premium ripple-from-click-point effect
+            const rect = btn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height) * 1.6;
+            ripple.className = 'ripple';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+            btn.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
+        });
+    });
+
+    // ---- Typing search (debounced, instant filter) ----
+    const searchInput = document.getElementById('searchInput');
+    const searchClear = document.getElementById('searchClear');
+    let searchDebounce = null;
+
+    searchInput.addEventListener('input', () => {
+        searchClear.style.display = searchInput.value ? 'block' : 'none';
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+            searchQuery = searchInput.value.trim().toLowerCase();
+            applyFiltersAndSearch();
+        }, 150);
+    });
+
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClear.style.display = 'none';
+        searchQuery = '';
+        applyFiltersAndSearch();
+        searchInput.focus();
+    });
+
+    // ---- Voice search (Web Speech API, English + Bengali) ----
+    const micBtn = document.getElementById('micBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognizer = null;
+    let isListening = false;
+
+    let selectedLang = 'bn-BD';
+    const langToggleBtn = document.getElementById('langToggleBtn');
+    langToggleBtn.addEventListener('click', () => {
+        if (isListening) stopListening();
+        if (selectedLang === 'bn-BD') {
+            selectedLang = 'en-IN';
+            langToggleBtn.textContent = 'EN';
+            langToggleBtn.classList.add('en');
+            langToggleBtn.title = 'বাংলায় বদলাতে ক্লিক করো';
+        } else {
+            selectedLang = 'bn-BD';
+            langToggleBtn.textContent = 'বাং';
+            langToggleBtn.classList.remove('en');
+            langToggleBtn.title = 'English-এ বদলাতে ক্লিক করো';
+        }
+    });
+
+    function pickBestTranscript(alternatives) {
+        const combinedIndex = allPhotos.map(p => p.searchIndex).join(' ');
+        let best = (alternatives[0] && alternatives[0].transcript || '').trim();
+        let bestScore = -1;
+        for (let i = 0; i < alternatives.length; i++) {
+            const t = (alternatives[i].transcript || '').trim();
+            if (!t) continue;
+            const words = t.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+            let score = 0;
+            words.forEach(w => { if (combinedIndex.indexOf(w) !== -1) score++; });
+            if (score > bestScore) { bestScore = score; best = t; }
+        }
+        return best;
+    }
+
+    function runRecognition(lang) {
+        const rec = new SpeechRecognition();
+        rec.lang = lang;
+        rec.interimResults = false;
+        rec.maxAlternatives = 5;
+        let gotResult = false;
+
+        rec.onresult = (e) => {
+            const transcript = pickBestTranscript(e.results[0]);
+            if (!transcript) return;
+            gotResult = true;
+            searchInput.value = transcript;
+            searchClear.style.display = 'block';
+            searchQuery = transcript.toLowerCase();
+            applyFiltersAndSearch();
+        };
+
+        rec.onerror = () => stopListening();
+        rec.onend = () => stopListening();
+
+        recognizer = rec;
+        rec.start();
+    }
+
+    function stopListening() {
+        isListening = false;
+        micBtn.classList.remove('listening');
+        if (recognizer) {
+            try { recognizer.onend = null; recognizer.onerror = null; recognizer.stop(); } catch (e) {}
+            recognizer = null;
+        }
+    }
+
+    function startListening() {
+        if (!SpeechRecognition) {
+            document.getElementById('searchStatus').textContent =
+                'Voice search isn\'t supported in this browser.';
+            return;
+        }
+        isListening = true;
+        micBtn.classList.add('listening');
+        runRecognition(selectedLang);
+    }
+
+    micBtn.addEventListener('click', () => {
+        if (isListening) {
+            stopListening();
+        } else {
+            startListening();
+        }
+    });
+
+    function openLightbox(idx) {
+        const pos = currentList.findIndex(p => p.idx === idx);
+        currentIdx = pos !== -1 ? pos : 0;
+        updateLightbox();
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function updateLightbox() {
+        const p = currentList[currentIdx];
+        document.getElementById('lbImg').src = p.url;
+        document.getElementById('lbTitle').textContent = p.title;
+        document.getElementById('lbCounter').textContent = (currentIdx + 1) + ' / ' + currentList.length;
+        document.getElementById('lbDl').onclick = () => dlImg(p.downloadUrl, 'Tonir-' + (p.idx + 1) + '.jpg');
+        document.getElementById('lbShare').onclick = () => shareImg(p.downloadUrl, 'Tonir-' + (p.idx + 1) + '.jpg', p.title || 'Tonir Shaik');
+    }
+
+    document.getElementById('lbClose').onclick = closeLightbox;
+    document.getElementById('lightbox').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeLightbox();
+    });
+    document.getElementById('lbPrev').onclick = () => {
+        currentIdx = (currentIdx - 1 + currentList.length) % currentList.length;
+        updateLightbox();
+    };
+    document.getElementById('lbNext').onclick = () => {
+        currentIdx = (currentIdx + 1) % currentList.length;
+        updateLightbox();
+    };
+    document.addEventListener('keydown', e => {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+        if (e.key === 'ArrowRight') document.getElementById('lbNext').click();
+    });
+
+    function dlImg(url, filename) {
+        fetch(url)
+            .then(r => r.blob())
+            .then(blob => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = filename;
+                a.click();
+            })
+            .catch(() => window.open(url, '_blank'));
+    }
+
+    function shareImg(url, filename, title) {
+        const pageUrl = 'https://tonirshaik.github.io/tonirshaik/';
+        const shareText = title + ' — Tonir Shaik | Official Gallery';
+
+        fetch(url)
+            .then(r => r.blob())
+            .then(blob => {
+                const file = new File([blob], filename, { type: blob.type || 'image/jpeg' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    return navigator.share({
+                        files: [file],
+                        title: shareText,
+                        text: shareText
+                    });
+                }
+                throw new Error('file-share-unsupported');
+            })
+            .catch(() => {
+
+                if (navigator.share) {
+                    navigator.share({ title: shareText, text: shareText, url: pageUrl }).catch(() => {});
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(pageUrl).then(() => {
+                        alert('লিংক কপি হয়েছে! এখন যেকোনো জায়গায় পেস্ট করে শেয়ার করতে পারবেন।');
+                    }).catch(() => {
+                        window.open(url, '_blank');
+                    });
+                } else {
+                    window.open(url, '_blank');
+                }
+            });
+    }
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    document.getElementById('navGalleryLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        adminLockOverlay.classList.add('open');
+        adminPasswordInput.value = '';
+        adminPasswordInput.type = 'password';
+        pwEyeIconOpen.style.display = 'none';
+        pwEyeIconClosed.style.display = 'flex';
+        adminLockMsg.textContent = '';
+        adminUnlockBtn.style.display = 'none';
+        adminPasswordInput.focus();
+    });
+
+    const adminLockOverlay  = document.getElementById('adminLockOverlay');
+    const adminLockClose    = document.getElementById('adminLockClose');
+    const adminPasswordInput= document.getElementById('adminPasswordInput');
+    const adminUnlockBtn    = document.getElementById('adminUnlockBtn');
+    const adminLockMsg      = document.getElementById('adminLockMsg');
+    const pwEyeBtn          = document.getElementById('pwEyeBtn');
+    const pwEyeIconOpen     = document.getElementById('pwEyeIconOpen');
+    const pwEyeIconClosed   = document.getElementById('pwEyeIconClosed');
+
+    const adminUploadOverlay= document.getElementById('adminUploadOverlay');
+    const adminUploadClose  = document.getElementById('adminUploadClose');
+    const adminFileInput    = document.getElementById('adminFileInput');
+    const adminStartTagBtn  = document.getElementById('adminStartTagBtn');
+    const adminPickMsg      = document.getElementById('adminPickMsg');
+    const uploadThumbs      = document.getElementById('uploadThumbs');
+    const uploadStepPick    = document.getElementById('uploadStepPick');
+    const uploadStepTag     = document.getElementById('uploadStepTag');
+    const uploadStepUploading = document.getElementById('uploadStepUploading');
+    const tagPreviewImg     = document.getElementById('tagPreviewImg');
+    const tagFacesList      = document.getElementById('tagFacesList');
+    const tagQuickAddInput  = document.getElementById('tagQuickAddInput');
+    const tagQuickAddBtn    = document.getElementById('tagQuickAddBtn');
+    const tagPrevBtn        = document.getElementById('tagPrevBtn');
+    const tagNextBtn        = document.getElementById('tagNextBtn');
+    const tagProgressFill   = document.getElementById('tagProgressFill');
+    const tagPhotoNum       = document.getElementById('tagPhotoNum');
+    const tagPhotoTotal     = document.getElementById('tagPhotoTotal');
+    const uploadProgressFill= document.getElementById('uploadProgressFill');
+    const uploadDoneCount   = document.getElementById('uploadDoneCount');
+    const uploadTotalCount  = document.getElementById('uploadTotalCount');
+    const adminUploadMsg    = document.getElementById('adminUploadMsg');
+
+    let uploadPeople = [];
+    let selectedPhotos = [];
+    let currentTagIdx = 0;
+
+    function resetUploadFlow() {
+        selectedPhotos = [];
+        uploadPeople = [];
+        currentTagIdx = 0;
+        adminFileInput.value = '';
+        uploadThumbs.innerHTML = '';
+        adminStartTagBtn.disabled = true;
+        adminPickMsg.textContent = '';
+        adminPickMsg.className = 'admin-msg';
+        uploadStepPick.style.display = 'block';
+        uploadStepTag.style.display = 'none';
+        uploadStepUploading.style.display = 'none';
+    }
+
+    adminLockClose.addEventListener('click', () => adminLockOverlay.classList.remove('open'));
+    adminLockOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) adminLockOverlay.classList.remove('open');
+    });
+
+    function tryUnlock() {
+        if (adminPasswordInput.value === ADMIN_PASSWORD) {
+            adminLockOverlay.classList.remove('open');
+            resetUploadFlow();
+            adminUploadOverlay.classList.add('open');
+            document.body.classList.add('admin-mode');
+        } else {
+            adminLockMsg.textContent = 'Wrong password';
+        }
+    }
+    adminUnlockBtn.addEventListener('click', tryUnlock);
+    adminPasswordInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+
+    pwEyeBtn.addEventListener('click', () => {
+        const showing = adminPasswordInput.type === 'text';
+        adminPasswordInput.type = showing ? 'password' : 'text';
+        pwEyeIconOpen.style.display = showing ? 'none' : 'flex';
+        pwEyeIconClosed.style.display = showing ? 'flex' : 'none';
+        pwEyeBtn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        adminPasswordInput.focus();
+    });
+
+    adminPasswordInput.addEventListener('input', () => {
+        adminLockMsg.textContent = '';
+        adminUnlockBtn.style.display = (adminPasswordInput.value === ADMIN_PASSWORD) ? 'block' : 'none';
+    });
+
+    adminUploadClose.addEventListener('click', () => {
+        adminUploadOverlay.classList.remove('open');
+        resetUploadFlow();
+    });
+    adminUploadOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            adminUploadOverlay.classList.remove('open');
+            resetUploadFlow();
+        }
+    });
+
+    function compressImage(file, maxDim, quality) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error('file-read-failed'));
+            reader.onload = () => {
+                const img = new Image();
+                img.onerror = () => reject(new Error('image-decode-failed'));
+                img.onload = () => {
+                    let { width, height } = img;
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round(height * (maxDim / width));
+                            width = maxDim;
+                        } else {
+                            width = Math.round(width * (maxDim / height));
+                            height = maxDim;
+                        }
+                    }
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function prepareFile(file) {
+        return compressImage(file, 1600, 0.82)
+            .then(dataUrl => ({ base64: dataUrl, mime: 'image/jpeg' }))
+            .catch(() => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({ base64: reader.result, mime: file.type });
+                reader.onerror = () => reject(new Error('file-read-failed'));
+                reader.readAsDataURL(file);
+            }));
+    }
+
+    function renderUploadThumbs() {
+        uploadThumbs.innerHTML = '';
+        selectedPhotos.forEach((photo, idx) => {
+            const div = document.createElement('div');
+            div.className = 'upload-thumb';
+            div.innerHTML = `
+                <img src="${photo.base64}" alt="">
+                <button type="button" class="thumb-remove" title="Remove">×</button>
+            `;
+            div.querySelector('.thumb-remove').addEventListener('click', () => {
+                selectedPhotos.splice(idx, 1);
+                renderUploadThumbs();
+                adminStartTagBtn.disabled = selectedPhotos.length === 0;
+            });
+            uploadThumbs.appendChild(div);
+        });
+    }
+
+    adminFileInput.addEventListener('change', () => {
+        const files = Array.from(adminFileInput.files || []);
+        if (files.length === 0) return;
+
+        adminStartTagBtn.disabled = true;
+        adminPickMsg.textContent = `Preparing ${files.length} photo(s)...`;
+        adminPickMsg.className = 'admin-msg';
+
+        Promise.all(files.map(file =>
+            prepareFile(file)
+                .then(({ base64, mime }) => ({ base64, mime, name: file.name, tagIdxs: new Set() }))
+                .catch(() => null)
+        )).then(results => {
+            const ok = results.filter(Boolean);
+            selectedPhotos = selectedPhotos.concat(ok);
+            renderUploadThumbs();
+            adminFileInput.value = '';
+            adminStartTagBtn.disabled = selectedPhotos.length === 0;
+            const failed = results.length - ok.length;
+            adminPickMsg.textContent = failed > 0
+                ? `❌ ${failed} photo(s) couldn't be read, the rest are ready`
+                : (selectedPhotos.length ? `✅ ${selectedPhotos.length} photo(s) ready` : '');
+            adminPickMsg.className = failed > 0 ? 'admin-msg err' : 'admin-msg ok';
+        });
+    });
+
+    function addUploadPerson(rawName) {
+        const name = (rawName || '').trim();
+        if (!name) return null;
+        const existingIdx = uploadPeople.findIndex(p => p.toLowerCase() === name.toLowerCase());
+        if (existingIdx !== -1) return existingIdx;
+        if (uploadPeople.length >= 20) {
+            adminUploadMsg.textContent = 'You can add a maximum of 20 names';
+            adminUploadMsg.className = 'admin-msg err';
+            return null;
+        }
+        uploadPeople.push(name);
+        return uploadPeople.length - 1;
+    }
+
+    function removeUploadPerson(idx) {
+        uploadPeople.splice(idx, 1);
+        selectedPhotos.forEach(photo => {
+            const newSet = new Set();
+            photo.tagIdxs.forEach(i => {
+                if (i === idx) return;
+                newSet.add(i > idx ? i - 1 : i);
+            });
+            photo.tagIdxs = newSet;
+        });
+        renderTagFaces();
+    }
+
+    function renderTagFaces() {
+        const photo = selectedPhotos[currentTagIdx];
+        tagFacesList.innerHTML = '';
+        if (uploadPeople.length === 0) {
+            tagFacesList.innerHTML = '<div class="tag-faces-empty">No names added yet — type a name below and tap + Add</div>';
+            return;
+        }
+        uploadPeople.forEach((name, idx) => {
+            const checked = photo.tagIdxs.has(idx);
+            const row = document.createElement('div');
+            row.className = 'tag-face-check' + (checked ? ' checked' : '');
+            row.innerHTML = `
+                <label style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer; margin:0; min-width:0;">
+                    <input type="checkbox" ${checked ? 'checked' : ''}> <span class="tag-face-name">${name}</span>
+                </label>
+                <button type="button" class="tag-face-edit-btn" title="এই নামটি ঠিক করো"><i class="fa-solid fa-pen"></i></button>
+                <button type="button" class="thumb-remove" title="Remove this name" style="position:static; flex-shrink:0;">×</button>
+            `;
+            row.querySelector('input').addEventListener('change', (e) => {
+                if (e.target.checked) photo.tagIdxs.add(idx);
+                else photo.tagIdxs.delete(idx);
+                row.classList.toggle('checked', e.target.checked);
+            });
+            row.querySelector('.tag-face-edit-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                startRenameUploadTagRow(row, idx);
+            });
+            row.querySelector('.thumb-remove').addEventListener('click', () => removeUploadPerson(idx));
+            tagFacesList.appendChild(row);
+        });
+    }
+
+    function startRenameUploadTagRow(row, idx) {
+        const oldName = uploadPeople[idx];
+        const wrap = document.createElement('div');
+        wrap.className = 'tag-face-rename-row';
+        wrap.innerHTML = `
+            <input type="text" class="tag-face-rename-input" value="${oldName.replace(/"/g, '&quot;')}">
+            <button type="button" class="tag-face-rename-save" title="Save"><i class="fa-solid fa-check"></i></button>
+            <button type="button" class="tag-face-rename-cancel" title="Cancel"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        row.innerHTML = '';
+        row.appendChild(wrap);
+        const input = wrap.querySelector('.tag-face-rename-input');
+        input.focus();
+        input.select();
+
+        const commit = () => {
+            const newName = input.value.trim();
+            if (!newName || newName === oldName) { renderTagFaces(); return; }
+            const dupIdx = uploadPeople.findIndex((p, i) => i !== idx && p.toLowerCase() === newName.toLowerCase());
+            if (dupIdx !== -1) {
+                adminUploadMsg.textContent = 'এই নামটি আগে থেকেই তালিকায় আছে।';
+                adminUploadMsg.className = 'admin-msg err';
+                renderTagFaces();
+                return;
+            }
+            uploadPeople[idx] = newName;
+            renderTagFaces();
+        };
+        const cancel = () => renderTagFaces();
+
+        wrap.querySelector('.tag-face-rename-save').addEventListener('click', (e) => { e.stopPropagation(); commit(); });
+        wrap.querySelector('.tag-face-rename-cancel').addEventListener('click', (e) => { e.stopPropagation(); cancel(); });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); commit(); }
+            else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+        });
+        input.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    function showTagStep(idx) {
+        currentTagIdx = idx;
+        const photo = selectedPhotos[idx];
+        tagPreviewImg.src = photo.base64;
+        tagPhotoNum.textContent = idx + 1;
+        tagPhotoTotal.textContent = selectedPhotos.length;
+        tagProgressFill.style.width = ((idx + 1) / selectedPhotos.length * 100) + '%';
+        tagPrevBtn.disabled = idx === 0;
+        tagNextBtn.textContent = (idx === selectedPhotos.length - 1) ? 'Upload All ✓' : 'Next →';
+
+        const faceResultsEl = document.getElementById('faceDetectResults');
+        const faceStatusEl = document.getElementById('faceDetectStatus');
+        const faceBtn = document.getElementById('faceDetectTestBtn');
+        if (faceResultsEl) faceResultsEl.innerHTML = '';
+        if (faceStatusEl) faceStatusEl.textContent = '';
+        if (faceBtn) faceBtn.disabled = false;
+
+        renderTagFaces();
+    }
+
+    function quickAddTagPerson() {
+        const rawName = (tagQuickAddInput.value || '').trim();
+        const idx = addUploadPerson(rawName);
+        if (idx === null) return;
+        selectedPhotos[currentTagIdx].tagIdxs.add(idx);
+
+        if (!isBanglaText(rawName)) {
+            const banglaName = banglaPhonetic(rawName);
+            if (banglaName && banglaName.toLowerCase() !== rawName.toLowerCase()) {
+                const bIdx = addUploadPerson(banglaName);
+                if (bIdx !== null) selectedPhotos[currentTagIdx].tagIdxs.add(bIdx);
+            }
+        }
+
+        tagQuickAddInput.value = '';
+        adminUploadMsg.textContent = '';
+        renderTagFaces();
+        tagQuickAddInput.focus();
+    }
+    tagQuickAddBtn.addEventListener('click', quickAddTagPerson);
+    tagQuickAddInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quickAddTagPerson(); });
+
+    tagPrevBtn.addEventListener('click', () => {
+        if (currentTagIdx > 0) showTagStep(currentTagIdx - 1);
+    });
+
+    adminStartTagBtn.addEventListener('click', () => {
+        if (selectedPhotos.length === 0) return;
+        uploadStepPick.style.display = 'none';
+        uploadStepTag.style.display = 'block';
+        showTagStep(0);
+    });
+
+    function deletePhotoConfirm(fileId, btnEl) {
+        if (!confirm('Are you sure you want to permanently delete this photo?')) return;
+
+        const item = btnEl.closest('.photo-item, .strip-item');
+        if (item) item.style.opacity = '0.4';
+        btnEl.disabled = true;
+
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                password: ADMIN_PASSWORD,
+                action: 'delete',
+                fileId: fileId
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                allPhotos = allPhotos.filter(p => p.fileId !== fileId);
+                currentList = currentList.filter(p => p.fileId !== fileId);
+                if (item) item.remove();
+                const countEl = document.getElementById('photoCount');
+                if (countEl) {
+                    const n = parseInt(countEl.textContent, 10);
+                    if (!isNaN(n) && n > 0) countEl.textContent = n - 1;
+                }
+            } else {
+                if (item) item.style.opacity = '1';
+                btnEl.disabled = false;
+                alert('Delete failed: ' + (res.error || 'Unknown error'));
+            }
+        })
+        .catch(() => {
+            if (item) item.style.opacity = '1';
+            btnEl.disabled = false;
+            alert('Network error, please try again');
+        });
+    }
+
+    function deleteTextPhotoConfirm(rawUrl, btnEl) {
+        if (!confirm('Are you sure you want to permanently delete this photo? (removes it from the source file)')) return;
+
+        const item = btnEl.closest('.photo-item, .strip-item');
+        if (item) item.style.opacity = '0.4';
+        btnEl.disabled = true;
+
+        fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                password: ADMIN_PASSWORD,
+                action: 'deleteText',
+                url: rawUrl
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                allPhotos = allPhotos.filter(p => p.rawUrl !== rawUrl);
+                currentList = currentList.filter(p => p.rawUrl !== rawUrl);
+                if (item) item.remove();
+                const countEl = document.getElementById('photoCount');
+                if (countEl) {
+                    const n = parseInt(countEl.textContent, 10);
+                    if (!isNaN(n) && n > 0) countEl.textContent = n - 1;
+                }
+            } else {
+                if (item) item.style.opacity = '1';
+                btnEl.disabled = false;
+                alert('Delete failed: ' + (res.error || 'Unknown error'));
+            }
+        })
+        .catch(() => {
+            if (item) item.style.opacity = '1';
+            btnEl.disabled = false;
+            alert('Network error, please try again');
+        });
+    }
+
+    const PHONETIC_CONSONANTS = [
+        ['kkh','ক্ষ'], ['kh','খ'], ['k','ক'],
+        ['gh','ঘ'], ['g','গ'], ['ng','ঙ'],
+        ['chh','ছ'], ['ch','চ'],
+        ['jh','ঝ'], ['j','জ'], ['z','জ'],
+        ['th','থ'], ['t','ত'],
+        ['dh','ধ'], ['d','দ'],
+        ['n','ন'],
+        ['ph','ফ'], ['f','ফ'], ['p','প'],
+        ['bh','ভ'], ['v','ভ'], ['b','ব'],
+        ['m','ম'],
+        ['sh','শ'], ['s','স'],
+        ['h','হ'],
+        ['r','র'],
+        ['l','ল'],
+        ['y','য়'],
+        ['w','ও']
+    ];
+    const PHONETIC_VOWELS = [
+        ['oi','ঐ','ৈ'], ['ou','ঔ','ৌ'],
+        ['ee','ঈ','ী'], ['ii','ঈ','ী'],
+        ['oo','ঊ','ূ'], ['uu','ঊ','ূ'],
+        ['aa','আ','া'], ['a','আ','া'],
+        ['i','ই','ি'],
+        ['u','উ','ু'],
+        ['e','এ','ে'],
+        ['o','ও','']
+    ];
+
+    function isBanglaText(s) {
+        return /[\u0980-\u09FF]/.test(s);
+    }
+
+    function banglaPhonetic(input) {
+        const s = (input || '').toLowerCase();
+        if (!s) return '';
+        let out = '';
+        let i = 0;
+        let lastWasConsonant = false;
+        while (i < s.length) {
+            const ch = s[i];
+            if (!/[a-z]/.test(ch)) { out += ch; i++; lastWasConsonant = false; continue; }
+
+            let matched = false;
+            for (const [pat, standalone, matra] of PHONETIC_VOWELS) {
+                if (s.startsWith(pat, i)) {
+                    out += lastWasConsonant ? matra : standalone;
+                    i += pat.length;
+                    lastWasConsonant = false;
+                    matched = true;
+                    break;
+                }
+            }
+            if (matched) continue;
+
+            for (const [pat, letter] of PHONETIC_CONSONANTS) {
+                if (s.startsWith(pat, i)) {
+                    out += letter;
+                    i += pat.length;
+                    lastWasConsonant = true;
+                    matched = true;
+                    break;
+                }
+            }
+            if (matched) continue;
+
+            out += ch;
+            i++;
+            lastWasConsonant = false;
+        }
+        return out;
+    }
+
+    const adminEditTagOverlay   = document.getElementById('adminEditTagOverlay');
+    const adminEditTagClose     = document.getElementById('adminEditTagClose');
+    const editTagPreviewImg     = document.getElementById('editTagPreviewImg');
+    const editTagFacesList      = document.getElementById('editTagFacesList');
+    const editTagQuickAddInput  = document.getElementById('editTagQuickAddInput');
+    const editTagQuickAddBtn    = document.getElementById('editTagQuickAddBtn');
+    const editTagPrevBtn        = document.getElementById('editTagPrevBtn');
+    const editTagNextBtn        = document.getElementById('editTagNextBtn');
+    const editTagSaveBtn        = document.getElementById('editTagSaveBtn');
+    const editTagMsg            = document.getElementById('editTagMsg');
+    const editTagProgressText   = document.getElementById('editTagProgressText');
+
+    let editTagPhoto = null;
+    let editTagSelected = new Set();
+    let editTagList = [];
+    let editTagListPos = -1;
+
+    function parseExistingNames(photo) {
+        const raw = (photo.names || '').trim();
+        if (!raw) return [];
+        return photo.fileId
+            ? raw.split(',').map(s => s.trim()).filter(Boolean)
+            : raw.split(/\s+/).filter(Boolean);
+    }
+
+    function serializeNames(namesArr, photo) {
+        return photo.fileId ? namesArr.join(', ') : namesArr.join(' ');
+    }
+
+    function renderEditTagFaces() {
+        editTagFacesList.innerHTML = '';
+        if (uploadPeople.length === 0) {
+            editTagFacesList.innerHTML = '<div class="tag-faces-empty">No names added yet — type a name below and tap + Add</div>';
+            return;
+        }
+        uploadPeople.forEach((name) => {
+            const checked = editTagSelected.has(name.toLowerCase());
+            const row = document.createElement('div');
+            row.className = 'tag-face-check' + (checked ? ' checked' : '');
+            row.innerHTML = `
+                <label style="display:flex; align-items:center; gap:10px; flex:1; cursor:pointer; margin:0; min-width:0;">
+                    <input type="checkbox" ${checked ? 'checked' : ''}> <span class="tag-face-name">${name}</span>
+                </label>
+                <button type="button" class="tag-face-edit-btn" title="Edit name"><i class="fa-solid fa-pen"></i></button>
+                <button type="button" class="tag-face-delete-btn" title="Delete this tag entirely"><i class="fa-solid fa-trash"></i></button>
+            `;
+            row.querySelector('input').addEventListener('change', (e) => {
+                if (e.target.checked) editTagSelected.add(name.toLowerCase());
+                else editTagSelected.delete(name.toLowerCase());
+                row.classList.toggle('checked', e.target.checked);
+            });
+            row.querySelector('.tag-face-edit-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                startRenameRow(row, name);
+            });
+            row.querySelector('.tag-face-delete-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteTagEntry(name);
+            });
+            editTagFacesList.appendChild(row);
+        });
+    }
+
+    function deleteTagEntry(name) {
+        const idx = uploadPeople.findIndex(p => p.toLowerCase() === name.toLowerCase());
+        if (idx !== -1) uploadPeople.splice(idx, 1);
+        editTagSelected.delete(name.toLowerCase());
+        renderEditTagFaces();
+    }
+
+    function startRenameRow(row, oldName) {
+        const wrap = document.createElement('div');
+        wrap.className = 'tag-face-rename-row';
+        wrap.innerHTML = `
+            <input type="text" class="tag-face-rename-input" value="${oldName.replace(/"/g, '&quot;')}">
+            <button type="button" class="tag-face-rename-save" title="Save"><i class="fa-solid fa-check"></i></button>
+            <button type="button" class="tag-face-rename-cancel" title="Cancel"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        row.innerHTML = '';
+        row.appendChild(wrap);
+        const input = wrap.querySelector('.tag-face-rename-input');
+        input.focus();
+        input.select();
+
+        const commit = () => {
+            const newName = input.value.trim();
+            if (!newName || newName === oldName) { renderEditTagFaces(); return; }
+            const dupIdx = uploadPeople.findIndex(p => p.toLowerCase() === newName.toLowerCase() && p.toLowerCase() !== oldName.toLowerCase());
+            if (dupIdx !== -1) {
+                editTagMsg.textContent = 'এই নামটি আগে থেকেই তালিকায় আছে।';
+                editTagMsg.className = 'admin-msg err';
+                renderEditTagFaces();
+                return;
+            }
+            const idx = uploadPeople.findIndex(p => p.toLowerCase() === oldName.toLowerCase());
+            if (idx !== -1) uploadPeople[idx] = newName;
+            if (editTagSelected.has(oldName.toLowerCase())) {
+                editTagSelected.delete(oldName.toLowerCase());
+                editTagSelected.add(newName.toLowerCase());
+            }
+            renderEditTagFaces();
+        };
+        const cancel = () => renderEditTagFaces();
+
+        wrap.querySelector('.tag-face-rename-save').addEventListener('click', (e) => { e.stopPropagation(); commit(); });
+        wrap.querySelector('.tag-face-rename-cancel').addEventListener('click', (e) => { e.stopPropagation(); cancel(); });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); commit(); }
+            else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+        });
+        input.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    function ensureInPeopleList(name) {
+        const idx = uploadPeople.findIndex(p => p.toLowerCase() === name.toLowerCase());
+        if (idx !== -1) return uploadPeople[idx];
+        uploadPeople.push(name);
+        return name;
+    }
+
+    function addNameWithPhonetic(rawName) {
+        const name = (rawName || '').trim();
+        if (!name) return;
+        const finalName = ensureInPeopleList(name);
+        editTagSelected.add(finalName.toLowerCase());
+
+        if (!isBanglaText(name)) {
+            const banglaName = banglaPhonetic(name);
+            if (banglaName && banglaName.toLowerCase() !== name.toLowerCase()) {
+                const finalBangla = ensureInPeopleList(banglaName);
+                editTagSelected.add(finalBangla.toLowerCase());
+            }
+        }
+    }
+
+    function loadEditTagAtPos(pos) {
+        const photo = editTagList[pos];
+        if (!photo) return;
+        editTagListPos = pos;
+        editTagPhoto = photo;
+        editTagMsg.textContent = '';
+        editTagMsg.className = 'admin-msg';
+        editTagPreviewImg.src = photo.url;
+        editTagQuickAddInput.value = '';
+
+        const existing = parseExistingNames(photo);
+        existing.forEach(n => ensureInPeopleList(n));
+        editTagSelected = new Set(existing.map(n => n.toLowerCase()));
+
+        renderEditTagFaces();
+        if (editTagProgressText) editTagProgressText.textContent = (pos + 1) + ' / ' + editTagList.length;
+        editTagPrevBtn.disabled = pos === 0;
+        editTagNextBtn.disabled = pos === editTagList.length - 1;
+    }
+
+    function openEditTagsByIdx(idx) {
+        editTagList = allPhotos.slice().sort((a, b) => a.idx - b.idx);
+        const pos = editTagList.findIndex(p => p.idx === idx);
+        if (pos === -1) return;
+        loadEditTagAtPos(pos);
+        adminEditTagOverlay.classList.add('open');
+    }
+
+    function closeEditTagOverlay() {
+        adminEditTagOverlay.classList.remove('open');
+        editTagPhoto = null;
+        editTagList = [];
+        editTagListPos = -1;
+        editTagQuickAddInput.value = '';
+    }
+    adminEditTagClose.addEventListener('click', closeEditTagOverlay);
+    adminEditTagOverlay.addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeEditTagOverlay();
+    });
+
+    function quickAddEditTagPerson() {
+        const name = (editTagQuickAddInput.value || '').trim();
+        if (!name) return;
+        if (uploadPeople.length >= 20 && !uploadPeople.some(p => p.toLowerCase() === name.toLowerCase())) {
+            editTagMsg.textContent = 'You can add a maximum of 20 names';
+            editTagMsg.className = 'admin-msg err';
+            return;
+        }
+        addNameWithPhonetic(name);
+        editTagQuickAddInput.value = '';
+        editTagMsg.textContent = '';
+        renderEditTagFaces();
+        editTagQuickAddInput.focus();
+    }
+    editTagQuickAddBtn.addEventListener('click', quickAddEditTagPerson);
+    editTagQuickAddInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') quickAddEditTagPerson(); });
+
+    function saveCurrentEditTagPhoto() {
+        if (!editTagPhoto) return Promise.resolve(false);
+        const finalNames = uploadPeople.filter(n => editTagSelected.has(n.toLowerCase()));
+        const newNamesStr = serializeNames(finalNames, editTagPhoto);
+        const photo = editTagPhoto;
+
+        editTagSaveBtn.disabled = true;
+        editTagPrevBtn.disabled = true;
+        editTagNextBtn.disabled = true;
+        editTagMsg.textContent = 'Saving...';
+        editTagMsg.className = 'admin-msg';
+
+        const payload = photo.fileId
+            ? { password: ADMIN_PASSWORD, action: 'updateCaption', fileId: photo.fileId, caption: newNamesStr }
+            : { password: ADMIN_PASSWORD, action: 'updateText', url: photo.rawUrl, names: newNamesStr };
+
+        return fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+            .then(r => r.json())
+            .then(res => {
+                editTagSaveBtn.disabled = false;
+                if (res.success) {
+                    photo.names = newNamesStr;
+                    photo.title = newNamesStr || photo.title;
+                    const sectionWords = SECTION_SEARCH_WORDS[photo.cat] || [];
+                    photo.searchIndex = [newNamesStr, ...sectionWords].join(' ').toLowerCase();
+                    editTagMsg.textContent = '✅ Saved';
+                    editTagMsg.className = 'admin-msg ok';
+                    return true;
+                } else {
+                    editTagMsg.textContent = 'Save failed: ' + (res.error || 'Unknown error');
+                    editTagMsg.className = 'admin-msg err';
+                    return false;
+                }
+            })
+            .catch(() => {
+                editTagSaveBtn.disabled = false;
+                editTagMsg.textContent = 'Network error, please try again';
+                editTagMsg.className = 'admin-msg err';
+                return false;
+            });
+    }
+
+    editTagSaveBtn.addEventListener('click', () => {
+        saveCurrentEditTagPhoto().then(ok => {
+            if (ok) setTimeout(closeEditTagOverlay, 500);
+            else { editTagPrevBtn.disabled = editTagListPos === 0; editTagNextBtn.disabled = editTagListPos === editTagList.length - 1; }
+        });
+    });
+
+    editTagPrevBtn.addEventListener('click', () => {
+        if (editTagListPos <= 0) return;
+        saveCurrentEditTagPhoto().then(ok => {
+            if (ok) loadEditTagAtPos(editTagListPos - 1);
+            else { editTagPrevBtn.disabled = false; editTagNextBtn.disabled = editTagListPos === editTagList.length - 1; }
+        });
+    });
+
+    editTagNextBtn.addEventListener('click', () => {
+        if (editTagListPos >= editTagList.length - 1) return;
+        saveCurrentEditTagPhoto().then(ok => {
+            if (ok) loadEditTagAtPos(editTagListPos + 1);
+            else { editTagNextBtn.disabled = false; editTagPrevBtn.disabled = editTagListPos === 0; }
+        });
+    });
+
+    function uploadOnePhoto(photo) {
+        const caption = Array.from(photo.tagIdxs).map(i => uploadPeople[i]).join(', ');
+        return fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                password: ADMIN_PASSWORD,
+                image: photo.base64,
+                mimeType: photo.mime,
+                filename: photo.name,
+                caption: caption
+            })
+        })
+        .then(r => r.json())
+        .catch(() => ({ success: false, error: 'Network error' }));
+    }
+
+    let isUploading = false;
+    function uploadAllPhotos() {
+        if (isUploading) return;
+        isUploading = true;
+
+        uploadStepTag.style.display = 'none';
+        uploadStepUploading.style.display = 'block';
+        uploadTotalCount.textContent = selectedPhotos.length;
+        uploadDoneCount.textContent = 0;
+        uploadProgressFill.style.width = '0%';
+        adminUploadMsg.textContent = '';
+        adminUploadMsg.className = 'admin-msg';
+
+        let done = 0, failed = 0;
+
+        function next(i) {
+            if (i >= selectedPhotos.length) {
+                adminUploadMsg.textContent = failed === 0
+                    ? `✅ All ${done} photo(s) uploaded successfully! It may take a few seconds to appear in the gallery...`
+                    : `✅ ${done} succeeded, ❌ ${failed} failed`;
+                adminUploadMsg.className = failed === 0 ? 'admin-msg ok' : 'admin-msg err';
+                isUploading = false;
+                refreshGalleryWithLiveUploads(4);
+                setTimeout(() => {
+                    adminUploadOverlay.classList.remove('open');
+                    resetUploadFlow();
+                }, 2500);
+                return;
+            }
+            uploadOnePhoto(selectedPhotos[i]).then(res => {
+                if (res && res.success) {
+                    done++;
+                    if (typeof onPhotoUploadedForFaceLearning === 'function') {
+                        onPhotoUploadedForFaceLearning(selectedPhotos[i]);
+                    }
+                } else failed++;
+                uploadDoneCount.textContent = done + failed;
+                uploadProgressFill.style.width = ((done + failed) / selectedPhotos.length * 100) + '%';
+                next(i + 1);
+            });
+        }
+        next(0);
+    }
+
+    tagNextBtn.addEventListener('click', () => {
+        if (currentTagIdx < selectedPhotos.length - 1) {
+            showTagStep(currentTagIdx + 1);
+        } else {
+            uploadAllPhotos();
+        }
+    });
+
+    function refreshGalleryWithLiveUploads(attemptsLeft) {
+        attemptsLeft = (typeof attemptsLeft === 'number') ? attemptsLeft : 0;
+        try {
+            fetch(csvUrl).then(r => r.text()).catch(() => '').then(textData => {
+                const oldPhotos = textData ? parsePhotoFile(textData) : [];
+                fetchLiveUploads().then(liveImages => {
+                    try {
+                        allPhotos = buildMergedPhotoList(oldPhotos, liveImages);
+                        document.getElementById('photoCount').textContent = allPhotos.length;
+                        applyFiltersAndSearch();
+                        buildStrip(allPhotos);
+                    } catch (e) {
+                    }
+                });
+            }).catch(() => {  });
+        } catch (e) {  }
+
+        if (attemptsLeft > 0) {
+            setTimeout(() => refreshGalleryWithLiveUploads(attemptsLeft - 1), 4000);
+        }
+    }
+
+    (function() {
+        function applyTilt(card) {
+            if (card._tiltBound) return;
+            card._tiltBound = true;
+
+            card.addEventListener('mousemove', function(e) {
+                const rect = card.getBoundingClientRect();
+                const cx = rect.left + rect.width  / 2;
+                const cy = rect.top  + rect.height / 2;
+                const dx = (e.clientX - cx) / (rect.width  / 2);
+                const dy = (e.clientY - cy) / (rect.height / 2);
+                const rotX = -dy * 10;
+                const rotY =  dx * 10;
+
+                card.style.transform =
+                    `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.04)`;
+                card.style.transition = 'transform 0.08s ease';
+
+                let shine = card.querySelector('.tilt-shine');
+                if (!shine) {
+                    shine = document.createElement('div');
+                    shine.className = 'tilt-shine';
+                    shine.style.cssText = `
+                        position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;
+                        background:radial-gradient(circle at 50% 50%, rgba(63,168,255,0.22) 0%, transparent 70%);
+                        transition:opacity 0.3s;
+                    `;
+                    card.style.position = 'relative';
+                    card.appendChild(shine);
+                }
+                const px = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
+                const py = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+                shine.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(63,168,255,0.30) 0%, transparent 65%)`;
+                shine.style.opacity = '1';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+                card.style.transition = 'transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)';
+                const shine = card.querySelector('.tilt-shine');
+                if (shine) shine.style.opacity = '0';
+            });
+        }
+
+        function bindAll() {
+            document.querySelectorAll('.photo-item').forEach(applyTilt);
+        }
+        bindAll();
+        const observer = new MutationObserver(bindAll);
+        observer.observe(document.getElementById('masonry') || document.body, { childList: true, subtree: true });
+    })();
+
+    
+    (function() {
+        const navWorkPicLink      = document.getElementById('navWorkPicLink');
+        const workpicLockOverlay  = document.getElementById('workpicLockOverlay');
+        const workpicLockClose    = document.getElementById('workpicLockClose');
+        const workpicPasswordInput= document.getElementById('workpicPasswordInput');
+        const workpicUnlockBtn    = document.getElementById('workpicUnlockBtn');
+        const workpicLockMsg      = document.getElementById('workpicLockMsg');
+        const workpicPwEyeBtn     = document.getElementById('workpicPwEyeBtn');
+        const workpicPwEyeIconOpen= document.getElementById('workpicPwEyeIconOpen');
+        const workpicPwEyeIconClosed = document.getElementById('workpicPwEyeIconClosed');
+
+        const workpicUploadOverlay = document.getElementById('workpicUploadOverlay');
+        const workpicUploadClose   = document.getElementById('workpicUploadClose');
+        const workpicFileInput     = document.getElementById('workpicFileInput');
+        const workpicThumbs        = document.getElementById('workpicThumbs');
+        const workpicSendBtn       = document.getElementById('workpicSendBtn');
+        const workpicMsg           = document.getElementById('workpicMsg');
+        const workpicProgressWrap  = document.getElementById('workpicProgressWrap');
+        const workpicProgressFill  = document.getElementById('workpicProgressFill');
+        const workpicDoneCount     = document.getElementById('workpicDoneCount');
+        const workpicTotalCount    = document.getElementById('workpicTotalCount');
+
+        let workpicSelectedFiles = [];
+
+        if (!navWorkPicLink) return;
+
+        navWorkPicLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            workpicLockOverlay.classList.add('open');
+            workpicPasswordInput.value = '';
+            workpicPasswordInput.type = 'password';
+            workpicPwEyeIconOpen.style.display = 'none';
+            workpicPwEyeIconClosed.style.display = 'flex';
+            workpicLockMsg.textContent = '';
+            workpicPasswordInput.focus();
+        });
+
+        workpicLockClose.addEventListener('click', () => workpicLockOverlay.classList.remove('open'));
+        workpicLockOverlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) workpicLockOverlay.classList.remove('open');
+        });
+
+        workpicPwEyeBtn.addEventListener('click', () => {
+            const showing = workpicPasswordInput.type === 'text';
+            workpicPasswordInput.type = showing ? 'password' : 'text';
+            workpicPwEyeIconOpen.style.display = showing ? 'none' : 'flex';
+            workpicPwEyeIconClosed.style.display = showing ? 'flex' : 'none';
+        });
+
+        function tryWorkpicUnlock() {
+            if (workpicPasswordInput.value === WORKPIC_PASSWORD) {
+                workpicLockOverlay.classList.remove('open');
+                resetWorkpicUploadFlow();
+                workpicUploadOverlay.classList.add('open');
+            } else {
+                workpicLockMsg.textContent = 'Wrong password';
+            }
+        }
+        workpicUnlockBtn.addEventListener('click', tryWorkpicUnlock);
+        workpicPasswordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') tryWorkpicUnlock();
+        });
+
+        workpicUploadClose.addEventListener('click', () => {
+            workpicUploadOverlay.classList.remove('open');
+            resetWorkpicUploadFlow();
+        });
+        workpicUploadOverlay.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                workpicUploadOverlay.classList.remove('open');
+                resetWorkpicUploadFlow();
+            }
+        });
+
+        function resetWorkpicUploadFlow() {
+            workpicSelectedFiles = [];
+            workpicFileInput.value = '';
+            workpicThumbs.innerHTML = '';
+            workpicSendBtn.disabled = true;
+            workpicMsg.textContent = '';
+            workpicMsg.className = 'admin-msg';
+            workpicProgressWrap.style.display = 'none';
+            workpicProgressFill.style.width = '0%';
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        workpicFileInput.addEventListener('change', () => {
+            workpicSelectedFiles = Array.from(workpicFileInput.files || []);
+            workpicThumbs.innerHTML = '';
+            workpicSelectedFiles.forEach(file => {
+                const img = document.createElement('img');
+                img.className = 'upload-thumb';
+                img.src = URL.createObjectURL(file);
+                workpicThumbs.appendChild(img);
+            });
+            workpicSendBtn.disabled = workpicSelectedFiles.length === 0;
+            workpicMsg.textContent = '';
+        });
+
+        function uploadOneWorkpicFile(file) {
+            return fileToBase64(file).then(base64 => {
+                return fetch(WORKPIC_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        password: WORKPIC_PASSWORD,
+                        image: base64,
+                        mimeType: file.type,
+                        filename: file.name
+                    })
+                })
+                .then(r => r.json())
+                .catch(() => ({ success: false, error: 'Network error' }));
+            });
+        }
+
+        workpicSendBtn.addEventListener('click', () => {
+            if (workpicSelectedFiles.length === 0) return;
+            workpicSendBtn.disabled = true;
+            workpicMsg.textContent = '';
+            workpicMsg.className = 'admin-msg';
+            workpicProgressWrap.style.display = 'block';
+            workpicTotalCount.textContent = workpicSelectedFiles.length;
+            workpicDoneCount.textContent = 0;
+            workpicProgressFill.style.width = '0%';
+
+            let done = 0, failed = 0;
+            function next(i) {
+                if (i >= workpicSelectedFiles.length) {
+                    workpicMsg.textContent = failed === 0
+                        ? `✅ All ${done} file(s) uploaded to Drive successfully!`
+                        : `✅ ${done} succeeded, ❌ ${failed} failed`;
+                    workpicMsg.className = failed === 0 ? 'admin-msg ok' : 'admin-msg err';
+                    workpicSendBtn.disabled = false;
+                    if (failed === 0) {
+                        setTimeout(() => {
+                            workpicUploadOverlay.classList.remove('open');
+                            resetWorkpicUploadFlow();
+                        }, 2000);
+                    }
+                    return;
+                }
+                uploadOneWorkpicFile(workpicSelectedFiles[i]).then(res => {
+                    if (res && res.success) done++; else failed++;
+                    workpicDoneCount.textContent = done + failed;
+                    workpicProgressFill.style.width = ((done + failed) / workpicSelectedFiles.length * 100) + '%';
+                    next(i + 1);
+                });
+            }
+            next(0);
+        });
+    })();
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script defer src="face-recognition.js"></script>
+</body>
+</html>
