@@ -636,6 +636,17 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .workpic-gallery-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 10px 0; }
+        .wp-actions {
+            position: absolute; top: 3px; right: 3px;
+            display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s ease;
+        }
+        .workpic-gallery-item:hover .wp-actions { opacity: 1; }
+        .wp-action-btn {
+            width: 20px; height: 20px; border-radius: 50%; border: none;
+            background: rgba(0,0,0,0.72); color: #fff; font-size: 11px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .wp-action-btn:hover { background: var(--gold); color: #000; }
         .tag-progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .tag-progress-track {
             flex: 1; height: 5px; border-radius: 4px;
@@ -2660,8 +2671,16 @@
             fetch(WORKPIC_APPS_SCRIPT_URL)
                 .then(r => r.json())
                 .then(res => {
-                    const images = (res && res.success && Array.isArray(res.images)) ? res.images : [];
                     workpicGalleryLoading.style.display = 'none';
+
+                    if (!res || res.success !== true) {
+                        workpicGalleryLoading.style.display = 'block';
+                        workpicGalleryLoading.textContent = 'লিস্ট আনতে সমস্যা হয়েছে: ' + ((res && res.error) || 'Unknown error');
+                        workpicGalleryLoading.className = 'admin-msg err';
+                        return;
+                    }
+
+                    const images = Array.isArray(res.images) ? res.images : [];
 
                     if (images.length === 0) {
                         workpicGallery.innerHTML = '<p class="workpic-gallery-empty">এখনো কোনো ছবি আপলোড হয়নি</p>';
@@ -2669,12 +2688,27 @@
                     }
 
                     images.forEach(img => {
-                        const item = document.createElement('a');
-                        item.href = img.viewUrl || img.url;
-                        item.target = '_blank';
-                        item.rel = 'noopener';
+                        const downloadUrl = 'https://drive.google.com/uc?export=download&id=' + img.id;
+                        const item = document.createElement('div');
                         item.className = 'workpic-gallery-item';
-                        item.innerHTML = `<img src="${img.url}" alt="${img.name || ''}" loading="lazy"><span class="wp-name">${img.name || ''}</span>`;
+                        item.innerHTML = `
+                            <a href="${img.viewUrl || img.url}" target="_blank" rel="noopener">
+                                <img src="${img.url}" alt="${img.name || ''}" loading="lazy">
+                            </a>
+                            <span class="wp-name">${img.name || ''}</span>
+                            <div class="wp-actions">
+                                <button type="button" class="wp-action-btn wp-dl" title="Download">⬇</button>
+                                <button type="button" class="wp-action-btn wp-share" title="Share">↗</button>
+                            </div>
+                        `;
+                        item.querySelector('.wp-dl').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            dlImg(downloadUrl, img.name || 'work-pic.jpg');
+                        });
+                        item.querySelector('.wp-share').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            shareImg(downloadUrl, img.name || 'work-pic.jpg', img.name || 'Work Pic');
+                        });
                         workpicGallery.appendChild(item);
                     });
                 })
