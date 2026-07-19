@@ -624,6 +624,18 @@
             display: flex; align-items: center; justify-content: center;
         }
         .upload-thumb .thumb-remove:hover { background: #c0392b; }
+        .workpic-gallery-item {
+            position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden;
+            background: var(--card-bg);
+        }
+        .workpic-gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .workpic-gallery-item .wp-name {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            font-size: 9px; color: #fff; padding: 3px 4px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .workpic-gallery-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 10px 0; }
         .tag-progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .tag-progress-track {
             flex: 1; height: 5px; border-radius: 4px;
@@ -1047,7 +1059,16 @@
 <div class="admin-overlay" id="workpicUploadOverlay">
     <div class="admin-box admin-box-wide" id="workpicUploadBox">
         <button class="admin-close" id="workpicUploadClose">×</button>
-        <h4>📤 Upload Work Pic</h4>
+        <h4>📁 Work Pic Dashboard</h4>
+
+        <div id="workpicGalleryWrap">
+            <p class="admin-msg" id="workpicGalleryLoading">Loading uploaded photos...</p>
+            <div class="upload-thumbs" id="workpicGallery"></div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border); margin:18px 0;">
+
+        <h4 style="font-size:14px;">📤 Upload New</h4>
         <input type="file" class="admin-input" id="workpicFileInput" accept="image/*" multiple>
         <div class="upload-thumbs" id="workpicThumbs"></div>
         <button class="admin-btn" id="workpicSendBtn" disabled>Upload →</button>
@@ -2554,6 +2575,8 @@
         const workpicProgressFill  = document.getElementById('workpicProgressFill');
         const workpicDoneCount     = document.getElementById('workpicDoneCount');
         const workpicTotalCount    = document.getElementById('workpicTotalCount');
+        const workpicGallery        = document.getElementById('workpicGallery');
+        const workpicGalleryLoading = document.getElementById('workpicGalleryLoading');
 
         let workpicSelectedFiles = [];
 
@@ -2587,6 +2610,7 @@
                 workpicLockOverlay.classList.remove('open');
                 resetWorkpicUploadFlow();
                 workpicUploadOverlay.classList.add('open');
+                loadWorkpicGallery();
             } else {
                 workpicLockMsg.textContent = 'Wrong password';
             }
@@ -2625,6 +2649,40 @@
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
+        }
+
+        function loadWorkpicGallery() {
+            workpicGalleryLoading.style.display = 'block';
+            workpicGalleryLoading.textContent = 'Loading uploaded photos...';
+            workpicGalleryLoading.className = 'admin-msg';
+            workpicGallery.innerHTML = '';
+
+            fetch(WORKPIC_APPS_SCRIPT_URL)
+                .then(r => r.json())
+                .then(res => {
+                    const images = (res && res.success && Array.isArray(res.images)) ? res.images : [];
+                    workpicGalleryLoading.style.display = 'none';
+
+                    if (images.length === 0) {
+                        workpicGallery.innerHTML = '<p class="workpic-gallery-empty">এখনো কোনো ছবি আপলোড হয়নি</p>';
+                        return;
+                    }
+
+                    images.forEach(img => {
+                        const item = document.createElement('a');
+                        item.href = img.viewUrl || img.url;
+                        item.target = '_blank';
+                        item.rel = 'noopener';
+                        item.className = 'workpic-gallery-item';
+                        item.innerHTML = `<img src="${img.url}" alt="${img.name || ''}" loading="lazy"><span class="wp-name">${img.name || ''}</span>`;
+                        workpicGallery.appendChild(item);
+                    });
+                })
+                .catch(() => {
+                    workpicGalleryLoading.style.display = 'block';
+                    workpicGalleryLoading.textContent = 'তালিকা লোড করা যায়নি, আবার চেষ্টা করুন';
+                    workpicGalleryLoading.className = 'admin-msg err';
+                });
         }
 
         workpicFileInput.addEventListener('change', () => {
@@ -2674,10 +2732,15 @@
                         : `✅ ${done} succeeded, ❌ ${failed} failed`;
                     workpicMsg.className = failed === 0 ? 'admin-msg ok' : 'admin-msg err';
                     workpicSendBtn.disabled = false;
+                    if (done > 0) loadWorkpicGallery();
                     if (failed === 0) {
                         setTimeout(() => {
-                            workpicUploadOverlay.classList.remove('open');
-                            resetWorkpicUploadFlow();
+                            workpicFileInput.value = '';
+                            workpicThumbs.innerHTML = '';
+                            workpicSelectedFiles = [];
+                            workpicSendBtn.disabled = true;
+                            workpicProgressWrap.style.display = 'none';
+                            workpicProgressFill.style.width = '0%';
                         }, 2000);
                     }
                     return;
