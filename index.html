@@ -982,6 +982,26 @@
     position:relative;
     z-index:1;
   }
+
+  .pc-company-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+    flex:1;
+  }
+  .pc-company-name{
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    max-width:140px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    opacity:0.95;
+    text-shadow:0 1px 2px rgba(0,0,0,0.3);
+  }
   .pc-logo{
     width:48px;
     height:48px;
@@ -1290,7 +1310,7 @@
       <a href="#" class="nav-doc-link" data-view="notepad" style="animation-delay:-1.7s,-2.1s"><i class="fa-solid fa-note-sticky"></i>Notepad</a>
       <a href="https://gmail-otp-dashboard.onrender.com/" target="_blank" rel="noopener noreferrer" style="animation-delay:-1.1s,-1.3s"><i class="fa-solid fa-envelope"></i>My Gmail</a>
       <a href="#" class="nav-doc-link" data-view="authenticator" style="animation-delay:-2.6s,-0.3s"><i class="fa-solid fa-shield-halved"></i>Authenticator</a>
-      <a href="#" class="nav-doc-link" data-view="card" style="animation-delay:-2.0s,-1.0s"><i class="fa-solid fa-credit-card"></i>Card</a>
+      <a href="#" class="nav-doc-link" data-view="card" style="animation-delay:-2.0s,-1.0s"><i class="fa-solid fa-credit-card"></i>Card 💳</a>
       <a href="#" class="nav-doc-link" data-view="security" style="animation-delay:-0.9s,-1.6s"><i class="fa-solid fa-key"></i>Vault</a>
       <a href="#" class="nav-doc-link" data-view="private" style="animation-delay:-3.1s,-0.9s"><i class="fa-solid fa-lock"></i>Private</a>
       <a href="#" class="nav-doc-link" data-view="cv" style="animation-delay:-1.2s,-1.9s"><i class="fa-solid fa-file-invoice"></i>CV</a>
@@ -1522,6 +1542,8 @@
           <input type="text" id="cardNewNote" placeholder="MM/YY  e.g. 07/29" autocomplete="off" maxlength="7">
           <label for="cardNewCvv">CVV</label>
           <input type="password" id="cardNewCvv" placeholder="3 or 4 digits" autocomplete="off" inputmode="numeric" maxlength="4">
+          <label for="cardNewCompany">Company Name (optional)</label>
+          <input type="text" id="cardNewCompany" placeholder="e.g. City Bank / BRAC Bank" autocomplete="off">
           <label for="cardNewLogo">Company Logo URL (optional)</label>
           <input type="url" id="cardNewLogo" placeholder="https://.../logo.png" autocomplete="off">
           <div class="sec-error" id="cardAddError"></div>
@@ -2169,9 +2191,13 @@
           const cvvShow = (c.cvv || '').trim() || '•••';
           const brandLabel = brandLabelText(brand);
           const logoUrl = (c.logo || '').trim();
+          const companyName = (c.company || '').trim();
           const logoHtml = logoUrl
             ? `<img class="pc-logo" src="${escapeHtml(logoUrl)}" alt="logo" onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='flex');"><div class="pc-logo-fallback" style="display:none;"><i class="fas fa-building"></i></div>`
             : `<div class="pc-logo-fallback"><i class="fas fa-building"></i></div>`;
+          const companyHtml = companyName
+            ? `<div class="pc-company-name">${escapeHtml(companyName)}</div>`
+            : '';
           return `<div class="pc-swipe-wrap" data-id="${c.id}">
             <button type="button" class="pc-swipe-edit" title="Edit" onclick="cardEdit(${c.id})">
               <i class="fas fa-pencil"></i>
@@ -2181,7 +2207,10 @@
             </button>
             <div class="plastic-card brand-${brand}" data-id="${c.id}">
               <div class="pc-top">
-                ${logoHtml}
+                <div class="pc-company-wrap">
+                  ${logoHtml}
+                  ${companyHtml}
+                </div>
                 <div class="pc-brand">${brandLabel}</div>
               </div>
               <div class="pc-number-row">
@@ -2364,6 +2393,8 @@
       if(cvvEl) cvvEl.value = '';
       const logoEl = document.getElementById('cardNewLogo');
       if(logoEl) logoEl.value = '';
+      const companyEl = document.getElementById('cardNewCompany');
+      if(companyEl) companyEl.value = '';
       document.getElementById('cardAddError').textContent = '';
       document.getElementById('cardAddModal').classList.add('active');
     }
@@ -2389,6 +2420,8 @@
       if(cvvEl) cvvEl.value = item.cvv || '';
       const logoEl = document.getElementById('cardNewLogo');
       if(logoEl) logoEl.value = item.logo || '';
+      const companyEl = document.getElementById('cardNewCompany');
+      if(companyEl) companyEl.value = item.company || '';
       document.getElementById('cardAddError').textContent = '';
       document.getElementById('cardAddModal').classList.add('active');
     }
@@ -2400,6 +2433,7 @@
       const note = document.getElementById('cardNewNote').value.trim();
       const cvv = (document.getElementById('cardNewCvv')?.value || '').trim();
       const logo = (document.getElementById('cardNewLogo')?.value || '').trim();
+      const company = (document.getElementById('cardNewCompany')?.value || '').trim();
       const errorEl = document.getElementById('cardAddError');
       const btn = document.getElementById('cardAddSaveBtn');
       if(cardAddInFlight) return;
@@ -2430,8 +2464,8 @@
       try{
         const endpoint = isEdit ? 'cards/update' : 'cards/add';
         const payload = isEdit
-          ? { token: cardToken, id: cardEditId, name, number: digits, note, cvv: cvvDigits, logo }
-          : { token: cardToken, name, number: digits, note, cvv: cvvDigits, logo };
+          ? { token: cardToken, id: cardEditId, name, number: digits, note, cvv: cvvDigits, logo, company }
+          : { token: cardToken, name, number: digits, note, cvv: cvvDigits, logo, company };
         const res = await fetch(`${API_BASE}/${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
