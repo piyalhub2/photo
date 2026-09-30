@@ -1394,6 +1394,10 @@
   .mf-pop button:hover{ background:var(--gold-soft); }
   .mf-pop button i{ width:16px; text-align:center; color:var(--text-dim); }
   .mf-pop .mf-del-opt, .mf-pop .mf-del-opt i{ color:var(--danger); }
+
+  .mf-ico{ overflow:hidden; }
+  .mf-l-grid{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); }
+  .mf-l-grid .mf-ico{ width:100%; height:110px; font-size:2rem; border-radius:10px; }
 </style>
 </head>
 <body>
@@ -2441,16 +2445,30 @@
 
     function mfPutThumb(el, url){ el.innerHTML = '<img src="' + url + '" alt="">'; }
     function mfLoadThumbs(){
-      if(mfLayout !== 'gallery' || !mfThumbObserver) return;
+      if(!mfThumbObserver) return;
       document.querySelectorAll('#mfList .mf-ico[data-th]').forEach(el => {
         const id = el.dataset.th;
         const node = mfStorage && mfStorage.files[id];
         if(!node || node.directory) return;
         if(mfMime(node.name).split('/')[0] !== 'image') return;
-        if(!node.size || node.size > 8 * 1024 * 1024) return;
+        if(!node.size || node.size > 12 * 1024 * 1024) return;
         if(mfThumbCache.has(id)){ mfPutThumb(el, mfThumbCache.get(id)); return; }
         mfThumbObserver.observe(el);
       });
+    }
+    async function mfMakeThumb(blob){
+      try{
+        const bmp = await createImageBitmap(blob);
+        const r = Math.min(1, 360 / Math.max(bmp.width, bmp.height));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(bmp.width * r));
+        c.height = Math.max(1, Math.round(bmp.height * r));
+        c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+        if(bmp.close) bmp.close();
+        const out = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.82));
+        if(out) return URL.createObjectURL(out);
+      }catch(_e){}
+      try{ return URL.createObjectURL(blob); }catch(_e){ return null; }
     }
     function mfThumbPump(){
       while(mfThumbActive < 3 && mfThumbQueue.length){
@@ -2461,7 +2479,8 @@
             const node = mfStorage && mfStorage.files[id];
             if(node){
               const blob = await mfFetchBlob(node);
-              const url = URL.createObjectURL(blob);
+              const url = await mfMakeThumb(blob);
+              if(!url) throw new Error('no thumb');
               mfThumbCache.set(id, url);
               document.querySelectorAll('#mfList .mf-ico[data-th="' + id + '"]').forEach(el => mfPutThumb(el, url));
             }
