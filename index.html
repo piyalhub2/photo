@@ -1408,6 +1408,34 @@
   .mf-ico{ overflow:hidden; }
   .mf-l-grid{ grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); }
   .mf-l-grid .mf-ico{ width:100%; height:110px; font-size:2rem; border-radius:10px; }
+
+  /* Grid: full width, 4 per row on desktop */
+  #myfileMain, .mf, #mfList{ width:100%; max-width:100%; }
+  .mf-l-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .mf-l-gallery{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .mf-l-grid .mf-ico{ height:90px; }
+  .mf-l-gallery .mf-ico{ height:120px; }
+  @media (max-width:900px){
+    .mf-l-grid, .mf-l-gallery{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  }
+  @media (max-width:560px){
+    .mf-l-grid, .mf-l-gallery{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+
+  /* ===== Mobile fit fix (My File cut-off) ===== */
+  html,body{ max-width:100%; overflow-x:hidden; }
+  main{ min-width:0; max-width:100%; }            /* lets flex child shrink to screen width */
+  #view-myfile .sec-wrap, #view-myfile .sec-wrap.mf-open{ max-width:100%; width:100%; }
+  .mf, .mf-bar, .mf-list, .mf-item{ min-width:0; max-width:100%; }
+  .mf-bar{ flex-wrap:wrap; }
+  .mf-name, .mf-up-name{ min-width:0; }
+  @media (max-width:560px){
+    #view-myfile .sec-wrap{ padding:22px 14px; }
+    .mf-bar input[type=text]{ flex:1 1 100%; }     /* search on its own row */
+    .mf-bar .mf-btn{ flex:1 1 auto; text-align:center; }
+    .mf-bar .mf-layout-wrap{ flex:0 0 auto; }
+    .mf-menu{ right:auto; left:0; max-width:calc(100vw - 48px); }
+  }
 </style>
 </head>
 <body>
@@ -2465,10 +2493,70 @@
         const node = mfStorage && mfStorage.files[id];
         if(!node || node.directory) return;
         if(mfMime(node.name).split('/')[0] !== 'image') return;
-        if(!node.size || node.size > 12 * 1024 * 1024) return;
+        if(!node.size) return;
         if(mfThumbCache.has(id)){ mfPutThumb(el, mfThumbCache.get(id)); return; }
         mfThumbObserver.observe(el);
       });
+    }
+    // ---- persistent thumbnail cache (IndexedDB) ----
+    const MF_THUMB_MAX = 4 * 1024 * 1024;     // auto-download limit for making a thumbnail from MEGA
+    const MF_THUMB_CONCURRENCY = 6;
+    const MF_PERSIST_THUMBS = true;           // false = thumbnails are wiped from this device on logout
+    let mfDbPromise = null;
+    function mfDb(){
+      if(!mfDbPromise) mfDbPromise = new Promise((resolve, reject) => {
+        try{
+          const rq = indexedDB.open('mfThumbs', 1);
+          rq.onupgradeneeded = () => rq.result.createObjectStore('t');
+          rq.onsuccess = () => resolve(rq.result);
+          rq.onerror = () => reject(rq.error);
+        }catch(e){ reject(e); }
+      });
+      return mfDbPromise;
+    }
+    function mfThumbKey(node){ return node.nodeId + '_' + (node.size || 0); }
+    async function mfDbGet(key){
+      try{
+        const db = await mfDb();
+        return await new Promise(res => {
+          const rq = db.transaction('t').objectStore('t').get(key);
+          rq.onsuccess = () => res(rq.result || null);
+          rq.onerror = () => res(null);
+        });
+      }catch(_e){ return null; }
+    }
+    async function mfDbPut(key, blob){
+      try{
+        const db = await mfDb();
+        db.transaction('t', 'readwrite').objectStore('t').put(blob, key);
+      }catch(_e){}
+    }
+    async function mfDbClear(){
+      try{ const db = await mfDb(); db.transaction('t', 'readwrite').objectStore('t').clear(); }catch(_e){}
+    }
+    // Build a small JPEG blob (max 360px) from any image blob
+    async function mfMakeThumbBlob(blob){
+      try{
+        const bmp = await createImageBitmap(blob);
+        const r = Math.min(1, 360 / Math.max(bmp.width, bmp.height));
+        const c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(bmp.width * r));
+        c.height = Math.max(1, Math.round(bmp.height * r));
+        c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+        if(bmp.close) bmp.close();
+        return await new Promise(res => c.toBlob(res, 'image/jpeg', 0.82));
+      }catch(_e){ return null; }
+    }
+    // Called right after an upload: make the thumbnail from the local file, no MEGA download needed
+    async function mfThumbFromLocal(node, file){
+      try{
+        if(!node || !node.nodeId || !file || !/^image\//.test(file.type || '')) return;
+        const tb = await mfMakeThumbBlob(file);
+        if(!tb) return;
+        const key = node.nodeId + '_' + file.size;
+        mfThumbCache.set(node.nodeId, URL.createObjectURL(tb));
+        mfDbPut(key, tb);
+      }catch(_e){}
     }
     async function mfMakeThumb(blob){
       try{
@@ -2485,15 +2573,25 @@
       try{ return URL.createObjectURL(blob); }catch(_e){ return null; }
     }
     function mfThumbPump(){
-      while(mfThumbActive < 3 && mfThumbQueue.length){
+      while(mfThumbActive < MF_THUMB_CONCURRENCY && mfThumbQueue.length){
         const id = mfThumbQueue.shift();
         mfThumbActive++;
         (async () => {
           try{
             const node = mfStorage && mfStorage.files[id];
             if(node){
-              const blob = await mfFetchBlob(node);
-              const url = await mfMakeThumb(blob);
+              let url = null;
+              const key = mfThumbKey(node);
+              const saved = await mfDbGet(key);
+              if(saved){
+                url = URL.createObjectURL(saved);
+              }else{
+                if(node.size > MF_THUMB_MAX) throw new Error('too large for auto thumbnail');
+                const blob = await mfFetchBlob(node);
+                const tb = await mfMakeThumbBlob(blob);
+                if(tb){ url = URL.createObjectURL(tb); mfDbPut(key, tb); }
+                else url = URL.createObjectURL(blob);
+              }
               if(!url) throw new Error('no thumb');
               mfThumbCache.set(id, url);
               document.querySelectorAll('#mfList .mf-ico[data-th="' + id + '"]').forEach(el => mfPutThumb(el, url));
@@ -2582,7 +2680,8 @@
             pct.textContent = p + '%'; fill.style.width = p + '%';
           });
           up.end(data);
-          await up.complete;
+          const newNode = await up.complete;
+          await mfThumbFromLocal(newNode, f);
           pct.textContent = 'Done'; fill.style.width = '100%'; row.classList.add('done');
           setTimeout(() => row.remove(), 2500);
         }catch(e){
@@ -2773,6 +2872,7 @@
 
     function myfileLogout(){
       mfThumbCache.forEach(u => URL.revokeObjectURL(u)); mfThumbCache.clear(); mfThumbQueue = []; mfThumbPending.clear();
+      if(!MF_PERSIST_THUMBS) mfDbClear();
       try{ if(mfStorage) mfStorage.close(); }catch(_e){}
       mfClosePreview(true);
       myfileToken = null; mfStorage = null; mfBase = null; mfCwd = null; mfQuery = '';
