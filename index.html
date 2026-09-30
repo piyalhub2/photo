@@ -1380,10 +1380,20 @@
   .mf-l-gallery .mf-open{ flex-direction:column; align-items:stretch; gap:0; }
   .mf-l-gallery .mf-ico{ width:100%; height:150px; border-radius:0; font-size:2.6rem; overflow:hidden; }
   .mf-l-gallery .mf-meta{ padding:8px 10px 10px; }
-  .mf-l-gallery .mf-mini{ position:absolute; top:6px; background:rgba(10,13,19,0.72); border-color:rgba(255,255,255,0.18); color:var(--text); }
-  .mf-l-gallery .mf-mini:last-child{ right:6px; }
-  .mf-l-gallery .mf-mini:nth-last-child(2){ right:44px; }
-  .mf-l-gallery .mf-mini:nth-last-child(3){ right:82px; }
+
+  /* 3-dot options menu */
+  .mf-item{ position:relative; }
+  .mf-more-wrap{ position:relative; flex:none; }
+  .mf-l-grid .mf-more-wrap, .mf-l-gallery .mf-more-wrap{ position:absolute; top:8px; right:8px; z-index:5; }
+  .mf-l-gallery .mf-item{ overflow:visible; }
+  .mf-l-gallery .mf-ico{ border-radius:12px 12px 0 0; }
+  .mf-l-gallery .mf-more{ background:rgba(10,13,19,0.72); border-color:rgba(255,255,255,0.18); color:var(--text); }
+  .mf-pop{ display:none; position:absolute; right:0; top:calc(100% + 4px); z-index:40; min-width:160px; background:var(--surface-solid); border:1px solid var(--border-strong); border-radius:12px; padding:6px; box-shadow:0 14px 40px rgba(0,0,0,0.55); text-align:left; }
+  .mf-pop.show{ display:block; }
+  .mf-pop button{ width:100%; display:flex; align-items:center; gap:10px; background:none; border:none; color:var(--text); padding:9px 10px; border-radius:8px; cursor:pointer; font:inherit; font-size:0.86rem; }
+  .mf-pop button:hover{ background:var(--gold-soft); }
+  .mf-pop button i{ width:16px; text-align:center; color:var(--text-dim); }
+  .mf-pop .mf-del-opt, .mf-pop .mf-del-opt i{ color:var(--danger); }
 </style>
 </head>
 <body>
@@ -2461,6 +2471,15 @@
       }
     }
 
+    function mfFitPop(pop){
+      const list = document.getElementById('mfList');
+      list.style.paddingBottom = '';
+      const w = document.getElementById('mfWrap').getBoundingClientRect();
+      const p = pop.getBoundingClientRect();
+      const over = p.bottom - (w.bottom - 16);
+      if(over > 0) list.style.paddingBottom = Math.ceil(over) + 'px';
+    }
+
     function mfRenderSoon(){ clearTimeout(mfRenderTimer); mfRenderTimer = setTimeout(mfRender, 250); }
     function mfSetQuery(v){ mfQuery = v.trim().toLowerCase(); mfRender(); }
 
@@ -2489,9 +2508,14 @@
             <span class="mf-ico" data-th="${id}"><i class="fas ${mfIcon(f)}"></i></span>
             <span class="mf-meta"><span class="mf-name">${mfEsc(f.name || 'Unnamed')}</span><span class="mf-sub">${mfEsc(sub)}</span></span>
           </div>
-          ${f.directory ? '' : `<button class="mf-mini" data-act="dl" data-id="${id}" title="Download"><i class="fas fa-download"></i></button>`}
-          <button class="mf-mini" data-act="ren" data-id="${id}" title="Rename"><i class="fas fa-pen"></i></button>
-          <button class="mf-mini mf-del" data-act="del" data-id="${id}" title="Delete"><i class="fas fa-trash"></i></button>
+          <div class="mf-more-wrap">
+            <button class="mf-mini mf-more" data-act="more" data-id="${id}" title="Options"><i class="fas fa-ellipsis-vertical"></i></button>
+            <div class="mf-pop">
+              ${f.directory ? '' : `<button data-act="dl" data-id="${id}"><i class="fas fa-download"></i> Download</button>`}
+              <button data-act="ren" data-id="${id}"><i class="fas fa-pen"></i> Rename</button>
+              <button class="mf-del-opt" data-act="del" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+          </div>
         </div>`;
       }).join('');
       mfLoadThumbs();
@@ -2600,8 +2624,20 @@
 
     document.addEventListener('click', async (e) => {
       const el = e.target.closest('[data-act]');
+      document.querySelectorAll('.mf-pop.show').forEach(p => {
+        if(!(el && el.dataset.act === 'more' && p.parentElement.contains(el))) p.classList.remove('show');
+      });
+      if(!document.querySelector('.mf-pop.show')){ const l = document.getElementById('mfList'); if(l) l.style.paddingBottom = ''; }
       if(!el || !mfStorage) return;
       const act = el.dataset.act;
+      if(act === 'more'){
+        const pop = el.nextElementSibling;
+        const willShow = !pop.classList.contains('show');
+        pop.classList.toggle('show', willShow);
+        if(willShow) mfFitPop(pop);
+        else { const l = document.getElementById('mfList'); if(l) l.style.paddingBottom = ''; }
+        return;
+      }
       if(act === 'close'){ mfClosePreview(); return; }
       const node = mfStorage.files[el.dataset.id];
       if(!node) return;
