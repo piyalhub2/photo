@@ -1345,6 +1345,45 @@
   .mf-view{ max-width:100%; max-height:72vh; border-radius:8px; }
   .mf-pdf{ width:100%; height:72vh; border:none; background:#fff; }
   .mf-text{ text-align:left; white-space:pre-wrap; word-break:break-word; font-family:var(--mono); font-size:0.8rem; margin:0; }
+
+  .mf-layout-wrap{ position:relative; }
+  .mf-menu{ display:none; position:absolute; right:0; top:calc(100% + 6px); z-index:50; min-width:200px; background:var(--surface-solid); border:1px solid var(--border-strong); border-radius:12px; padding:8px; box-shadow:0 14px 40px rgba(0,0,0,0.55); }
+  .mf-menu.show{ display:block; }
+  .mf-menu-title{ font-size:0.72rem; color:var(--text-faint); padding:4px 10px 6px; text-transform:uppercase; letter-spacing:0.05em; }
+  .mf-menu button{ width:100%; display:flex; align-items:center; gap:12px; background:none; border:none; color:var(--text); padding:9px 10px; border-radius:8px; cursor:pointer; font:inherit; font-size:0.88rem; text-align:left; }
+  .mf-menu button:hover{ background:var(--gold-soft); }
+  .mf-menu button i:first-child{ width:18px; text-align:center; color:var(--text-dim); }
+  .mf-menu button span{ flex:1; }
+  .mf-tick{ visibility:hidden; color:var(--cyan); }
+  .mf-menu button.active .mf-tick{ visibility:visible; }
+  .mf-ico img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* List (roomier rows) */
+  .mf-l-list{ gap:12px; }
+  .mf-l-list .mf-item{ padding:14px 16px; }
+  .mf-l-list .mf-ico{ width:54px; height:54px; font-size:1.3rem; }
+  .mf-l-list .mf-name{ font-size:1rem; white-space:normal; }
+  .mf-l-list .mf-sub{ font-size:0.78rem; margin-top:2px; }
+
+  /* Grid (cards) */
+  .mf-l-grid, .mf-l-gallery{ display:grid; gap:12px; }
+  .mf-l-grid{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+  .mf-l-grid .mf-item{ display:grid; grid-template-columns:repeat(3,1fr); justify-items:center; gap:8px; padding:14px 10px 10px; text-align:center; }
+  .mf-l-grid .mf-open{ grid-column:1/-1; flex-direction:column; gap:10px; width:100%; }
+  .mf-l-grid .mf-ico{ width:64px; height:64px; font-size:1.6rem; }
+  .mf-l-grid .mf-meta{ align-items:center; width:100%; }
+  .mf-l-grid .mf-name{ max-width:100%; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; word-break:break-word; }
+
+  /* Gallery (big thumbnails) */
+  .mf-l-gallery{ grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); }
+  .mf-l-gallery .mf-item{ position:relative; display:flex; flex-direction:column; align-items:stretch; padding:0; overflow:hidden; }
+  .mf-l-gallery .mf-open{ flex-direction:column; align-items:stretch; gap:0; }
+  .mf-l-gallery .mf-ico{ width:100%; height:150px; border-radius:0; font-size:2.6rem; overflow:hidden; }
+  .mf-l-gallery .mf-meta{ padding:8px 10px 10px; }
+  .mf-l-gallery .mf-mini{ position:absolute; top:6px; background:rgba(10,13,19,0.72); border-color:rgba(255,255,255,0.18); color:var(--text); }
+  .mf-l-gallery .mf-mini:last-child{ right:6px; }
+  .mf-l-gallery .mf-mini:nth-last-child(2){ right:44px; }
+  .mf-l-gallery .mf-mini:nth-last-child(3){ right:82px; }
 </style>
 </head>
 <body>
@@ -1888,6 +1927,16 @@
               <input type="text" id="mfSearch" placeholder="Search in this folder..." oninput="mfSetQuery(this.value)">
               <button class="mf-btn" onclick="mfNewFolder()" title="New folder"><i class="fas fa-folder-plus"></i></button>
               <button class="mf-btn mf-primary" onclick="document.getElementById('mfFileInput').click()"><i class="fas fa-upload"></i> Upload</button>
+              <div class="mf-layout-wrap">
+                <button class="mf-btn" id="mfLayoutBtn" onclick="mfToggleLayoutMenu(event)" title="Layout"><i class="fas fa-table-cells-large"></i></button>
+                <div class="mf-menu" id="mfLayoutMenu">
+                  <div class="mf-menu-title">Layout</div>
+                  <button data-layout="compact" onclick="mfSetLayout('compact')"><i class="fas fa-list-ul"></i><span>Compact list</span><i class="fas fa-check mf-tick"></i></button>
+                  <button data-layout="list" onclick="mfSetLayout('list')"><i class="fas fa-bars"></i><span>List</span><i class="fas fa-check mf-tick"></i></button>
+                  <button data-layout="grid" onclick="mfSetLayout('grid')"><i class="fas fa-table-cells-large"></i><span>Grid</span><i class="fas fa-check mf-tick"></i></button>
+                  <button data-layout="gallery" onclick="mfSetLayout('gallery')"><i class="fas fa-image"></i><span>Gallery</span><i class="fas fa-check mf-tick"></i></button>
+                </div>
+              </div>
               <button class="mf-btn" onclick="myfileLogout()" title="Lock"><i class="fas fa-lock"></i></button>
               <input type="file" id="mfFileInput" multiple hidden onchange="mfUploadFiles(this.files); this.value=''">
             </div>
@@ -2296,6 +2345,7 @@
       if(!base) base = await storage.root.mkdir(MF_BASE_NAME);
       mfBase = base; mfCwd = base;
       ['add','move','delete','update'].forEach(ev => { try{ storage.on(ev, mfRenderSoon); }catch(_e){} });
+      mfMarkLayout();
       mfRender();
       mfLoadSpace();
     }
@@ -2339,6 +2389,78 @@
       }catch(_e){}
     }
 
+    // ---- layout switcher (Compact list / List / Grid / Gallery) ----
+    let mfLayout = 'compact';
+    try{ const sv = localStorage.getItem('mfLayout'); if(['compact','list','grid','gallery'].includes(sv)) mfLayout = sv; }catch(_e){}
+    const mfThumbCache = new Map();
+    const mfThumbPending = new Set();
+    let mfThumbQueue = [], mfThumbActive = 0;
+
+    function mfMarkLayout(){
+      document.querySelectorAll('#mfLayoutMenu button').forEach(b => b.classList.toggle('active', b.dataset.layout === mfLayout));
+      const ic = {compact:'fa-list-ul', list:'fa-bars', grid:'fa-table-cells-large', gallery:'fa-image'}[mfLayout];
+      const btn = document.getElementById('mfLayoutBtn');
+      if(btn) btn.innerHTML = '<i class="fas ' + ic + '"></i>';
+    }
+    function mfToggleLayoutMenu(e){
+      if(e) e.stopPropagation();
+      document.getElementById('mfLayoutMenu').classList.toggle('show');
+      mfMarkLayout();
+    }
+    function mfSetLayout(name){
+      mfLayout = name;
+      try{ localStorage.setItem('mfLayout', name); }catch(_e){}
+      document.getElementById('mfLayoutMenu').classList.remove('show');
+      mfMarkLayout();
+      mfRender();
+    }
+    document.addEventListener('click', () => {
+      const m = document.getElementById('mfLayoutMenu');
+      if(m) m.classList.remove('show');
+    });
+
+    const mfThumbObserver = ('IntersectionObserver' in window) ? new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if(!en.isIntersecting) return;
+        mfThumbObserver.unobserve(en.target);
+        const id = en.target.dataset.th;
+        if(id && !mfThumbPending.has(id) && !mfThumbCache.has(id)){ mfThumbPending.add(id); mfThumbQueue.push(id); }
+      });
+      mfThumbPump();
+    }, { rootMargin: '200px' }) : null;
+
+    function mfPutThumb(el, url){ el.innerHTML = '<img src="' + url + '" alt="">'; }
+    function mfLoadThumbs(){
+      if(mfLayout !== 'gallery' || !mfThumbObserver) return;
+      document.querySelectorAll('#mfList .mf-ico[data-th]').forEach(el => {
+        const id = el.dataset.th;
+        const node = mfStorage && mfStorage.files[id];
+        if(!node || node.directory) return;
+        if(mfMime(node.name).split('/')[0] !== 'image') return;
+        if(!node.size || node.size > 8 * 1024 * 1024) return;
+        if(mfThumbCache.has(id)){ mfPutThumb(el, mfThumbCache.get(id)); return; }
+        mfThumbObserver.observe(el);
+      });
+    }
+    function mfThumbPump(){
+      while(mfThumbActive < 3 && mfThumbQueue.length){
+        const id = mfThumbQueue.shift();
+        mfThumbActive++;
+        (async () => {
+          try{
+            const node = mfStorage && mfStorage.files[id];
+            if(node){
+              const blob = await mfFetchBlob(node);
+              const url = URL.createObjectURL(blob);
+              mfThumbCache.set(id, url);
+              document.querySelectorAll('#mfList .mf-ico[data-th="' + id + '"]').forEach(el => mfPutThumb(el, url));
+            }
+          }catch(_e){}
+          finally{ mfThumbPending.delete(id); mfThumbActive--; mfThumbPump(); }
+        })();
+      }
+    }
+
     function mfRenderSoon(){ clearTimeout(mfRenderTimer); mfRenderTimer = setTimeout(mfRender, 250); }
     function mfSetQuery(v){ mfQuery = v.trim().toLowerCase(); mfRender(); }
 
@@ -2354,6 +2476,7 @@
         .filter(c => !mfQuery || String(c.name || '').toLowerCase().includes(mfQuery))
         .sort((x, y) => (y.directory - x.directory) || String(x.name || '').localeCompare(String(y.name || '')));
       const el = document.getElementById('mfList');
+      el.className = 'mf-list mf-l-' + mfLayout;
       if(!items.length){
         el.innerHTML = '<div class="mf-empty">' + (mfQuery ? 'No matching files.' : 'This folder is empty. Tap Upload or drop files here.') + '</div>';
         return;
@@ -2363,7 +2486,7 @@
         const sub = f.directory ? 'Folder' : (mfSize(f.size) + (f.timestamp ? ' · ' + new Date(f.timestamp * 1000).toLocaleDateString() : ''));
         return `<div class="mf-item">
           <div class="mf-open" data-act="open" data-id="${id}">
-            <span class="mf-ico"><i class="fas ${mfIcon(f)}"></i></span>
+            <span class="mf-ico" data-th="${id}"><i class="fas ${mfIcon(f)}"></i></span>
             <span class="mf-meta"><span class="mf-name">${mfEsc(f.name || 'Unnamed')}</span><span class="mf-sub">${mfEsc(sub)}</span></span>
           </div>
           ${f.directory ? '' : `<button class="mf-mini" data-act="dl" data-id="${id}" title="Download"><i class="fas fa-download"></i></button>`}
@@ -2371,6 +2494,7 @@
           <button class="mf-mini mf-del" data-act="del" data-id="${id}" title="Delete"><i class="fas fa-trash"></i></button>
         </div>`;
       }).join('');
+      mfLoadThumbs();
     }
 
     async function mfNewFolder(){
@@ -2507,6 +2631,7 @@
     })();
 
     function myfileLogout(){
+      mfThumbCache.forEach(u => URL.revokeObjectURL(u)); mfThumbCache.clear(); mfThumbQueue = []; mfThumbPending.clear();
       try{ if(mfStorage) mfStorage.close(); }catch(_e){}
       mfClosePreview();
       myfileToken = null; mfStorage = null; mfBase = null; mfCwd = null; mfQuery = '';
