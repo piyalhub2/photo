@@ -1357,6 +1357,14 @@
   .mf-tick{ visibility:hidden; color:var(--cyan); }
   .mf-menu button.active .mf-tick{ visibility:visible; }
   .mf-ico img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .mf-pick-box{ width:min(460px,100%); }
+  .mf-pick-crumbs{ display:flex; flex-wrap:wrap; gap:4px; align-items:center; padding:10px 14px 0; font-size:0.8rem; }
+  .mf-pick-list{ padding:10px 14px; overflow:auto; display:flex; flex-direction:column; gap:6px; max-height:46vh; min-height:120px; text-align:left; }
+  .mf-pick-row{ display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:var(--surface); cursor:pointer; color:var(--text); font:inherit; font-size:0.88rem; text-align:left; }
+  .mf-pick-row:hover{ border-color:var(--gold); }
+  .mf-pick-row i{ color:var(--gold); }
+  .mf-pick-foot{ display:flex; gap:8px; justify-content:flex-end; padding:12px 14px; border-top:1px solid var(--border); }
+  .mf-toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:10001; background:var(--surface-solid); border:1px solid var(--border-strong); color:var(--text); padding:10px 16px; border-radius:10px; font-size:0.85rem; box-shadow:0 10px 30px rgba(0,0,0,0.5); max-width:90vw; }
 
   /* Text editor in preview modal */
   .mf-modal-actions{ display:flex; gap:6px; align-items:center; }
@@ -2643,6 +2651,11 @@
             <button class="mf-mini mf-more" data-act="more" data-id="${id}" title="Options"><i class="fas fa-ellipsis-vertical"></i></button>
             <div class="mf-pop">
               ${f.directory ? '' : `<button data-act="dl" data-id="${id}"><i class="fas fa-download"></i> Download</button>`}
+              ${f.directory ? '' : `<button data-act="link" data-id="${id}"><i class="fas fa-link"></i> Copy link</button>
+              <button data-act="share" data-id="${id}"><i class="fas fa-share-nodes"></i> Share</button>
+              <button data-act="unlink" data-id="${id}"><i class="fas fa-link-slash"></i> Remove link</button>`}
+              <button data-act="move" data-id="${id}"><i class="fas fa-arrows-up-down-left-right"></i> Move to...</button>
+              <button data-act="copy" data-id="${id}"><i class="fas fa-copy"></i> Copy to...</button>
               <button data-act="ren" data-id="${id}"><i class="fas fa-pen"></i> Rename</button>
               <button class="mf-del-opt" data-act="del" data-id="${id}"><i class="fas fa-trash"></i> Delete</button>
             </div>
@@ -2822,6 +2835,161 @@
       }
     }
 
+
+    // ---------- Copy link / Share / Move / Copy ----------
+    function mfToast(msg){
+      let t = document.getElementById('mfToast');
+      if(!t){ t = document.createElement('div'); t.id = 'mfToast'; t.className = 'mf-toast'; document.body.appendChild(t); }
+      t.textContent = msg; t.style.display = 'block';
+      clearTimeout(mfToast._t); mfToast._t = setTimeout(() => { t.style.display = 'none'; }, 3200);
+    }
+    async function mfClip(text){
+      try{ await navigator.clipboard.writeText(text); return true; }catch(_e){}
+      try{
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok;
+      }catch(_e){ return false; }
+    }
+    async function mfGetLink(node){
+      const url = await node.link();
+      return url;
+    }
+    async function mfCopyLink(node){
+      try{
+        mfToast('Creating link...');
+        const url = await mfGetLink(node);
+        if(await mfClip(url)) mfToast('Link copied. Anyone with this link can open it.');
+        else prompt('Copy this link:', url);
+      }catch(err){ alert('Could not create link: ' + (err.message || err)); }
+    }
+    async function mfShare(node){
+      try{
+        mfToast('Creating link...');
+        const url = await mfGetLink(node);
+        if(navigator.share){
+          try{ await navigator.share({ title: node.name || 'File', url }); return; }
+          catch(e){ if(e && e.name === 'AbortError') return; }
+        }
+        if(await mfClip(url)) mfToast('Link copied. Paste it wherever you want to share.');
+        else prompt('Copy this link:', url);
+      }catch(err){ alert('Could not share: ' + (err.message || err)); }
+    }
+    async function mfRemoveLink(node){
+      if(!confirm('Remove the public link of "' + (node.name || 'this item') + '"? Old links will stop working.')) return;
+      try{ await node.unshare(); mfToast('Link removed.'); }
+      catch(err){ alert('Could not remove link: ' + (err.message || err)); }
+    }
+
+    // Folder picker: resolves to a folder node or null
+    function mfPickFolder(title, blockNode){
+      return new Promise(resolve => {
+        let cur = mfBase || mfStorage.root;
+        const m = document.createElement('div');
+        m.className = 'mf-modal show'; m.style.zIndex = 10000;
+        m.innerHTML = '<div class="mf-modal-box mf-pick-box"><div class="mf-modal-head"><span class="mf-modal-title"></span><button class="mf-mini" data-pk="x"><i class="fas fa-xmark"></i></button></div><div class="mf-pick-crumbs"></div><div class="mf-pick-list"></div><div class="mf-pick-foot"><button class="mf-btn" data-pk="x">Cancel</button><button class="mf-btn mf-primary" data-pk="ok"></button></div></div>';
+        m.querySelector('.mf-modal-title').textContent = title;
+        document.body.appendChild(m);
+        const done = v => { m.remove(); resolve(v); };
+        const isBlocked = n => { for(let x = n; x; x = x.parent){ if(blockNode && x === blockNode) return true; } return false; };
+        function draw(){
+          const chain = []; for(let x = cur; x; x = x.parent){ chain.unshift(x); if(x === (mfBase || mfStorage.root)) break; }
+          const cr = m.querySelector('.mf-pick-crumbs');
+          cr.innerHTML = '';
+          chain.forEach((c, i) => {
+            const b = document.createElement('button'); b.className = 'mf-crumb' + (i === chain.length - 1 ? ' active' : '');
+            b.textContent = i === 0 ? 'My File' : (c.name || '');
+            b.onclick = () => { cur = c; draw(); };
+            cr.appendChild(b);
+            if(i < chain.length - 1){ const sp = document.createElement('span'); sp.className = 'mf-sep'; sp.textContent = '/'; cr.appendChild(sp); }
+          });
+          const list = m.querySelector('.mf-pick-list'); list.innerHTML = '';
+          const folders = (cur.children || []).filter(c => c.directory && !isBlocked(c))
+            .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+          if(!folders.length){ const e = document.createElement('div'); e.className = 'mf-empty'; e.textContent = 'No sub-folders here.'; list.appendChild(e); }
+          folders.forEach(f => {
+            const b = document.createElement('button'); b.className = 'mf-pick-row';
+            b.innerHTML = '<i class="fas fa-folder"></i><span></span>';
+            b.lastChild.textContent = f.name || 'Folder';
+            b.onclick = () => { cur = f; draw(); };
+            list.appendChild(b);
+          });
+          const ok = m.querySelector('[data-pk="ok"]');
+          ok.textContent = 'Select this folder';
+          ok.disabled = isBlocked(cur);
+        }
+        m.addEventListener('click', e => {
+          const k = e.target.closest('[data-pk]');
+          if(k){ e.stopPropagation(); if(k.dataset.pk === 'x') done(null); else if(!k.disabled) done(cur); }
+          else if(e.target === m) done(null);
+        });
+        draw();
+      });
+    }
+
+    async function mfMoveNode(node){
+      const target = await mfPickFolder('Move "' + (node.name || 'item') + '" to...', node.directory ? node : null);
+      if(!target) return;
+      if(target === node.parent){ mfToast('Already in that folder.'); return; }
+      try{ await node.moveTo(target); mfToast('Moved.'); mfRender(); }
+      catch(err){ alert('Move failed: ' + (err.message || err)); }
+    }
+
+    function mfUniqueName(folder, name){
+      const names = new Set((folder.children || []).map(c => c.name));
+      if(!names.has(name)) return name;
+      const dot = name.lastIndexOf('.');
+      const base = dot > 0 ? name.slice(0, dot) : name, ext = dot > 0 ? name.slice(dot) : '';
+      let i = 1, cand;
+      do{ cand = base + ' (copy' + (i > 1 ? ' ' + i : '') + ')' + ext; i++; }while(names.has(cand));
+      return cand;
+    }
+    // Files are copied by download + re-upload (encrypted end to end, no public link needed)
+    async function mfCopyFileTo(node, folder, row){
+      const pct = row.querySelector('.mf-up-pct'), fill = row.querySelector('.mf-bar-fill');
+      pct.textContent = 'Reading...';
+      const buf = new Uint8Array(await node.downloadBuffer());
+      const name = mfUniqueName(folder, node.name || 'file');
+      const up = folder.upload({ name, size: buf.length });
+      up.on('progress', info => {
+        const total = info.bytesTotal || buf.length || 1;
+        const pp = Math.min(100, Math.round(((info.bytesUploaded != null ? info.bytesUploaded : info.bytesLoaded) || 0) / total * 100));
+        pct.textContent = pp + '%'; fill.style.width = pp + '%';
+      });
+      up.end(buf);
+      return await up.complete;
+    }
+    async function mfCopyFolderTo(node, folder, boxRow){
+      const nf = await folder.mkdir(mfUniqueName(folder, node.name || 'Folder'));
+      for(const c of (node.children || [])){
+        if(c.directory) await mfCopyFolderTo(c, nf, boxRow);
+        else await mfCopyFileTo(c, nf, boxRow);
+      }
+      return nf;
+    }
+    async function mfCopyNode(node){
+      const target = await mfPickFolder('Copy "' + (node.name || 'item') + '" to...', node.directory ? node : null);
+      if(!target) return;
+      const files = [];
+      (function walk(n){ if(n.directory) (n.children || []).forEach(walk); else files.push(n); })(node);
+      const total = files.reduce((a, f) => a + (f.size || 0), 0);
+      if(total > 100 * 1024 * 1024 && !confirm('This copy is ' + mfSize(total) + '. Files are copied by downloading and uploading again, which uses your MEGA bandwidth and can take a while. Continue?')) return;
+      const box = document.getElementById('mfUploads');
+      const row = document.createElement('div');
+      row.className = 'mf-up';
+      row.innerHTML = '<div class="mf-up-top"><span class="mf-up-name"></span><span class="mf-up-pct">0%</span></div><div class="mf-bar-bg"><div class="mf-bar-fill"></div></div>';
+      row.querySelector('.mf-up-name').textContent = 'Copying: ' + (node.name || '');
+      box.appendChild(row);
+      try{
+        if(node.directory) await mfCopyFolderTo(node, target, row);
+        else await mfCopyFileTo(node, target, row);
+        row.querySelector('.mf-up-pct').textContent = 'Done'; row.querySelector('.mf-bar-fill').style.width = '100%'; row.classList.add('done');
+        setTimeout(() => row.remove(), 2500);
+      }catch(err){
+        row.querySelector('.mf-up-pct').textContent = 'Failed'; row.classList.add('fail'); row.title = (err && err.message) || 'Copy failed';
+      }
+      mfRender(); mfLoadSpace();
+    }
+
     document.addEventListener('click', async (e) => {
       const el = e.target.closest('[data-act]');
       document.querySelectorAll('.mf-pop.show').forEach(p => {
@@ -2851,6 +3019,12 @@
       }
       else if(act === 'astext'){ mfOpenAsText(node); }
       else if(act === 'dl'){ mfDownload(node); }
+      else if(act === 'link'){ mfCopyLink(node); }
+      else if(act === 'share'){ mfShare(node); }
+      else if(act === 'unlink'){ mfRemoveLink(node); }
+      else if(act === 'move'){ mfMoveNode(node); }
+      else if(act === 'copy'){ mfCopyNode(node); }
+      else if(act === 'pick-go'){ /* handled inside picker */ }
       else if(act === 'ren'){
         const nn = (prompt('Rename to:', node.name || '') || '').trim();
         if(!nn || nn === node.name) return;
