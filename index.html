@@ -2370,6 +2370,7 @@
       const storage = new window.mega.Storage({ email: data.email, password: data.password });
       await storage.ready;
       mfStorage = storage;
+      mfBase = storage.root; mfCwd = storage.root;
 
       ['add','move','delete','update'].forEach(ev => { try{ storage.on(ev, mfRenderSoon); }catch(_e){} });
       mfMarkLayout();
