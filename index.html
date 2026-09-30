@@ -2499,7 +2499,7 @@
       });
     }
     // ---- persistent thumbnail cache (IndexedDB) ----
-    const MF_THUMB_MAX = 4 * 1024 * 1024;     // auto-download limit for making a thumbnail from MEGA
+    const MF_THUMB_MAX = 20 * 1024 * 1024;    // auto-download limit for making a thumbnail from MEGA
     const MF_THUMB_CONCURRENCY = 6;
     const MF_PERSIST_THUMBS = true;           // false = thumbnails are wiped from this device on logout
     let mfDbPromise = null;
