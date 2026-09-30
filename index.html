@@ -1358,6 +1358,16 @@
   .mf-menu button.active .mf-tick{ visibility:visible; }
   .mf-ico img{ width:100%; height:100%; object-fit:cover; display:block; }
 
+  /* Text editor in preview modal */
+  .mf-modal-actions{ display:flex; gap:6px; align-items:center; }
+  .mf-editor{
+    width:100%; min-height:60vh; resize:vertical; box-sizing:border-box;
+    background:var(--bg); color:var(--text); border:1px solid var(--border-strong);
+    border-radius:10px; padding:12px; font-family:var(--mono); font-size:0.82rem;
+    line-height:1.6; tab-size:2; white-space:pre; overflow:auto;
+  }
+  .mf-editor:focus{ outline:none; border-color:var(--gold); }
+
   /* List (roomier rows) */
   .mf-l-list{ gap:12px; }
   .mf-l-list .mf-item{ padding:14px 16px; }
@@ -2291,7 +2301,7 @@
       document.getElementById('privLockError').textContent = '';
     }
 
-    // ---------- My File (real MEGA storage: upload / browse / preview / download) ----------
+    // ---------- My File (real MEGA storage: upload / browse / preview / edit / download) ----------
     const MF_BASE_ID = 'K3xT3LTQ';      // your MEGA folder handle (from mega.nz/fm/K3xT3LTQ)
     const MF_BASE_NAME = 'My File';     // fallback folder that is auto-created if the handle is not found
     const MF_MAX_PREVIEW = 200 * 1024 * 1024;
@@ -2320,6 +2330,12 @@
         pdf:'application/pdf',txt:'text/plain',csv:'text/plain'};
       return m[mfExt(name)] || 'application/octet-stream';
     }
+    const MF_TEXT_EXT = ['txt','md','markdown','json','csv','tsv','log','xml','html','htm','css','js','mjs','ts','jsx','tsx',
+      'py','java','c','cpp','h','cs','php','rb','go','rs','sh','bat','ps1','sql','yml','yaml','toml','ini','cfg','conf','env',
+      'gs','srt','vtt','tex','gitignore'];
+    const MF_MAX_TEXT = 5 * 1024 * 1024;
+    function mfIsText(name){ return MF_TEXT_EXT.includes(mfExt(name)); }
+    let mfEditNode = null, mfEditText = '';
     function mfSize(n){
       if(n == null) return '';
       const u = ['B','KB','MB','GB']; let i = 0; n = Number(n);
@@ -2354,10 +2370,7 @@
       const storage = new window.mega.Storage({ email: data.email, password: data.password });
       await storage.ready;
       mfStorage = storage;
-      let base = storage.files && storage.files[MF_BASE_ID];
-      if(!base || !base.directory) base = (storage.root.children || []).find(c => c.directory && c.name === MF_BASE_NAME);
-      if(!base) base = await storage.root.mkdir(MF_BASE_NAME);
-      mfBase = base; mfCwd = base;
+
       ['add','move','delete','update'].forEach(ev => { try{ storage.on(ev, mfRenderSoon); }catch(_e){} });
       mfMarkLayout();
       mfRender();
@@ -2604,33 +2617,101 @@
       }
       return m;
     }
-    function mfClosePreview(){
+
+    function mfClosePreview(force){
+      if(!force && document.getElementById('mfEditor') && !confirm('Discard unsaved changes?')) return;
+      mfEditNode = null; mfEditText = '';
       const m = document.getElementById('mfModal');
       if(m) m.classList.remove('show');
       const body = document.getElementById('mfModalBody');
       if(body) body.innerHTML = '';
       if(mfBlobUrl){ URL.revokeObjectURL(mfBlobUrl); mfBlobUrl = null; }
     }
+
+    function mfShowText(node, text){
+      mfEditNode = node; mfEditText = text;
+      document.getElementById('mfModalTitle').textContent = node.name || 'File';
+      document.getElementById('mfModalActions').innerHTML =
+        `<button class="mf-mini" data-act="edit" title="Edit"><i class="fas fa-pen-to-square"></i></button>` +
+        `<button class="mf-mini" data-act="dl" data-id="${mfEsc(node.nodeId)}" title="Download"><i class="fas fa-download"></i></button>`;
+      const body = document.getElementById('mfModalBody');
+      const pre = document.createElement('pre'); pre.className = 'mf-text';
+      pre.textContent = text;
+      body.innerHTML = ''; body.appendChild(pre);
+    }
+
+    function mfStartEdit(){
+      if(!mfEditNode) return;
+      document.getElementById('mfModalActions').innerHTML =
+        `<button class="mf-btn mf-primary" data-act="save"><i class="fas fa-floppy-disk"></i> Save</button>` +
+        `<button class="mf-btn" data-act="cancel-edit">Cancel</button>`;
+      const body = document.getElementById('mfModalBody');
+      body.innerHTML = '<textarea class="mf-editor" id="mfEditor" spellcheck="false"></textarea>';
+      const ta = document.getElementById('mfEditor');
+      ta.value = mfEditText;
+      ta.addEventListener('keydown', e => {
+        if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){
+          e.preventDefault();
+          const b = document.querySelector('#mfModalActions [data-act="save"]');
+          if(b) mfSaveEdit(b);
+        }
+      });
+      ta.focus();
+    }
+
+    async function mfSaveEdit(btn){
+      const ta = document.getElementById('mfEditor');
+      if(!ta || !mfEditNode) return;
+      const old = mfEditNode, parent = old.parent, name = old.name, text = ta.value;
+      const label = btn.innerHTML;
+      btn.disabled = true; btn.textContent = 'Saving...';
+      try{
+        const data = new TextEncoder().encode(text);
+        const up = parent.upload({ name, size: data.length });
+        up.end(data);
+        const newNode = await up.complete;
+        try{ await old.delete(true); }catch(_e){}   // purano version muche felo
+        mfShowText(newNode || old, text);
+        mfRender(); mfLoadSpace();
+      }catch(e){
+        alert('Save failed: ' + (e.message || e));
+        btn.disabled = false; btn.innerHTML = label;
+      }
+    }
+
+    async function mfOpenAsText(node){
+      const body = document.getElementById('mfModalBody');
+      body.innerHTML = '<div class="mf-empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+      try{
+        const blob = await mfFetchBlob(node);
+        mfShowText(node, await blob.text());
+      }catch(e){
+        body.innerHTML = '<div class="mf-empty">Could not load the file: ' + mfEsc(e.message || e) + '</div>';
+      }
+    }
+
     async function mfPreview(node){
       const m = mfModalEl();
       const body = document.getElementById('mfModalBody');
+      mfEditNode = null; mfEditText = '';
       document.getElementById('mfModalTitle').textContent = node.name || 'File';
       document.getElementById('mfModalActions').innerHTML = `<button class="mf-mini" data-act="dl" data-id="${mfEsc(node.nodeId)}" title="Download"><i class="fas fa-download"></i></button>`;
       m.classList.add('show');
       const mime = mfMime(node.name);
       const kind = mime.split('/')[0];
-      const previewable = ['image','video','audio'].includes(kind) || mime === 'application/pdf' || mime === 'text/plain';
-      if(!previewable){ body.innerHTML = '<div class="mf-empty">No preview for this file type. Use the download button.</div>'; return; }
-      if(node.size > MF_MAX_PREVIEW){ body.innerHTML = '<div class="mf-empty">File is too large to preview. Use the download button.</div>'; return; }
+      const isText = mfIsText(node.name);
+      const previewable = isText || ['image','video','audio'].includes(kind) || mime === 'application/pdf';
+      if(!previewable){
+        body.innerHTML = '<div class="mf-empty">No preview for this file type. Use the download button.' +
+          (node.size <= MF_MAX_TEXT ? `<br><br><button class="mf-btn" data-act="astext" data-id="${mfEsc(node.nodeId)}">Open as text</button>` : '') + '</div>';
+        return;
+      }
+      if(isText ? node.size > MF_MAX_TEXT : node.size > MF_MAX_PREVIEW){ body.innerHTML = '<div class="mf-empty">File is too large to preview. Use the download button.</div>'; return; }
       body.innerHTML = '<div class="mf-empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
       try{
         const blob = await mfFetchBlob(node);
         if(!m.classList.contains('show')) return;
-        if(mime === 'text/plain'){
-          const pre = document.createElement('pre'); pre.className = 'mf-text';
-          pre.textContent = await blob.text();
-          body.innerHTML = ''; body.appendChild(pre); return;
-        }
+        if(isText){ mfShowText(node, await blob.text()); return; }
         mfBlobUrl = URL.createObjectURL(blob);
         if(kind === 'image') body.innerHTML = `<img class="mf-view" src="${mfBlobUrl}" alt="">`;
         else if(kind === 'video') body.innerHTML = `<video class="mf-view" src="${mfBlobUrl}" controls playsinline></video>`;
@@ -2658,6 +2739,9 @@
         return;
       }
       if(act === 'close'){ mfClosePreview(); return; }
+      if(act === 'edit'){ mfStartEdit(); return; }
+      if(act === 'save'){ mfSaveEdit(el); return; }
+      if(act === 'cancel-edit'){ if(mfEditNode) mfShowText(mfEditNode, mfEditText); return; }
       const node = mfStorage.files[el.dataset.id];
       if(!node) return;
       if(act === 'crumb'){ mfCwd = node; mfRender(); }
@@ -2665,6 +2749,7 @@
         if(node.directory){ mfCwd = node; mfQuery = ''; document.getElementById('mfSearch').value = ''; mfRender(); }
         else mfPreview(node);
       }
+      else if(act === 'astext'){ mfOpenAsText(node); }
       else if(act === 'dl'){ mfDownload(node); }
       else if(act === 'ren'){
         const nn = (prompt('Rename to:', node.name || '') || '').trim();
@@ -2688,7 +2773,7 @@
     function myfileLogout(){
       mfThumbCache.forEach(u => URL.revokeObjectURL(u)); mfThumbCache.clear(); mfThumbQueue = []; mfThumbPending.clear();
       try{ if(mfStorage) mfStorage.close(); }catch(_e){}
-      mfClosePreview();
+      mfClosePreview(true);
       myfileToken = null; mfStorage = null; mfBase = null; mfCwd = null; mfQuery = '';
       document.getElementById('myfilePasswordField').value = '';
       document.getElementById('myfilePasswordField').type = 'password';
