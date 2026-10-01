@@ -1,1 +1,200 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storage</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#16181d;--mute:#69707d;--line:#e3e6ea;--acc:#2563eb;--gd:#1a9c5b;--mg:#d9272e}
+@media(prefers-color-scheme:dark){:root{--bg:#14161a;--card:#1d2026;--ink:#eceef2;--mute:#9aa1ad;--line:#2b2f37;--acc:#6b9bff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Noto Sans Bengali",sans-serif}
+header{display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header h1{font-size:17px;margin:0;flex:1}
+.sw{display:flex;gap:8px}
+.av{width:42px;height:42px;border-radius:50%;border:3px solid transparent;display:grid;place-items:center;font-weight:700;color:#fff;cursor:pointer;position:relative;opacity:.55;transition:.15s}
+.av:hover{opacity:.85}.av.on{opacity:1;border-color:var(--ink)}
+.av[data-p=gd]{background:var(--gd)}.av[data-p=mega]{background:var(--mg)}
+.av i{position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%;background:#9aa1ad;border:2px solid var(--card)}
+.av.ok i{background:#22c55e}
+main{max-width:980px;margin:0 auto;padding:18px}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.crumb{flex:1;color:var(--mute);min-width:140px}
+.crumb a{color:var(--acc);cursor:pointer}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.list{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.row{display:grid;grid-template-columns:28px 1fr auto auto;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+.row:last-child{border:0}.row:hover{background:var(--bg)}
+.sz{color:var(--mute);font-size:13px}
+.drop{outline:2px dashed var(--acc);outline-offset:-6px}
+.msg{padding:38px 16px;text-align:center;color:var(--mute)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:20px;width:min(360px,92vw)}
+dialog::backdrop{background:#0008}
+dialog input{width:100%;padding:9px;margin:6px 0 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Storage</h1>
+  <div class="sw">
+    <div class="av" data-p="gd" title="Google Drive" tabindex="0">G<i></i></div>
+    <div class="av" data-p="mega" title="Mega" tabindex="0">M<i></i></div>
+  </div>
+</header>
+<main id="main">
+  <div class="bar">
+    <div class="crumb" id="crumb"></div>
+    <button class="pri" id="up">Upload</button>
+    <input type="file" id="file" multiple hidden>
+  </div>
+  <div class="list" id="list"><div class="msg">উপরের আইকন থেকে একটি অ্যাকাউন্ট বেছে নিন।</div></div>
+</main>
 
+<dialog id="mdlg">
+  <form method="dialog" id="mform">
+    <b>Mega login</b><br>
+    <input id="memail" type="email" placeholder="Email" autocomplete="username" required>
+    <input id="mpass" type="password" placeholder="Password" autocomplete="current-password" required>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" id="mcancel">Cancel</button><button class="pri">Connect</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/megajs@1.3.7/dist/main.browser-umd.js"></script>
+<script>
+// ====== শুধু এই লাইনটি বদলান (Google Cloud Console থেকে পাওয়া Client ID) ======
+const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
+// ==========================================================================
+
+const $ = s => document.querySelector(s);
+const S = { p: null, gd: { token: null, exp: 0, stack: [{ id: 'root', name: 'My Drive' }] }, mega: { st: null, stack: [] } };
+const toast = t => { const e = $('#toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2800); };
+const size = n => !n ? '' : n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : n < 1073741824 ? (n / 1048576).toFixed(1) + ' MB' : (n / 1073741824).toFixed(2) + ' GB';
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------- Google Drive ---------- */
+function gdToken() {
+  return new Promise((ok, no) => {
+    if (S.gd.token && Date.now() < S.gd.exp) return ok(S.gd.token);
+    if (!window.google) return no(new Error('Google script লোড হয়নি'));
+    google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/drive',
+      callback: r => { if (r.error) return no(new Error(r.error)); S.gd.token = r.access_token; S.gd.exp = Date.now() + (r.expires_in - 60) * 1000; ok(r.access_token); }
+    }).requestAccessToken();
+  });
+}
+async function gdApi(url, opt = {}) {
+  const t = await gdToken();
+  const r = await fetch(url, { ...opt, headers: { Authorization: 'Bearer ' + t } });
+  if (!r.ok) throw new Error('Drive error ' + r.status);
+  return r.json();
+}
+async function gdList() {
+  const cur = S.gd.stack.at(-1);
+  const q = encodeURIComponent(`'${cur.id}' in parents and trashed=false`);
+  const d = await gdApi(`https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=200&orderBy=folder,name&fields=files(id,name,mimeType,size,webViewLink)`);
+  return d.files.map(f => ({
+    name: f.name, size: +f.size || 0, folder: f.mimeType === 'application/vnd.google-apps.folder',
+    open: () => { S.gd.stack.push({ id: f.id, name: f.name }); load(); },
+    get: () => window.open(f.webViewLink, '_blank')
+  }));
+}
+async function gdUpload(file) {
+  const fd = new FormData();
+  fd.append('metadata', new Blob([JSON.stringify({ name: file.name, parents: [S.gd.stack.at(-1).id] })], { type: 'application/json' }));
+  fd.append('file', file);
+  await gdApi('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', { method: 'POST', body: fd });
+}
+
+/* ---------- Mega ---------- */
+function megaLogin() {
+  return new Promise((ok, no) => {
+    const dlg = $('#mdlg');
+    dlg.showModal();
+    $('#mcancel').onclick = () => { dlg.close(); no(new Error('cancelled')); };
+    $('#mform').onsubmit = async e => {
+      e.preventDefault();
+      try {
+        const st = new mega.Storage({ email: $('#memail').value, password: $('#mpass').value });
+        await st.ready;
+        $('#mpass').value = ''; // পাসওয়ার্ড কোথাও সেভ হয় না, শুধু মেমরিতে সেশন থাকে
+        S.mega.st = st; S.mega.stack = [st.root]; dlg.close(); ok();
+      } catch (err) { toast('Mega login ব্যর্থ: ' + err.message); }
+    };
+  });
+}
+async function megaList() {
+  return (S.mega.stack.at(-1).children || []).map(n => ({
+    name: n.name, size: n.size || 0, folder: !!n.directory,
+    open: () => { S.mega.stack.push(n); load(); },
+    get: async () => {
+      toast('ডাউনলোড হচ্ছে…');
+      const buf = await n.downloadBuffer();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([buf])); a.download = n.name; a.click();
+    }
+  })).sort((a, b) => b.folder - a.folder || a.name.localeCompare(b.name));
+}
+async function megaUpload(file) {
+  const buf = new Uint8Array(await file.arrayBuffer());
+  await S.mega.stack.at(-1).upload({ name: file.name, size: file.size, allowUploadBuffering: true }, buf).complete;
+}
+
+/* ---------- UI ---------- */
+function crumbs() {
+  const st = S.p === 'gd' ? S.gd.stack : S.mega.stack;
+  const name = (x, i) => S.p === 'gd' ? x.name : (i === 0 ? 'Cloud Drive' : x.name);
+  $('#crumb').innerHTML = st.map((x, i) => i === st.length - 1 ? `<b>${esc(name(x, i))}</b>` : `<a data-i="${i}">${esc(name(x, i))}</a>`).join(' / ');
+  $('#crumb').querySelectorAll('a').forEach(a => a.onclick = () => { st.length = +a.dataset.i + 1; load(); });
+}
+async function load() {
+  const list = $('#list');
+  list.innerHTML = '<div class="msg">লোড হচ্ছে…</div>';
+  try {
+    const items = S.p === 'gd' ? await gdList() : await megaList();
+    crumbs();
+    if (!items.length) { list.innerHTML = '<div class="msg">ফোল্ডারটি খালি। Upload চাপুন বা ফাইল এখানে ড্র্যাগ করুন।</div>'; return; }
+    list.innerHTML = '';
+    items.forEach(it => {
+      const r = document.createElement('div');
+      r.className = 'row';
+      r.innerHTML = `<span>${it.folder ? '📁' : '📄'}</span><span>${esc(it.name)}</span><span class="sz">${it.folder ? '' : size(it.size)}</span><span class="sz">${it.folder ? '' : '⬇'}</span>`;
+      r.onclick = () => it.folder ? it.open() : it.get();
+      list.appendChild(r);
+    });
+  } catch (e) { list.innerHTML = `<div class="msg">${esc(e.message)}</div>`; }
+}
+async function switchTo(p) {
+  try {
+    if (p === 'gd') await gdToken(); else if (!S.mega.st) await megaLogin();
+    S.p = p;
+    document.querySelectorAll('.av').forEach(a => { a.classList.toggle('on', a.dataset.p === p); });
+    document.querySelector(`.av[data-p=${p}]`).classList.add('ok');
+    $('#title').textContent = p === 'gd' ? 'Google Drive' : 'Mega';
+    load();
+  } catch (e) { if (e.message !== 'cancelled') toast(e.message); }
+}
+async function upload(files) {
+  if (!S.p) return toast('আগে একটি অ্যাকাউন্ট বেছে নিন');
+  for (const f of files) {
+    toast(`আপলোড হচ্ছে: ${f.name}`);
+    try { S.p === 'gd' ? await gdUpload(f) : await megaUpload(f); } catch (e) { toast('আপলোড ব্যর্থ: ' + e.message); return; }
+  }
+  toast('আপলোড শেষ'); load();
+}
+document.querySelectorAll('.av').forEach(a => { a.onclick = () => switchTo(a.dataset.p); a.onkeydown = e => e.key === 'Enter' && a.click(); });
+$('#up').onclick = () => $('#file').click();
+$('#file').onchange = e => { upload([...e.target.files]); e.target.value = ''; };
+const m = $('#main');
+['dragover', 'dragenter'].forEach(t => m.addEventListener(t, e => { e.preventDefault(); $('#list').classList.add('drop'); }));
+['dragleave', 'drop'].forEach(t => m.addEventListener(t, e => { e.preventDefault(); $('#list').classList.remove('drop'); }));
+m.addEventListener('drop', e => upload([...e.dataTransfer.files]));
+</script>
+</body>
+</html>
