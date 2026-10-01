@@ -1,8 +1,0 @@
-/* My File: account switcher (Mega / Google Drive) */
-.mf-accts{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.mf-acct{position:relative;width:40px;height:40px;border-radius:50%;border:2px solid transparent;background:var(--c);color:#fff;font-weight:700;cursor:pointer;opacity:.5;transition:.2s var(--ease)}
-.mf-acct:hover{opacity:.85;transform:translateY(-2px)}
-.mf-acct.on{opacity:1;border-color:var(--text);box-shadow:0 0 0 3px var(--gold-soft)}
-.mf-acct i{position:absolute;right:-2px;bottom:-2px;width:11px;height:11px;border-radius:50%;background:var(--text-faint);border:2px solid var(--surface-solid)}
-.mf-acct.ok i{background:#22c55e}
-.mf-acct-name{font-size:.85rem;color:var(--text-dim);margin-left:4px}
