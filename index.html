@@ -823,9 +823,18 @@
                   <button data-layout="gallery" onclick="mfSetLayout('gallery')"><i class="fas fa-image"></i><span>Gallery</span><i class="fas fa-check mf-tick"></i></button>
                 </div>
               </div>
-              <button class="mf-btn" onclick="myfileLogout()" title="Lock"><i class="fas fa-lock"></i></button>
+              <button class="mf-btn" id="mfSelBtn" onclick="mfToggleSelect()" title="Select files"><i class="fas fa-square-check"></i></button>
               <input type="file" id="mfFileInput" multiple hidden onchange="mfUploadFiles(this.files); this.value=''">
               <input type="file" id="mfFolderInput" webkitdirectory multiple hidden onchange="mfUploadFiles(this.files); this.value=''">
+            </div>
+            <div class="mf-selbar" id="mfSelBar">
+              <span class="mf-sel-count" id="mfSelCount">0 selected</span>
+              <button type="button" onclick="mfSelAll()"><i class="fas fa-check-double"></i><span>All</span></button>
+              <button type="button" data-need="1" onclick="mfBulk('dl')"><i class="fas fa-download"></i><span>Download</span></button>
+              <button type="button" data-need="1" onclick="mfBulk('move')"><i class="fas fa-arrows-up-down-left-right"></i><span>Move</span></button>
+              <button type="button" data-need="1" onclick="mfBulk('copy')"><i class="fas fa-copy"></i><span>Copy</span></button>
+              <button type="button" data-need="1" class="mf-sel-del" onclick="mfBulk('del')"><i class="fas fa-trash"></i><span>Delete</span></button>
+              <button type="button" onclick="mfSelExit()" title="Cancel"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="mf-crumbs" id="mfCrumbs"></div>
             <div class="mf-uploads" id="mfUploads"></div>
