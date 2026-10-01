@@ -3,7 +3,7 @@
    tai ager sob feature (preview, upload, rename, move, copy...) Drive-e-o cholbe. */
 
 // Google Cloud Console theke paoa Web Client ID (public hole shomossha nei)
-const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '582508472830-2gnv54j3jhkklcplro2a6l0k3c5u84qf.apps.googleusercontent.com';
 
 // Notun account joraar jonno ekhane ekta line add korun (porer comment dekhun)
 const MF_ACCOUNTS = [
