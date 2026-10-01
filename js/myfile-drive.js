@@ -8,15 +8,6 @@ const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 /* ---------- Account logos (SVG) ---------- */
 const MF_ICON_MEGA = `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#d9272e"/><path d="M8.5 22V10.5l7.5 7.5 7.5-7.5V22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const MF_ICON_GD = `<svg viewBox="0 0 87.3 78" aria-hidden="true"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>`;
-(function () {
-  const st = document.createElement('style');
-  st.textContent = '.mf-acct.has-logo{background:#fff!important;color:transparent!important;padding:0!important}'
-    + '.mf-acct.has-logo svg{width:62%;height:62%;display:block;margin:auto}'
-    + '.mf-acct.has-logo[style*="d9272e"]{background:#d9272e!important}'
-    + '.mf-acct.has-logo[style*="d9272e"] svg{width:100%;height:100%}';
-  document.head.appendChild(st);
-})();
-
 // Notun account joraar jonno ekhane ekta line add korun (porer comment dekhun)
 const MF_ACCOUNTS = [
   { id: 'mega', type: 'mega', label: 'Mega',         letter: 'M', color: '#d9272e', icon: MF_ICON_MEGA },
@@ -202,12 +193,13 @@ function mfRenderAccts() {
   if (!el) return;
   const act = MF_ACCOUNTS.find(a => a.id === mfActive);
   el.innerHTML = MF_ACCOUNTS.map(a =>
-    `<button type="button" class="mf-acct${a.icon ? ' has-logo' : ''}${a.id === mfActive ? ' on' : ''}${mfConn[a.id] ? ' ok' : ''}" style="--c:${a.color}" title="${mfEsc(a.label)}" onclick="mfSwitch('${a.id}')">${a.icon || mfEsc(a.letter)}<i></i></button>`
+    `<button type="button" class="mf-acct${a.icon ? ' has-logo' : ''}${a.type === 'mega' ? ' mega' : ''}${a.id === mfActive ? ' on' : ''}${mfConn[a.id] ? ' ok' : ''}" style="--c:${a.color}" title="${mfEsc(a.label)}" onclick="mfSwitch('${a.id}')">${a.icon || mfEsc(a.letter)}<i></i></button>`
   ).join('') + `<span class="mf-acct-name">${mfEsc(act ? act.label : '')}</span>`;
 }
 
 async function mfSwitch(id) {
   if (id === mfActive && mfConn[id]) return;
+  mfSelExit();
   const cfg = MF_ACCOUNTS.find(a => a.id === id);
   if (!cfg) return;
   if (mfConn[mfActive]) mfConn[mfActive].cwd = mfCwd;          // ager account-er folder mone rakho
@@ -224,7 +216,8 @@ async function mfSwitch(id) {
   mfRenderAccts(); mfRender(); mfLoadSpace();
 }
 
-async function mfGo(n) {                                       // folder-e dhoukar age Drive children load
+async function mfGo(n) {
+  mfSelClear();                                       // folder-e dhoukar age Drive children load
   if (n.load && !n.children) {
     document.getElementById('mfList').innerHTML = '<div class="mf-empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
     try { await n.load(); } catch (e) { mfToast(e.message || e); mfRender(); return; }
@@ -251,7 +244,126 @@ mfConnect = async function () {
 };
 const _myfileLogout = myfileLogout;
 myfileLogout = function () {
+  mfSelExit();
   Object.keys(mfConn).forEach(k => { try { mfConn[k].storage.close(); } catch (_e) {} delete mfConn[k]; });
   mfActive = 'mega';
   _myfileLogout();
 };
+
+
+/* ---------- Select mode: ek sathe onek file select kore Download / Move / Copy / Delete ---------- */
+let mfSelMode = false;
+const mfSel = new Set();
+
+function mfSelUpdate() {
+  const n = mfSel.size;
+  const c = document.getElementById('mfSelCount');
+  if (c) c.textContent = n + ' selected';
+  document.querySelectorAll('#mfSelBar [data-need]').forEach(b => { b.disabled = !n; });
+  document.querySelectorAll('#mfList .mf-item').forEach(it => {
+    const o = it.querySelector('.mf-open');
+    it.classList.toggle('sel', !!(o && mfSel.has(o.dataset.id)));
+  });
+}
+function mfToggleSelect() { mfSelMode ? mfSelExit() : mfSelEnter(); }
+function mfSelEnter() {
+  mfSelMode = true;
+  const z = document.getElementById('mfDrop'); if (z) z.classList.add('selmode');
+  const b = document.getElementById('mfSelBtn'); if (b) b.classList.add('on');
+  mfSelUpdate();
+}
+function mfSelClear() { mfSel.clear(); mfSelUpdate(); }
+function mfSelExit() {
+  mfSelMode = false; mfSel.clear();
+  const z = document.getElementById('mfDrop'); if (z) z.classList.remove('selmode');
+  const b = document.getElementById('mfSelBtn'); if (b) b.classList.remove('on');
+  mfSelUpdate();
+}
+function mfSelAll() {
+  const ids = [...document.querySelectorAll('#mfList .mf-open')].map(o => o.dataset.id);
+  const all = ids.length && ids.every(i => mfSel.has(i));
+  ids.forEach(i => all ? mfSel.delete(i) : mfSel.add(i));
+  mfSelUpdate();
+}
+function mfSelNodes() { return [...mfSel].map(id => mfStorage && mfStorage.files[id]).filter(Boolean); }
+
+// select mode-e item-e click korle open na hoye select/unselect hobe (main.js-er click handler-er age dhore)
+document.addEventListener('click', e => {
+  if (!mfSelMode) return;
+  const it = e.target.closest('#mfList .mf-item');
+  if (!it) return;
+  e.stopPropagation(); e.preventDefault();
+  const o = it.querySelector('.mf-open'); if (!o) return;
+  const id = o.dataset.id;
+  mfSel.has(id) ? mfSel.delete(id) : mfSel.add(id);
+  mfSelUpdate();
+}, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && mfSelMode && !document.querySelector('.mf-modal.show')) mfSelExit(); });
+
+// har render-er por checkbox boshano
+const _mfRender = mfRender;
+mfRender = function () {
+  _mfRender();
+  document.querySelectorAll('#mfList .mf-open').forEach(o => {
+    if (!o.querySelector('.mf-chk')) o.insertAdjacentHTML('afterbegin', '<span class="mf-chk"><i class="fas fa-check"></i></span>');
+  });
+  mfSelUpdate();
+};
+
+function mfInside(t, n) { for (let x = t; x; x = x.parent) if (x === n) return true; return false; }
+
+async function mfBulk(kind) {
+  const nodes = mfSelNodes();
+  if (!nodes.length) return;
+  const n = nodes.length;
+  try {
+    if (kind === 'dl') {
+      const files = nodes.filter(x => !x.directory);
+      if (!files.length) { mfToast('Folder download kora jabe na, file select korun'); return; }
+      if (files.length < n) mfToast('Folder bad diye ' + files.length + 'ta file download hocche...');
+      for (const f of files) await mfDownload(f);
+    }
+    else if (kind === 'del') {
+      if (!confirm('Delete ' + n + ' selected item' + (n > 1 ? 's' : '') + '? They will be moved to the trash.')) return;
+      let ok = 0, bad = 0;
+      for (const x of nodes) { try { await x.delete(false); ok++; } catch (_e) { bad++; } }
+      mfToast(ok + ' deleted' + (bad ? ', ' + bad + ' failed' : ''));
+      mfSelClear(); mfRender(); mfLoadSpace(); return;
+    }
+    else if (kind === 'move') {
+      const target = await mfPickFolder('Move ' + n + ' item' + (n > 1 ? 's' : '') + ' to...', null);
+      if (!target) return;
+      let ok = 0, skip = 0, bad = 0;
+      for (const x of nodes) {
+        if (x.parent === target || mfInside(target, x)) { skip++; continue; }
+        try { await x.moveTo(target); ok++; } catch (_e) { bad++; }
+      }
+      mfToast(ok + ' moved' + (skip ? ', ' + skip + ' skipped' : '') + (bad ? ', ' + bad + ' failed' : ''));
+      mfSelClear(); mfRender(); return;
+    }
+    else if (kind === 'copy') {
+      const target = await mfPickFolder('Copy ' + n + ' item' + (n > 1 ? 's' : '') + ' to...', null);
+      if (!target) return;
+      for (const x of nodes) await mfDeepLoad(x);
+      const total = nodes.reduce((a, x) => { let t = 0; (function w(y) { if (y.directory) (y.children || []).forEach(w); else t += y.size || 0; })(x); return a + t; }, 0);
+      if (total > 100 * 1024 * 1024 && !confirm('This copy is ' + mfSize(total) + '. Files are copied by downloading and uploading again. Continue?')) return;
+      const box = document.getElementById('mfUploads');
+      const row = document.createElement('div');
+      row.className = 'mf-up';
+      row.innerHTML = '<div class="mf-up-top"><span class="mf-up-name"></span><span class="mf-up-pct">0%</span></div><div class="mf-bar-bg"><div class="mf-bar-fill"></div></div>';
+      row.querySelector('.mf-up-name').textContent = 'Copying ' + n + ' item' + (n > 1 ? 's' : '');
+      box.appendChild(row);
+      try {
+        for (const x of nodes) {
+          if (mfInside(target, x) && x.directory) continue;       // folder-ke nijer bhetor copy kora jay na
+          if (x.directory) await mfCopyFolderTo(x, target, row); else await mfCopyFileTo(x, target, row);
+        }
+        row.querySelector('.mf-up-pct').textContent = 'Done'; row.querySelector('.mf-bar-fill').style.width = '100%'; row.classList.add('done');
+        setTimeout(() => row.remove(), 2500);
+      } catch (err) {
+        row.querySelector('.mf-up-pct').textContent = 'Failed'; row.classList.add('fail'); row.title = (err && err.message) || 'Copy failed';
+      }
+      mfSelClear(); mfRender(); mfLoadSpace(); return;
+    }
+  } catch (e) { alert('Failed: ' + (e.message || e)); }
+}
