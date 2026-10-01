@@ -5,10 +5,22 @@
 // Fallback-er jonno (Worker set thakle ei ID lagbe na). Google Cloud-er Web Client ID
 const GOOGLE_CLIENT_ID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 
+/* ---------- Account logos (SVG) ---------- */
+const MF_ICON_MEGA = `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#d9272e"/><path d="M8.5 22V10.5l7.5 7.5 7.5-7.5V22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const MF_ICON_GD = `<svg viewBox="0 0 87.3 78" aria-hidden="true"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>`;
+(function () {
+  const st = document.createElement('style');
+  st.textContent = '.mf-acct.has-logo{background:#fff!important;color:transparent!important;padding:0!important}'
+    + '.mf-acct.has-logo svg{width:62%;height:62%;display:block;margin:auto}'
+    + '.mf-acct.has-logo[style*="d9272e"]{background:#d9272e!important}'
+    + '.mf-acct.has-logo[style*="d9272e"] svg{width:100%;height:100%}';
+  document.head.appendChild(st);
+})();
+
 // Notun account joraar jonno ekhane ekta line add korun (porer comment dekhun)
 const MF_ACCOUNTS = [
-  { id: 'mega', type: 'mega', label: 'Mega',         letter: 'M', color: '#d9272e' },
-  { id: 'gd',   type: 'gd',   label: 'Google Drive', letter: 'G', color: '#1a9c5b' }
+  { id: 'mega', type: 'mega', label: 'Mega',         letter: 'M', color: '#d9272e', icon: MF_ICON_MEGA },
+  { id: 'gd',   type: 'gd',   label: 'Google Drive', letter: 'G', color: '#1a9c5b', icon: MF_ICON_GD }
   // , { id: 'gd2', type: 'gd', label: 'Work Drive', letter: 'W', color: '#2563eb', hint: 'work@gmail.com' }
 ];
 
@@ -190,7 +202,7 @@ function mfRenderAccts() {
   if (!el) return;
   const act = MF_ACCOUNTS.find(a => a.id === mfActive);
   el.innerHTML = MF_ACCOUNTS.map(a =>
-    `<button type="button" class="mf-acct${a.id === mfActive ? ' on' : ''}${mfConn[a.id] ? ' ok' : ''}" style="--c:${a.color}" title="${mfEsc(a.label)}" onclick="mfSwitch('${a.id}')">${mfEsc(a.letter)}<i></i></button>`
+    `<button type="button" class="mf-acct${a.icon ? ' has-logo' : ''}${a.id === mfActive ? ' on' : ''}${mfConn[a.id] ? ' ok' : ''}" style="--c:${a.color}" title="${mfEsc(a.label)}" onclick="mfSwitch('${a.id}')">${a.icon || mfEsc(a.letter)}<i></i></button>`
   ).join('') + `<span class="mf-acct-name">${mfEsc(act ? act.label : '')}</span>`;
 }
 
